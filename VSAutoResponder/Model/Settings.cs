@@ -25,8 +25,7 @@ namespace Fiddler.VSAutoResponder.Model
                 if (redirects == null)
                 {
                     redirects = new BindingList<Redirect>();
-                    redirects.ListChanged += (s, e) => OnSettingsChanged(EventArgs.Empty);                   
-                    // redirects.Add(new Redirect() { Url = new Uri("https://veidekkeintra.blob.core.windows.net"), IsEnabled = true, UseMinified = true });
+                    redirects.ListChanged += (s, e) => OnSettingsChanged(EventArgs.Empty);                                       
                 }                
                 return redirects;
             }
@@ -36,8 +35,7 @@ namespace Fiddler.VSAutoResponder.Model
                     redirects.RaiseListChangedEvents = false;
                 Redirects.Clear();
                 if (value != null)
-                {
-                    
+                {                    
                     foreach (var val in value)
                         Redirects.Add(val);
                 }

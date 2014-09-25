@@ -37,9 +37,11 @@
             // 
             // dgvRedirects
             // 
+            this.dgvRedirects.AllowDrop = true;
             this.dgvRedirects.AllowUserToOrderColumns = true;
             this.dgvRedirects.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvRedirects.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvRedirects.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dgvRedirects.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRedirects.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colEnabled,
@@ -47,14 +49,19 @@
             this.colUseMinified});
             this.dgvRedirects.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvRedirects.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.dgvRedirects.GridColor = System.Drawing.SystemColors.Control;
             this.dgvRedirects.Location = new System.Drawing.Point(0, 0);
             this.dgvRedirects.Margin = new System.Windows.Forms.Padding(0);
             this.dgvRedirects.Name = "dgvRedirects";
-            this.dgvRedirects.RowHeadersVisible = false;
-            this.dgvRedirects.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvRedirects.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dgvRedirects.RowHeadersWidth = 20;
+            this.dgvRedirects.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvRedirects.Size = new System.Drawing.Size(359, 274);
             this.dgvRedirects.TabIndex = 2;
             this.dgvRedirects.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgvRedirects_CurrentCellDirtyStateChanged);
+            this.dgvRedirects.DragDrop += new System.Windows.Forms.DragEventHandler(this.dgvRedirects_DragDrop);
+            this.dgvRedirects.DragEnter += new System.Windows.Forms.DragEventHandler(this.dgvRedirects_DragEnter);
+            this.dgvRedirects.DragOver += new System.Windows.Forms.DragEventHandler(this.dgvRedirects_DragOver);
             // 
             // colEnabled
             // 
@@ -62,6 +69,7 @@
             this.colEnabled.DataPropertyName = "IsEnabled";
             this.colEnabled.HeaderText = "E";
             this.colEnabled.Name = "colEnabled";
+            this.colEnabled.ToolTipText = "If checked this redirect is enabled. Otherwise it is not enabled.";
             this.colEnabled.Width = 21;
             // 
             // colFrom
@@ -70,16 +78,20 @@
             this.colFrom.DataPropertyName = "Url";
             this.colFrom.HeaderText = "Url";
             this.colFrom.Name = "colFrom";
+            this.colFrom.ToolTipText = "If a request url matches this it will be redirect to localhost. A website must ex" +
+    "ist with same hostname as original request. Url must start with http:// or https" +
+    ":// and have a valid host name.";
             // 
             // colUseMinified
             // 
             this.colUseMinified.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.colUseMinified.DataPropertyName = "UseMinified";
-            this.colUseMinified.HeaderText = "M";
+            this.colUseMinified.HeaderText = "Min";
             this.colUseMinified.Name = "colUseMinified";
             this.colUseMinified.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.colUseMinified.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colUseMinified.Width = 41;
+            this.colUseMinified.ToolTipText = "If unchecked *.min.(css|js) will be replaced with .(css|js) requests instead.";
+            this.colUseMinified.Width = 49;
             // 
             // LocalRedirectSettings
             // 

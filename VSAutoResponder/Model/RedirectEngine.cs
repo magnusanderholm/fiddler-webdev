@@ -6,6 +6,12 @@ using System.Threading;
 
 namespace Fiddler.VSAutoResponder.Model
 {
+    // TODO We could create a way to inject javascripts and css into head of any page
+    //      by just looking at a html fragment (of head) file located in the root of the IIS site or similiar
+    //      that html file is then inserted into head at the bottom. easy peasy. Best thing would be if we could
+    //      use our redirect rule or another rule for that. Ie the html fragment is attached to the rule. That way it would
+    //      be very easy to customize different parts of a customer sharepoint site without actually deploying anything at all.
+    //      almost like simulating a master page.
     public class RedirectEngine
     {
         private Settings settings;
@@ -47,7 +53,7 @@ namespace Fiddler.VSAutoResponder.Model
 
             if (bestMatchingRedirect != null)
             {
-                if (bestMatchingRedirect.UseMinified)
+                if (!bestMatchingRedirect.UseMinified)
                 {
                     oSession.url = oSession.url.Replace(".min.css", ".css");
                     oSession.url = oSession.url.Replace(".min.js", ".js");

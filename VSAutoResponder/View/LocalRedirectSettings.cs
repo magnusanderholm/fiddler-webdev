@@ -36,5 +36,29 @@ namespace Fiddler.VSAutoResponder.View
                 dgvRedirects.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
         }
+
+        private void dgvRedirects_DragEnter(object sender, DragEventArgs e)
+        {
+            //((Fiddler.Session[])(e.Data.GetData("Fiddler.Session[]")))[0]
+            if (e.Data.GetFormats().Any(f => f == "Fiddler.Session[]"))
+                e.Effect = DragDropEffects.Copy;
+        }
+
+        private void dgvRedirects_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetFormats().Any(f => f == "Fiddler.Session[]"))
+            {
+                var fiddlerSessions = (Fiddler.Session[])e.Data.GetData("Fiddler.Session[]");
+                foreach(var fiddlerSession in fiddlerSessions)
+                {
+                    Settings.Redirects.Add(new Model.Redirect() { Url = fiddlerSession.fullUrl, IsEnabled = true, UseMinified = false});
+                }
+            }
+        }
+
+        private void dgvRedirects_DragOver(object sender, DragEventArgs e)
+        {
+            int i = 0;
+        }
     }
 }
