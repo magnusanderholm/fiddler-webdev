@@ -61,9 +61,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VSAutoResponder\Fiddler.VSAutoResponder.csproj">
+    <ProjectReference Include="..\LocalRedirect\Fiddler.LocalRedirect.csproj">
       <Project>{a4aafd3f-f830-4604-8ac2-7145f64022c7}</Project>
-      <Name>Fiddler.VSAutoResponder</Name>
+      <Name>Fiddler.LocalRedirect</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

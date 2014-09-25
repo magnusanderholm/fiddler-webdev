@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiddler.VSAutoResponder", "VSAutoResponder\Fiddler.VSAutoResponder.csproj", "{A4AAFD3F-F830-4604-8AC2-7145F64022C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiddler.LocalRedirect", "LocalRedirect\Fiddler.LocalRedirect.csproj", "{A4AAFD3F-F830-4604-8AC2-7145F64022C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSAutoResponder.Tests", "VSAutoResponder.Tests\VSAutoResponder.Tests.csproj", "{63327AD4-4E73-4FEC-A268-0B58A0AA4EB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalRedirect.Tests", "LocalRedirect.Tests\LocalRedirect.Tests.csproj", "{63327AD4-4E73-4FEC-A268-0B58A0AA4EB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
