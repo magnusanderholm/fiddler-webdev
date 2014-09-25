@@ -30,9 +30,8 @@
         {
             this.dgvRedirects = new System.Windows.Forms.DataGridView();
             this.colFrom = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colUseMinified = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colEnabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colLocalHost = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRedirects)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,11 +43,11 @@
             this.dgvRedirects.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRedirects.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colFrom,
-            this.colTo,
-            this.colEnabled,
-            this.colLocalHost});
+            this.colUseMinified,
+            this.colEnabled});
             this.dgvRedirects.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvRedirects.Location = new System.Drawing.Point(0, 0);
+            this.dgvRedirects.Margin = new System.Windows.Forms.Padding(0);
             this.dgvRedirects.Name = "dgvRedirects";
             this.dgvRedirects.RowHeadersVisible = false;
             this.dgvRedirects.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -59,15 +58,17 @@
             // 
             this.colFrom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colFrom.DataPropertyName = "FromUrl";
-            this.colFrom.HeaderText = "From";
+            this.colFrom.HeaderText = "Url";
             this.colFrom.Name = "colFrom";
             // 
-            // colTo
+            // colUseMinified
             // 
-            this.colTo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colTo.DataPropertyName = "ToUrl";
-            this.colTo.HeaderText = "To";
-            this.colTo.Name = "colTo";
+            this.colUseMinified.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colUseMinified.HeaderText = "M";
+            this.colUseMinified.Name = "colUseMinified";
+            this.colUseMinified.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colUseMinified.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colUseMinified.Width = 41;
             // 
             // colEnabled
             // 
@@ -76,19 +77,12 @@
             this.colEnabled.Name = "colEnabled";
             this.colEnabled.Width = 21;
             // 
-            // colLocalHost
-            // 
-            this.colLocalHost.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colLocalHost.DataPropertyName = "IsLocalHost";
-            this.colLocalHost.HeaderText = "localhost";
-            this.colLocalHost.Name = "colLocalHost";
-            this.colLocalHost.Width = 55;
-            // 
             // LocalRedirectSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.dgvRedirects);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "LocalRedirectSettings";
             this.Size = new System.Drawing.Size(359, 274);
             ((System.ComponentModel.ISupportInitialize)(this.dgvRedirects)).EndInit();
@@ -100,8 +94,7 @@
 
         private System.Windows.Forms.DataGridView dgvRedirects;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFrom;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colTo;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colUseMinified;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colEnabled;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn colLocalHost;
     }
 }

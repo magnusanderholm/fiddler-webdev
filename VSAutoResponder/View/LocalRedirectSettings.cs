@@ -16,6 +16,7 @@ namespace Fiddler.VSAutoResponder.View
         public LocalRedirectSettings()
         {
             InitializeComponent();
+            dgvRedirects.AutoGenerateColumns = false;
         }
 
         public Model.Settings Settings 

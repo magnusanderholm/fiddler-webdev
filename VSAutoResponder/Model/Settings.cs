@@ -10,9 +10,13 @@ namespace Fiddler.VSAutoResponder.Model
     {
         public Settings()
         {
+            // TODO Need to make Settings and Redirect instances threadsafe somehow.
+            //      best would probably be if we use a copy of Settings in the RedirectEngine
+            //      and only update it once in a while
             var bindingList = new BindingList<Redirect>();            
             bindingList.ListChanged += OnListChanged;
             Redirects = bindingList;
+            bindingList.Add(new Redirect() { Url = new Uri("https://veidekkeintra.blob.core.windows.net"), IsEnabled = true, UseMinified = true });
         }
 
         private void OnListChanged(object sender, ListChangedEventArgs e)
@@ -22,14 +26,9 @@ namespace Fiddler.VSAutoResponder.Model
             // TODO If we are adding items make sure we register their propertychanged event
             //      so we get notifications right away. Hmm perhaps we shall use some kind of timer 
             //      before we save so we actually dont just save "garbage" data and stall the UI thread because
-            //      of all the I/O.
-
-            // Save any settings to the HostsFile as well. Should probably be done in the same way as above.
-        }
-
-        public HostFile Hosts { get; private set; }
-
-        // TODO Changing a redirect will trigger a change in the hosts file....
+            //      of all the I/O.            
+        }        
+        
         public IEnumerable<Redirect> Redirects { get; private set; }        
     }
 }

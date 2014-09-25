@@ -8,16 +8,13 @@ namespace Fiddler.VSAutoResponder.Model
 {
     public class Redirect : INotifyPropertyChanged
     {
-        public Uri FromUrl { get; set; }
-
-        public Uri ToUrl { get; set; }
+        public Uri Url { get; set; }        
 
         public bool IsEnabled { get; set; }
 
-        public bool IsLocalHostRedirect { get; set; }
-
-        // TODO How do we tell the engine to use replace minified js/css with unminified versions?
-                
+        public bool UseMinified { get; set; }
+        
+        // TODO How do we tell the engine to use replace minified js/css with unminified versions?ö                
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
