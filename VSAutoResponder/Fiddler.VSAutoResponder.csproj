@@ -54,8 +54,6 @@
     <Compile Include="AutoResponderRule.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="LocaRedirect.cs" />
-    <Compile Include="Model\Binding.cs" />
-    <Compile Include="Model\IIS.cs" />
     <Compile Include="Model\Redirect.cs" />
     <Compile Include="Model\RedirectEngine.cs" />
     <Compile Include="Model\Settings.cs" />
