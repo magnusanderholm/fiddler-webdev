@@ -58,9 +58,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IIS.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VSAutoResponder\Fiddler.VSAutoResponder.csproj">

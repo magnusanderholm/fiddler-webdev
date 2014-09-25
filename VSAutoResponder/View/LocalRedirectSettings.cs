@@ -28,5 +28,13 @@ namespace Fiddler.VSAutoResponder.View
                 dgvRedirects.DataSource = settings.Redirects;
             }
         }
+
+        private void dgvRedirects_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dgvRedirects.IsCurrentCellDirty && dgvRedirects.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                dgvRedirects.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
     }
 }

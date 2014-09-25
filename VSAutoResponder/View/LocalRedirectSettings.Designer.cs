@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.dgvRedirects = new System.Windows.Forms.DataGridView();
+            this.colEnabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colFrom = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colUseMinified = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colEnabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRedirects)).BeginInit();
             this.SuspendLayout();
             // 
@@ -42,10 +42,11 @@
             this.dgvRedirects.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvRedirects.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRedirects.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colEnabled,
             this.colFrom,
-            this.colUseMinified,
-            this.colEnabled});
+            this.colUseMinified});
             this.dgvRedirects.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvRedirects.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dgvRedirects.Location = new System.Drawing.Point(0, 0);
             this.dgvRedirects.Margin = new System.Windows.Forms.Padding(0);
             this.dgvRedirects.Name = "dgvRedirects";
@@ -53,29 +54,32 @@
             this.dgvRedirects.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvRedirects.Size = new System.Drawing.Size(359, 274);
             this.dgvRedirects.TabIndex = 2;
+            this.dgvRedirects.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgvRedirects_CurrentCellDirtyStateChanged);
+            // 
+            // colEnabled
+            // 
+            this.colEnabled.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colEnabled.DataPropertyName = "IsEnabled";
+            this.colEnabled.HeaderText = "E";
+            this.colEnabled.Name = "colEnabled";
+            this.colEnabled.Width = 21;
             // 
             // colFrom
             // 
             this.colFrom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colFrom.DataPropertyName = "FromUrl";
+            this.colFrom.DataPropertyName = "Url";
             this.colFrom.HeaderText = "Url";
             this.colFrom.Name = "colFrom";
             // 
             // colUseMinified
             // 
             this.colUseMinified.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colUseMinified.DataPropertyName = "UseMinified";
             this.colUseMinified.HeaderText = "M";
             this.colUseMinified.Name = "colUseMinified";
             this.colUseMinified.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.colUseMinified.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.colUseMinified.Width = 41;
-            // 
-            // colEnabled
-            // 
-            this.colEnabled.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colEnabled.HeaderText = "E";
-            this.colEnabled.Name = "colEnabled";
-            this.colEnabled.Width = 21;
             // 
             // LocalRedirectSettings
             // 
@@ -93,8 +97,8 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dgvRedirects;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colEnabled;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFrom;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colUseMinified;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn colEnabled;
     }
 }

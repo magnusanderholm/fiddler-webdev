@@ -2,33 +2,57 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Fiddler.VSAutoResponder.Model
 {
-    public class Settings 
+    [DataContract(Name="settings", Namespace="")]
+    public class Settings
     {
+        private BindingList<Redirect> redirects;
+
         public Settings()
+        {                        
+        }                
+        
+
+        [DataMember(Name="redirects")]
+        public ICollection<Redirect> Redirects
         {
-            // TODO Need to make Settings and Redirect instances threadsafe somehow.
-            //      best would probably be if we use a copy of Settings in the RedirectEngine
-            //      and only update it once in a while
-            var bindingList = new BindingList<Redirect>();            
-            bindingList.ListChanged += OnListChanged;
-            Redirects = bindingList;
-            bindingList.Add(new Redirect() { Url = new Uri("https://veidekkeintra.blob.core.windows.net"), IsEnabled = true, UseMinified = true });
+            get
+            {
+                if (redirects == null)
+                {
+                    redirects = new BindingList<Redirect>();
+                    redirects.ListChanged += (s, e) => OnSettingsChanged(EventArgs.Empty);                   
+                    // redirects.Add(new Redirect() { Url = new Uri("https://veidekkeintra.blob.core.windows.net"), IsEnabled = true, UseMinified = true });
+                }                
+                return redirects;
+            }
+            set
+            {
+                if (redirects != null)
+                    redirects.RaiseListChangedEvents = false;
+                Redirects.Clear();
+                if (value != null)
+                {
+                    
+                    foreach (var val in value)
+                        Redirects.Add(val);
+                }
+                redirects.RaiseListChangedEvents = true;
+                redirects.ResetBindings();
+            }
         }
 
-        private void OnListChanged(object sender, ListChangedEventArgs e)
-        {                        
-            //  Kick of Save task and save settings to disk. As Json or xml???
+        public event EventHandler<EventArgs> Changed;
 
-            // TODO If we are adding items make sure we register their propertychanged event
-            //      so we get notifications right away. Hmm perhaps we shall use some kind of timer 
-            //      before we save so we actually dont just save "garbage" data and stall the UI thread because
-            //      of all the I/O.            
-        }        
-        
-        public IEnumerable<Redirect> Redirects { get; private set; }        
+        protected virtual void OnSettingsChanged(EventArgs e)
+        {
+            var h = Changed;
+            if (h != null)
+                h(this, e);
+        } 
     }
 }

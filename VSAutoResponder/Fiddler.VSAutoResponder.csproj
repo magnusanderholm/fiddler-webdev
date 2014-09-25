@@ -51,12 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoResponderRule.cs" />
-    <Compile Include="Configuration.cs" />
     <Compile Include="LocaRedirect.cs" />
+    <Compile Include="Model\SerializerEx.cs" />
     <Compile Include="Model\Redirect.cs" />
     <Compile Include="Model\RedirectEngine.cs" />
     <Compile Include="Model\Settings.cs" />
+    <Compile Include="Model\SettingsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\LocalRedirectSettings.cs">
       <SubType>UserControl</SubType>
@@ -64,7 +64,6 @@
     <Compile Include="View\LocalRedirectSettings.Designer.cs">
       <DependentUpon>LocalRedirectSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="VSAutoResponderTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="View\LocalRedirectSettings.resx">
