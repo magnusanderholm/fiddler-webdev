@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Fiddler.VSAutoResponder.Model
+namespace Fiddler.LocalRedirect.Model
 {
     [DataContract(Name="settings", Namespace="")]
     public class Settings

@@ -1,4 +1,4 @@
-﻿namespace Fiddler.VSAutoResponder.View
+﻿namespace Fiddler.LocalRedirect.View
 {
     partial class LocalRedirectSettings
     {

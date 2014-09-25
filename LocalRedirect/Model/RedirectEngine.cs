@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Fiddler.VSAutoResponder.Model
+namespace Fiddler.LocalRedirect.Model
 {
     // TODO We could create a way to inject javascripts and css into head of any page
     //      by just looking at a html fragment (of head) file located in the root of the IIS site or similiar

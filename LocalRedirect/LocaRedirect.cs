@@ -1,5 +1,5 @@
 ﻿using Fiddler;
-using Fiddler.VSAutoResponder.Model;
+using Fiddler.LocalRedirect.Model;
 using System.IO;
 using System.Windows.Forms;
 
@@ -26,7 +26,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     {        
         var oPage = new TabPage("Redirector");
         oPage.ImageIndex = (int)Fiddler.SessionIcons.Redirect;
-        var view = new Fiddler.VSAutoResponder.View.LocalRedirectSettings();        
+        var view = new Fiddler.LocalRedirect.View.LocalRedirectSettings();        
         oPage.Controls.Add(view);
         oPage.Padding = new Padding(0);
         view.Dock = DockStyle.Fill;

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Fiddler.VSAutoResponder.View
+namespace Fiddler.LocalRedirect.View
 {
     public partial class LocalRedirectSettings : UserControl
     {

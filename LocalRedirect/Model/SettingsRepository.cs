@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace Fiddler.VSAutoResponder.Model
+namespace Fiddler.LocalRedirect.Model
 {
     public class SettingsRepository
     {
