@@ -28,26 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.wpfHost = new System.Windows.Forms.Integration.ElementHost();
             this.localRedirect1 = new Fiddler.LocalRedirect.View.LocalRedirect();
             this.SuspendLayout();
             // 
-            // elementHost1
+            // wpfHost
             // 
-            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.elementHost1.Location = new System.Drawing.Point(0, 0);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(316, 262);
-            this.elementHost1.TabIndex = 0;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.localRedirect1;
+            this.wpfHost.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.wpfHost.Location = new System.Drawing.Point(3, 3);
+            this.wpfHost.Name = "wpfHost";
+            this.wpfHost.Size = new System.Drawing.Size(310, 256);
+            this.wpfHost.TabIndex = 0;
+            this.wpfHost.Text = "elementHost1";
+            this.wpfHost.Child = this.localRedirect1;
             // 
             // LocalRedirectHost
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.elementHost1);
+            this.Controls.Add(this.wpfHost);
             this.Name = "LocalRedirectHost";
+            this.Padding = new System.Windows.Forms.Padding(3);
             this.Size = new System.Drawing.Size(316, 262);
             this.ResumeLayout(false);
 
@@ -55,7 +56,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Integration.ElementHost elementHost1;
+        private System.Windows.Forms.Integration.ElementHost wpfHost;
         private LocalRedirect localRedirect1;
     }
 }

@@ -12,7 +12,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <DataGrid Grid.Row="0" ItemsSource="{Binding Redirects}" CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False" Margin="0,0,-257,-39" Grid.RowSpan="2" >
+        <DataGrid Grid.Row="0" ItemsSource="{Binding Redirects}" CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False" Margin="0,0,-257,-39" Grid.RowSpan="2" AllowDrop="True" >
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Header="E" Binding="{Binding IsEnabled}" Width="Auto"/>
                 <DataGridTextColumn Header="From url" Binding="{Binding FromUrl}" Width="2*"/>
