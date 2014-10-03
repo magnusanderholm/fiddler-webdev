@@ -4,21 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:doc="http://schemas.microsoft.com/xps/2005/06/documentstructure"
-             mc:Ignorable="d"              
-             d:DesignHeight="300" d:DesignWidth="300" AllowDrop="True">
+             mc:Ignorable="d" AllowDrop="True" Height="372.903" Width="477.398">
     <Grid>
         <Grid.RowDefinitions>
             <!-- TODO Need a toolbar row with export, import, add and delete buttons. -->
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <DataGrid Grid.Row="0" ItemsSource="{Binding Redirects}" CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False" Margin="0,0,-257,-39" Grid.RowSpan="2" AllowDrop="True" >
-            <DataGrid.Columns>
-                <DataGridCheckBoxColumn Header="E" Binding="{Binding IsEnabled}" Width="Auto"/>
-                <DataGridTextColumn Header="From url" Binding="{Binding FromUrl}" Width="2*"/>
-                <DataGridTextColumn Header="To host" Binding="{Binding ToHost}" Width="*"/>
+        <DataGrid Grid.Row="0" ItemsSource="{Binding Redirects}" CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False"  Grid.RowSpan="2" AllowDrop="True" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" HorizontalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" GridLinesVisibility="Horizontal" >
+            <DataGrid.Columns>                
+                <DataGridTemplateColumn Header="E">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>                    
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="From url" Binding="{Binding FromUrl}" Width="*"/>
+                <DataGridTextColumn Header="To host" Binding="{Binding ToHost}" Width="Auto"/>
                 <DataGridTextColumn Header="To port" Binding="{Binding ToPort}" Width="Auto"/>
-                <DataGridTextColumn Header="Min" Binding="{Binding UseMinified}" Width="Auto"/>
+                <DataGridCheckBoxColumn Header="Min" Binding="{Binding UseMinified}" Width="Auto"/>
             </DataGrid.Columns>
             <!--<DataGrid.RowDetailsTemplate>
                 TODO Buttons to connect script here and set browserlink here, use minified etc.
