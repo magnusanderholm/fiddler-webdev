@@ -47,10 +47,12 @@ namespace Fiddler.LocalRedirect.Model
             var sessionUrl = oSession.fullUrl.ToLower(); // Hmm host must match fully???. Otherwise we'll get hits on https:// .. but we do not know where to.            
             var bestMatchingRedirect = settings
                 .Redirects
-                .Where(r => r.IsValid && r.IsEnabled && string.Compare(r.Host, oSession.hostname, true) == 0)
-                .OrderByDescending(r => r.Url.Length)
-                .FirstOrDefault(r => sessionUrl.StartsWith(r.Url));
-
+                .Where(r => r.IsValid && r.IsEnabled)
+                .OrderByDescending(r => r.FromUrl.Length)
+                .FirstOrDefault(r => sessionUrl.StartsWith(r.FromUrl));
+            
+            // Hmm a redirect can only happen if we actually have a valid host and port. In the case of 
+            // a script we do not need that though.
             if (bestMatchingRedirect != null)
             {
                 if (!bestMatchingRedirect.UseMinified)
@@ -59,8 +61,10 @@ namespace Fiddler.LocalRedirect.Model
                     oSession.url = oSession.url.Replace(".min.js", ".js");
                 }
                 
-                oSession.bypassGateway = true;  // Prevent this request from going through an upstream proxy
-                oSession["x-overrideHost"] = "127.0.0.1"; // Point to a localhost site with same host name as original request.                
+                oSession.bypassGateway = true;  // Prevent this request from going through an upstream proxy              
+                // override host and port. Host can be IP or name but most likely ip.
+                oSession["x-overrideHost"] = string.Format("{0}:{1}",bestMatchingRedirect.ToHost, bestMatchingRedirect.ToPort); 
+                
                 // We always use http for local redirects since https goes bananas because the certificates are different.             
                 // its also easier to handle in the iis.
                 oSession.oRequest.headers.UriScheme = "http"; 

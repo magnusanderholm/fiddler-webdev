@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Collections.Specialized;
 
 namespace Fiddler.LocalRedirect.Model
 {
     [DataContract(Name="settings", Namespace="")]
     public class Settings
     {
-        private BindingList<Redirect> redirects;
+        private ObservableItemCollection<Redirect> redirects;
 
         public Settings()
         {                        
@@ -18,39 +20,23 @@ namespace Fiddler.LocalRedirect.Model
         
 
         [DataMember(Name="redirects")]
-        public ICollection<Redirect> Redirects
+        public ObservableItemCollection<Redirect> Redirects
         {
             get
             {
-                if (redirects == null)
-                {
-                    redirects = new BindingList<Redirect>();
-                    redirects.ListChanged += (s, e) => OnSettingsChanged(EventArgs.Empty);                                       
-                }                
+                redirects = redirects ?? new ObservableItemCollection<Redirect>();
                 return redirects;
             }
             set
             {
-                if (redirects != null)
-                    redirects.RaiseListChangedEvents = false;
-                Redirects.Clear();
+                var _redirects = Redirects;
+                _redirects.Clear();
                 if (value != null)
-                {                    
+                {
                     foreach (var val in value)
-                        Redirects.Add(val);
+                        _redirects.Add(val);
                 }
-                redirects.RaiseListChangedEvents = true;
-                redirects.ResetBindings();
             }
         }
-
-        public event EventHandler<EventArgs> Changed;
-
-        protected virtual void OnSettingsChanged(EventArgs e)
-        {
-            var h = Changed;
-            if (h != null)
-                h(this, e);
-        } 
     }
 }

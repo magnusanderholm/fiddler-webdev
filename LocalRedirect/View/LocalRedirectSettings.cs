@@ -46,7 +46,7 @@ namespace Fiddler.LocalRedirect.View
                 var fiddlerSessions = (Fiddler.Session[])e.Data.GetData("Fiddler.Session[]");
                 foreach(var fiddlerSession in fiddlerSessions)
                 {
-                    Settings.Redirects.Add(new Model.Redirect() { Url = fiddlerSession.fullUrl, IsEnabled = true, UseMinified = false});
+                    Settings.Redirects.Add(new Model.Redirect() { FromUrl = fiddlerSession.fullUrl, IsEnabled = true, UseMinified = false});
                 }
             }
         }
