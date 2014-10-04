@@ -39,8 +39,7 @@ namespace Fiddler.LocalRedirect.View
         }
 
         private void OnWpfDragEnter(object sender, System.Windows.DragEventArgs e)
-        {
-            // System.Drawing.Bitmap  bmp = new Bitmap()
+        {            
             var rTb = new RenderTargetBitmap(
                 (int)wpfHost.Child.RenderSize.Width, 
                 (int)wpfHost.Child.RenderSize.Height, 
@@ -94,13 +93,17 @@ namespace Fiddler.LocalRedirect.View
             {
                 var fiddlerSessions = (Fiddler.Session[])e.Data.GetData("Fiddler.Session[]") ?? new Fiddler.Session[] { };
                 foreach (var session in fiddlerSessions)
-                    ViewModel.Redirects.Add(new Model.Redirect() { FromUrl = session.fullUrl, ToPort = session.port });
+                {
+                    var redirect = ViewModel.Create();
+                    redirect.FromUrl = session.fullUrl;
+                    ViewModel.Redirects.Add(redirect);
+                }                    
             }
         }
 
         private static unsafe void ChangeColors(Bitmap img)
         {
-            const int noOfChannels = 4;            
+            //const int noOfChannels = 4;            
             BitmapData data = img.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadWrite, img.PixelFormat);
             byte* ptr = (byte*)data.Scan0;
             for (int j = 0; j < data.Height; j++)
@@ -108,7 +111,7 @@ namespace Fiddler.LocalRedirect.View
                 byte* scanPtr = ptr + (j * data.Stride);
                 for (int i = 0; i < data.Stride; i++, scanPtr++)
                 {
-                    *scanPtr = (byte)(*scanPtr *0.95);
+                    *scanPtr = (byte)(*scanPtr *0.92);
                     //if (i % noOfChannels == 4)
                     //{
                     //    *scanPtr = 50;

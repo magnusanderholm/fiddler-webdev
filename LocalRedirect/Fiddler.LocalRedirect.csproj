@@ -60,9 +60,6 @@
     <Compile Include="Model\SettingsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\RedirectViewModel.cs" />
-    <Compile Include="View\LabelEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="View\LocalRedirect.xaml.cs">
       <DependentUpon>LocalRedirect.xaml</DependentUpon>
     </Compile>

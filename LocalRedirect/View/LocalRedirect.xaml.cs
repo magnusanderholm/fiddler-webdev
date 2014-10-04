@@ -25,11 +25,6 @@ namespace Fiddler.LocalRedirect.View
             InitializeComponent();
         }
 
-        public RedirectViewModel ViewModel { get { return DataContext as RedirectViewModel; } }
-
-        private void DataGrid_Drop(object sender, DragEventArgs e)
-        {
-            
-        }
+        public RedirectViewModel ViewModel { get { return DataContext as RedirectViewModel; } }        
     }
 }
