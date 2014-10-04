@@ -23,7 +23,10 @@ namespace Fiddler.LocalRedirect.View
             this.wpfHost.Child.AllowDrop = true;         
             this.AllowDrop = true;
             
-
+            // Below DnD code is a attempt to work around the fact that Fiddler.Session is not serializable 
+            // so it cannot be dnd on top of a WPF control. We therefore briong out a winforms control on dragenter of wpf controls
+            // so we can drop the item on that instead. When DnD operations is done we bring the wpf control to the front again.
+            // The winforms control we show as drop target is simply a ImageBox with the WPF control rendered in the image.
             this.wpfHost.Child.DragEnter += OnWpfDragEnter; // Disable wpf control so dnd events go to winforms instead.
             this.DragEnter += OnWinFormsDragEnter;
             this.DragDrop += OnWinFormsDragDrop;
