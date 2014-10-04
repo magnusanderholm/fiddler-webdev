@@ -22,14 +22,12 @@ namespace Fiddler.LocalRedirect.View
             InitializeComponent();                        
             this.wpfHost.Child.AllowDrop = true;         
             this.AllowDrop = true;
-            // this.lblDropZone.BackColor = Color.FromArgb(150, Color.Red);
+            
+
             this.wpfHost.Child.DragEnter += OnWpfDragEnter; // Disable wpf control so dnd events go to winforms instead.
             this.DragEnter += OnWinFormsDragEnter;
             this.DragDrop += OnWinFormsDragDrop;
-            this.DragLeave += OnWinFormsDragLeave;
-
-            //dropZoneColorInactive = this.wpfHost.BackColor;
-            //dropZoneColorActive = ControlPaint.LightLight(dropZoneColorInactive);
+            this.DragLeave += OnWinFormsDragLeave;            
         }
 
         public RedirectViewModel ViewModel
@@ -66,17 +64,10 @@ namespace Fiddler.LocalRedirect.View
 
         private void OnWinFormsDragEnter(object sender, DragEventArgs e)
         {
-            if (e.AllowedEffect == DragDropEffects.Copy)
-            {
-                e.Effect = DragDropEffects.Copy;
-                //this.wpfHost.BackColor = dropZoneColorActive;
-                // Change background color to something better.
-            }
-            else
-            {
-                wpfHost.BringToFront();
-                //this.wpfHost.BackColor = dropZoneColorInactive;
-            }
+            if (e.AllowedEffect == DragDropEffects.Copy)            
+                e.Effect = DragDropEffects.Copy;                            
+            else           
+                wpfHost.BringToFront();                
         }
 
         private void OnWinFormsDragLeave(object sender, EventArgs e)
@@ -109,19 +100,8 @@ namespace Fiddler.LocalRedirect.View
             for (int j = 0; j < data.Height; j++)
             {
                 byte* scanPtr = ptr + (j * data.Stride);
-                for (int i = 0; i < data.Stride; i++, scanPtr++)
-                {
-                    *scanPtr = (byte)(*scanPtr *0.92);
-                    //if (i % noOfChannels == 4)
-                    //{
-                    //    *scanPtr = 50;
-                    //    continue;
-                    //}
-                    //if (i % noOfChannels != 0)
-                    //{
-                    //    *scanPtr = 0;
-                    //}
-                }
+                for (int i = 0; i < data.Stride; i++, scanPtr++)                
+                    *scanPtr = (byte)(*scanPtr *0.92);                
             }
 
             img.UnlockBits(data);            
