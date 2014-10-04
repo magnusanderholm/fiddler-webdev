@@ -30,21 +30,15 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         view.ViewModel = new Fiddler.LocalRedirect.ViewModel.RedirectViewModel(settingsRepository.Settings);
         oPage.Controls.Add(view);
         oPage.Padding = new Padding(0);
-        view.Dock = DockStyle.Fill;
-        FiddlerApplication.UI.lvSessions.QueryContinueDrag += lvSessions_QueryContinueDrag;
-        FiddlerApplication.UI.tabsViews.TabPages.Add(oPage);
+        view.Dock = DockStyle.Fill;        
+        FiddlerApplication.UI.tabsViews.TabPages.Add(oPage);        
 
         
         settingsRepository.Settings.Redirects.CollectionChanged  += (s, e) => AssingSettingsToRedirectEngine();
         settingsRepository.Settings.Redirects.ItemPropertyChanged += (s, e) => AssingSettingsToRedirectEngine();
-
         AssingSettingsToRedirectEngine();                       
     }
-
-    void lvSessions_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
-    {        
-        int i = 0;
-    }
+    
 
     private void AssingSettingsToRedirectEngine()
     {

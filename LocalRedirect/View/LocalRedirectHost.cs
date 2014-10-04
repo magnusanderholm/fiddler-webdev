@@ -9,23 +9,21 @@ using System.Windows.Forms;
 using Fiddler.LocalRedirect.ViewModel;
 using System.Reflection;
 using System.Windows.Interop;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System.Drawing.Imaging;
 
 namespace Fiddler.LocalRedirect.View
 {
     public partial class LocalRedirectHost : UserControl
-    {        
-
-        private readonly Color dropZoneColorInactive;
-        private readonly Color dropZoneColorActive;
+    {                
         public LocalRedirectHost()
         {
-            InitializeComponent();            
-            
-            
+            InitializeComponent();                        
             this.wpfHost.Child.AllowDrop = true;         
             this.AllowDrop = true;
-
-            this.wpfHost.Child.DragEnter += (s,e) => wpfHost.Visible = false; // Disable wpf control so dnd events go to winforms instead.
+            // this.lblDropZone.BackColor = Color.FromArgb(150, Color.Red);
+            this.wpfHost.Child.DragEnter += OnWpfDragEnter; // Disable wpf control so dnd events go to winforms instead.
             this.DragEnter += OnWinFormsDragEnter;
             this.DragDrop += OnWinFormsDragDrop;
             this.DragLeave += OnWinFormsDragLeave;
@@ -38,7 +36,34 @@ namespace Fiddler.LocalRedirect.View
         {
             get { return localRedirect1.DataContext as RedirectViewModel; }
             set { localRedirect1.DataContext = value; }
-        } 
+        }
+
+        private void OnWpfDragEnter(object sender, System.Windows.DragEventArgs e)
+        {
+            // System.Drawing.Bitmap  bmp = new Bitmap()
+            var rTb = new RenderTargetBitmap(
+                (int)wpfHost.Child.RenderSize.Width, 
+                (int)wpfHost.Child.RenderSize.Height, 
+                96, 
+                96, 
+                PixelFormats.Pbgra32);                        
+            rTb.Render(wpfHost.Child);
+            wpfHost.Child.SnapsToDevicePixels = true;
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(rTb));            
+            using (var mS = new System.IO.MemoryStream())
+            {
+                encoder.Save(mS);
+                mS.Position = 0;
+                var bmp = new Bitmap(mS);
+                ChangeColors(bmp);
+                if (lblDropZone.Image != null)
+                    lblDropZone.Image.Dispose();
+                lblDropZone.Image = bmp;
+            }
+                                                
+            wpfHost.SendToBack();
+        }
 
         private void OnWinFormsDragEnter(object sender, DragEventArgs e)
         {
@@ -50,21 +75,20 @@ namespace Fiddler.LocalRedirect.View
             }
             else
             {
-                wpfHost.Visible = true;
-                this.wpfHost.BackColor = dropZoneColorInactive;
+                wpfHost.BringToFront();
+                //this.wpfHost.BackColor = dropZoneColorInactive;
             }
         }
 
         private void OnWinFormsDragLeave(object sender, EventArgs e)
         {
-            wpfHost.Visible = true;
-            //this.wpfHost.BackColor = dropZoneColorInactive;
+            wpfHost.BringToFront();            
         }
 
         private void OnWinFormsDragDrop(object sender, DragEventArgs e)
         {
             //this.pnlDropZone.Visible = false;
-            wpfHost.Visible = true;
+            wpfHost.BringToFront();  
             //this.wpfHost.BackColor = dropZoneColorInactive;
             if (e.Data.GetFormats().Any(f => f == "Fiddler.Session[]"))
             {
@@ -72,6 +96,32 @@ namespace Fiddler.LocalRedirect.View
                 foreach (var session in fiddlerSessions)
                     ViewModel.Redirects.Add(new Model.Redirect() { FromUrl = session.fullUrl, ToPort = session.port });
             }
+        }
+
+        private static unsafe void ChangeColors(Bitmap img)
+        {
+            const int noOfChannels = 4;            
+            BitmapData data = img.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadWrite, img.PixelFormat);
+            byte* ptr = (byte*)data.Scan0;
+            for (int j = 0; j < data.Height; j++)
+            {
+                byte* scanPtr = ptr + (j * data.Stride);
+                for (int i = 0; i < data.Stride; i++, scanPtr++)
+                {
+                    *scanPtr = (byte)(*scanPtr *0.95);
+                    //if (i % noOfChannels == 4)
+                    //{
+                    //    *scanPtr = 50;
+                    //    continue;
+                    //}
+                    //if (i % noOfChannels != 0)
+                    //{
+                    //    *scanPtr = 0;
+                    //}
+                }
+            }
+
+            img.UnlockBits(data);            
         }
 
                                                         

@@ -13,7 +13,8 @@ namespace Fiddler.LocalRedirect.ViewModel
         {
             Redirects = settings.Redirects;
         }
-
+        
+        // TODO Ensure that we cannot add duplicates!!!! Porably best to put that in the custom ObservableCollection class.
         public ICollection<Redirect> Redirects { get; private set; }
 
 
