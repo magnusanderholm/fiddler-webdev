@@ -9,6 +9,8 @@ namespace Fiddler.LocalRedirect.Model
 {
     public class ObservableItemCollection<T> : ObservableCollection<T> where T:INotifyPropertyChanged
     {
+        // TODO Can we avoid getting duplicates in Add???
+
         protected override void OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)

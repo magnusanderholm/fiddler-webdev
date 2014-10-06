@@ -22,8 +22,7 @@ namespace Fiddler.LocalRedirect.ViewModel
             var redirect = new Model.Redirect();
             var lastRedirect = Redirects.LastOrDefault();
             if (lastRedirect != null)
-            {
-                redirect.ToPort = lastRedirect.ToPort;
+            {                
                 redirect.ToHost = lastRedirect.ToHost;
             }
             return redirect;

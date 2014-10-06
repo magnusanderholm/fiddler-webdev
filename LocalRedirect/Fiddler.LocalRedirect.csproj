@@ -51,11 +51,13 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\HostUtil.cs" />
+    <Compile Include="Model\SessionModifier.cs" />
+    <Compile Include="Model\UrlMatcher.cs" />
     <Compile Include="Plugin\LocaRedirect.cs" />
     <Compile Include="Model\ObservableItemCollection.cs" />
     <Compile Include="Model\SerializerEx.cs" />
     <Compile Include="Model\Redirect.cs" />
-    <Compile Include="Model\RedirectEngine.cs" />
     <Compile Include="Model\Settings.cs" />
     <Compile Include="Model\SettingsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

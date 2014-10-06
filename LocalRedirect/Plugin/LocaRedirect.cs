@@ -8,10 +8,10 @@ using System.Windows.Forms;
 
 
 public class LocalRedirect : Fiddler.IAutoTamper2
-{        
-    private readonly RedirectEngine redirectEngine =  new RedirectEngine();
+{            
     private readonly SettingsRepository settingsRepository = 
         new SettingsRepository(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")));
+    private readonly UrlMatcher urlMatcher = new UrlMatcher();
     
     public LocalRedirect()
     {
@@ -41,37 +41,39 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     
 
     private void AssingSettingsToRedirectEngine()
-    {
-        redirectEngine.Settings = settingsRepository.CopySettings();
+    {        
+        urlMatcher.Settings = settingsRepository.CopySettings();
     }
 
 
     public void OnPeekAtResponseHeaders(Fiddler.Session oSession)
     {
+        urlMatcher.Get(oSession).PeekAtResponseHeaders();        
     }
 
     public void AutoTamperRequestAfter(Fiddler.Session oSession)
-    {        
+    {
+        urlMatcher.Get(oSession).RequestAfter();        
     }
 
     public void AutoTamperRequestBefore(Fiddler.Session oSession)
-    {
-        redirectEngine.TryRedirect(oSession);
+    {        
+        urlMatcher.Get(oSession).RequestBefore();                
     }
 
     public void AutoTamperResponseAfter(Fiddler.Session oSession)
     {
-
+        urlMatcher.Get(oSession).ResponseAfter();        
     }
 
     public void AutoTamperResponseBefore(Fiddler.Session oSession)
     {
-
+        urlMatcher.Get(oSession).ResponseBefore();        
     }
 
     public void OnBeforeReturningError(Fiddler.Session oSession)
     {
-
+        urlMatcher.Get(oSession).BeforeReturningError();        
     }
 }
 
