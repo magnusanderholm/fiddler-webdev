@@ -3,8 +3,9 @@
     using Fiddler.LocalRedirect.Model;
     using System.Xml.Serialization;
     
-    public partial class ChildSetting: ISessionModifier
+    public abstract partial class ChildSetting: ISessionModifier
     {
+        private ObservableItemCollection<ChildSetting> observableChildren;
         public ChildSetting()
         {
         }
@@ -17,6 +18,7 @@
         // Must be set during deserialization.
         [XmlIgnore()]
         public UrlRule Parent { get; set; }
+        
 
         public virtual void PeekAtResponseHeaders(Session session)
         {            

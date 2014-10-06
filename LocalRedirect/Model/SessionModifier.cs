@@ -4,7 +4,7 @@
 
     public class SessionModifier
     {
-        public static readonly SessionModifier Empty = new SessionModifier(null, null);
+        public static readonly SessionModifier Empty = new SessionModifier(null, new ISessionModifier[]{});
 
         public SessionModifier(Fiddler.Session session, IEnumerable<ISessionModifier> modifiers)
         {

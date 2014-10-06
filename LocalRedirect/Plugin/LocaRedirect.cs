@@ -11,7 +11,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
 {            
     private readonly SettingsRepository settingsRepository = 
         new SettingsRepository(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")));
-    private readonly UrlMatcher urlMatcher = new UrlMatcher();
+    private readonly UrlRuleSelector urlMatcher = new UrlRuleSelector();
     
     public LocalRedirect()
     {
@@ -34,9 +34,9 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         FiddlerApplication.UI.tabsViews.TabPages.Add(oPage);        
 
         
-        settingsRepository.Settings.Matches.CollectionChanged  += (s, e) => AssingSettingsToRedirectEngine();
-        settingsRepository.Settings.Matches.ItemPropertyChanged += (s, e) => AssingSettingsToRedirectEngine();
-        AssingSettingsToRedirectEngine();                       
+        //settingsRepository.Settings.Matches.CollectionChanged  += (s, e) => AssingSettingsToRedirectEngine();
+        //settingsRepository.Settings.Matches.ItemPropertyChanged += (s, e) => AssingSettingsToRedirectEngine();
+        //AssingSettingsToRedirectEngine();                       
     }
     
 

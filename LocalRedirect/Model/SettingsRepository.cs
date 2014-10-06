@@ -11,7 +11,7 @@ namespace Fiddler.LocalRedirect.Model
     public class SettingsRepository
     {
         private readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();
-        private readonly Settings settings = new Settings();
+        private readonly Settings settings = Settings.CreateDefault();
         private readonly FileInfo settingsFile;
 
         public SettingsRepository(FileInfo settingsFile)

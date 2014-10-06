@@ -14,7 +14,7 @@
     <xs:complexContent>
       <xs:extension base="Setting" >
         <xs:sequence minOccurs="0" maxOccurs="1">
-          <xs:element name="Children" type="ChildSetting"  minOccurs="1" maxOccurs="unbounded"/>
+          <xs:element name="Children" type="ChildSetting"  minOccurs="1" maxOccurs="unbounded" nillable="false"/>
         </xs:sequence>
         <xs:attribute name="Url"  type="xs:anyURI" use="required" />
       </xs:extension>
@@ -46,18 +46,18 @@
   <xs:complexType name="Redirect">
     <xs:complexContent>
       <xs:extension base="ChildSetting" >
-        <xs:attribute name="ToHost" type="xs:string" use="required" />
+        <xs:attribute name="ToHost" type="xs:string" use="required"  />
         <xs:attribute name="ForceUnminified" type="xs:boolean" use="optional" default="false"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="Settings">
-    <xs:sequence minOccurs="1" maxOccurs="1">
-      <xs:element name="UrlRules" type="UrlRule"  minOccurs="1" maxOccurs="unbounded"/>    
+    <xs:sequence minOccurs="1" maxOccurs="1"  >
+      <xs:element name="UrlRules" type="UrlRule"  minOccurs="0" maxOccurs="unbounded" nillable="false"/>    
     </xs:sequence>
   </xs:complexType>
 
-  <xs:element name="Settings" type="Settings" />
+  <xs:element name="Settings" type="Settings" nillable="false" />
   
 </xs:schema>

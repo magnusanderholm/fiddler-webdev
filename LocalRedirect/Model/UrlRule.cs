@@ -14,6 +14,7 @@
             children.Add(new Redirect(rule, "localhost:80", false));
             children.Add(new HeaderScript(rule));
             children.Add(new BrowserLink(rule));
+            rule.Children = children.ToArray();
             return rule;
         }
 
@@ -26,7 +27,7 @@
                   ? new Uri(Url).Scheme.ToUpper()
                   : "NONE";
             }
-        }
+        }        
 
         public IEnumerator<ChildSetting> GetEnumerator()
         {

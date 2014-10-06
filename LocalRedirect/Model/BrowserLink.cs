@@ -29,6 +29,6 @@
                 // Enable browser link by injecting corresponding scripts. Don't think we need to cache
                 // anything as browserlink reads its config via memory mapped files.
             } 
-        }
+        }        
     }
 }

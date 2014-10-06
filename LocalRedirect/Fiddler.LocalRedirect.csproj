@@ -68,10 +68,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\SettingsRepository.cs" />
-    <Compile Include="Model\UrlMatcher.cs">
+    <Compile Include="Model\UrlRuleSelector.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\UrlRule.cs" />
+    <Compile Include="Plugin\LocaRedirect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\RedirectViewModel.cs" />
     <Compile Include="View\LocalRedirect.xaml.cs">
@@ -92,9 +93,7 @@
       <DependentUpon>LocalRedirectHost.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Plugin\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="View\LocalRedirect.xaml">
       <Generator>MSBuild:Compile</Generator>
