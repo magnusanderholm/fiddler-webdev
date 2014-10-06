@@ -7,15 +7,15 @@ namespace Fiddler.LocalRedirect.Model
 {
     public class SessionModifier
     {
-        public static readonly SessionModifier Empty = new SessionModifier(null, Redirect.Empty);
+        public static readonly SessionModifier Empty = new SessionModifier(null, null);
 
-        public SessionModifier(Fiddler.Session session, Redirect redirect)
+        public SessionModifier(Fiddler.Session session, IEnumerable<SettingBase> settings)
         {
-            Redirect = redirect;
+            Settings = settings;
             Session = session;
         }
 
-        public Redirect Redirect { get; private set; }
+        public IEnumerable<SettingBase> Settings { get; private set; }
 
         public Fiddler.Session Session { get; private set; }
 
@@ -31,29 +31,32 @@ namespace Fiddler.LocalRedirect.Model
 
         public void RequestBefore()
         {
-            if (Redirect.IsEnabled && Redirect.CanRedirect)
+            foreach (var setting in Settings)
             {
-                // Prevent this request from going through an upstream proxy              
-                Session.bypassGateway = true;
-                // override host and port. Host can be IP or name but most likely ip.
-                Session["x-overrideHost"] = Redirect.ToHost.ToString();
-
-                if (!Redirect.ForceUnminified)
+                if (Redirect.IsEnabled && Redirect.CanRedirect)
                 {
-                    Session.url = Session.url.Replace(".min.css", ".css");
-                    Session.url = Session.url.Replace(".min.js", ".js");
+                    // Prevent this request from going through an upstream proxy              
+                    Session.bypassGateway = true;
+                    // override host and port. Host can be IP or name but most likely ip.
+                    Session["x-overrideHost"] = Redirect.ToHost.ToString();
+
+                    if (!Redirect.ForceUnminified)
+                    {
+                        Session.url = Session.url.Replace(".min.css", ".css");
+                        Session.url = Session.url.Replace(".min.js", ".js");
+                    }
+
+                    // We always use http for local redirects since https goes bananas because the certificates are different.             
+                    // its also easier to handle in the iis.
+                    Session.oRequest.headers.UriScheme = "http";
                 }
 
-                // We always use http for local redirects since https goes bananas because the certificates are different.             
-                // its also easier to handle in the iis.
-                Session.oRequest.headers.UriScheme = "http"; 
-            }
-
-            if ((Redirect.IsHeaderScriptEnabled && Redirect.HasHeaderScript) || Redirect.BrowserLinkEnabled)
-            {
-                // In order to be able to inject data in the response we need to buffer it.
-                Session.bBufferResponse = true;
-            }
+                if ((Redirect.IsHeaderScriptEnabled && Redirect.HasHeaderScript) || Redirect.BrowserLinkEnabled)
+                {
+                    // In order to be able to inject data in the response we need to buffer it.
+                    Session.bBufferResponse = true;
+                }
+            }          
         }
 
         public void ResponseAfter()

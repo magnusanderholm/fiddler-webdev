@@ -21,8 +21,8 @@ namespace Fiddler.LocalRedirect.Model
                 SaveSettingsToFile(settingsFile, settings);
             
             this.settings = LoadSettingsFromFile(settingsFile);
-            this.settings.Redirects.CollectionChanged += (s, e) => Persist();
-            this.settings.Redirects.ItemPropertyChanged += (s, e) => Persist();
+            this.settings.Matches.CollectionChanged += (s, e) => Persist();
+            this.settings.Matches.ItemPropertyChanged += (s, e) => Persist();
         }
         
 

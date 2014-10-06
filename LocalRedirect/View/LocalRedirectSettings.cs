@@ -20,7 +20,7 @@ namespace Fiddler.LocalRedirect.View
             set
             {
                 settings = value;
-                dgvRedirects.DataSource = settings.Redirects;
+                dgvRedirects.DataSource = settings.Matches;
             }
         }
 
@@ -46,7 +46,7 @@ namespace Fiddler.LocalRedirect.View
                 var fiddlerSessions = (Fiddler.Session[])e.Data.GetData("Fiddler.Session[]");
                 foreach(var fiddlerSession in fiddlerSessions)
                 {
-                    Settings.Redirects.Add(new Model.Redirect() { FromUrl = fiddlerSession.fullUrl, IsEnabled = true, ForceUnminified = false});
+                    Settings.Matches.Add(new Model.Redirect() { FromUrl = fiddlerSession.fullUrl, IsEnabled = true, ForceUnminified = false});
                 }
             }
         }

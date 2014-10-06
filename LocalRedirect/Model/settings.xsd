@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SettingsSchema"
+    targetNamespace="http://tempuri.org/settings.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/settings.xsd"
+    xmlns:mstns="http://tempuri.org/settings.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:complexType name="Setting" abstract="true" >
+    <xs:attribute name="IsEnabled" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="UrlMatch">
+    <xs:complexContent>
+      <xs:extension base="Setting" >
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element name="Children" type="ChildSetting"  minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="Url"  type="xs:anyURI" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ChildSetting">
+    <xs:complexContent>
+      <xs:extension base="Setting" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HeaderScript">
+    <xs:complexContent>
+      <xs:extension base="ChildSetting" >
+        <xs:attribute name="Path" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="BrowserLink">
+    <xs:complexContent>
+      <xs:extension base="ChildSetting" >
+        <xs:attribute name="Path" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Redirect">
+    <xs:complexContent>
+      <xs:extension base="ChildSetting" >
+        <xs:attribute name="ToHost" type="xs:string" use="required"/>
+        <xs:attribute name="ForceUnminified" type="xs:boolean" use="optional" default="false"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="Settings" type="Setting"  />
+</xs:schema>

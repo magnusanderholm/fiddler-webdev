@@ -54,7 +54,7 @@
                     var sessionUrl = s.fullUrl.ToLower();
 
                     // TODO If Redirects are ordered to begin with we can avoid some overhead here.
-                    var orderedRedirects = settings.Redirects.OrderByDescending(r => r.FromUrl.Length).ToArray();
+                    var orderedRedirects = settings.Matches.OrderByDescending(r => r.FromUrl.Length).ToArray();
                     var bestMatch = orderedRedirects.FirstOrDefault(r => sessionUrl.StartsWith(r.FromUrl));
                     if (bestMatch != null)                    
                         sessionModifier = new SessionModifier(s, bestMatch);

@@ -51,8 +51,11 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\BrowserLink.cs" />
+    <Compile Include="Model\HeaderScript.cs" />
     <Compile Include="Model\HostName.cs" />
     <Compile Include="Model\SessionModifier.cs" />
+    <Compile Include="Model\Setting.cs" />
     <Compile Include="Model\UrlMatcher.cs" />
     <Compile Include="Plugin\LocaRedirect.cs" />
     <Compile Include="Model\ObservableItemCollection.cs" />

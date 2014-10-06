@@ -12,29 +12,29 @@ namespace Fiddler.LocalRedirect.Model
     [DataContract(Name="settings", Namespace="")]
     public class Settings
     {
-        private ObservableItemCollection<Redirect> redirects;
+        private ObservableItemCollection<UrlRule> urlRules;
 
         public Settings()
         {                        
         }                
         
 
-        [DataMember(Name="redirects")]
-        public ObservableItemCollection<Redirect> Redirects
+        [DataMember(Name="urlrules")]
+        public ObservableItemCollection<UrlRule> UrlRules
         {
             get
             {
-                redirects = redirects ?? new ObservableItemCollection<Redirect>();
-                return redirects;
+                urlRules = urlRules ?? new ObservableItemCollection<UrlRule>();
+                return urlRules;
             }
             set
             {
-                var _redirects = Redirects;
-                _redirects.Clear();
+                var _urlRules = UrlRules;
+                _urlRules.Clear();
                 if (value != null)
                 {
                     foreach (var val in value)
-                        _redirects.Add(val);
+                        _urlRules.Add(val);
                 }
             }
         }
