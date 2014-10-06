@@ -112,8 +112,6 @@ namespace Fiddler.LocalRedirect.Config {
         
         private bool isEnabledField;
         
-        private bool isEnabledFieldSpecified;
-        
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public bool IsEnabled {
@@ -123,18 +121,6 @@ namespace Fiddler.LocalRedirect.Config {
             set {
                 this.isEnabledField = value;
                 this.RaisePropertyChanged("IsEnabled");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsEnabledSpecified {
-            get {
-                return this.isEnabledFieldSpecified;
-            }
-            set {
-                this.isEnabledFieldSpecified = value;
-                this.RaisePropertyChanged("IsEnabledSpecified");
             }
         }
         

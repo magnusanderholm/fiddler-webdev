@@ -29,16 +29,16 @@ namespace Fiddler.LocalRedirect.View
 
         private void OnSetHeaderScriptClick(object sender, RoutedEventArgs e)
         {
-            var dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".html";
-            dlg.Filter = "Html (*.html)|*.htm";
-            bool? result = dlg.ShowDialog();
-            if (result != null && result.Value)
-            {
-                var redirect = (Model.Redirect)((System.Windows.FrameworkContentElement)(e.Source)).DataContext;
-                redirect.HeaderScriptPath = dlg.FileName;
-                redirect.IsHeaderScriptEnabled = true;
-            }
+            //var dlg = new Microsoft.Win32.OpenFileDialog();
+            //dlg.DefaultExt = ".html";
+            //dlg.Filter = "Html (*.html)|*.htm";
+            //bool? result = dlg.ShowDialog();
+            //if (result != null && result.Value)
+            //{
+            //    var redirect = (Model.Redirect)((System.Windows.FrameworkContentElement)(e.Source)).DataContext;
+            //    redirect.HeaderScriptPath = dlg.FileName;
+            //    redirect.IsHeaderScriptEnabled = true;
+            //}
         }        
     }
 }

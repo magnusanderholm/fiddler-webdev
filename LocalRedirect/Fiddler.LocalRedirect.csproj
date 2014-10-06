@@ -67,21 +67,39 @@
     <Compile Include="Model\Settings.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\SettingsRepository.cs" />
     <Compile Include="Model\UrlMatcher.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\UrlRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\RedirectViewModel.cs" />
+    <Compile Include="View\LocalRedirect.xaml.cs">
+      <DependentUpon>LocalRedirect.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LocalRedirectHost.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\LocalRedirectHost.Designer.cs">
+      <DependentUpon>LocalRedirectHost.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Model\Config.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\LocalRedirectHost.resx">
+      <DependentUpon>LocalRedirectHost.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugin\" />
-    <Folder Include="ViewModel\" />
-    <Folder Include="View\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="View\LocalRedirect.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

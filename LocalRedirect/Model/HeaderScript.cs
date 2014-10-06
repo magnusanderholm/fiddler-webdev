@@ -8,6 +8,21 @@
     {
         private string headerScriptPath = string.Empty;
 
+        public HeaderScript()
+        {
+        }
+
+        public HeaderScript(UrlRule parent)
+            :base(parent)
+        {
+        }
+
+        public HeaderScript(UrlRule parent, FileInfo fI)
+            : this(parent)
+        {            
+            Path = fI.FullName;
+        }
+
         [XmlIgnore()]
         public bool HasScript
         {

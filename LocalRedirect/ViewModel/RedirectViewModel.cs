@@ -1,4 +1,5 @@
-﻿using Fiddler.LocalRedirect.Model;
+﻿using Fiddler.LocalRedirect.Config;
+using Fiddler.LocalRedirect.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,23 +10,31 @@ namespace Fiddler.LocalRedirect.ViewModel
 {
     public class RedirectViewModel
     {        
+
         public RedirectViewModel(Settings settings)
         {
-            Redirects = settings.Matches;
+            var _col = new ObservableItemCollection<Config.UrlRule>();
+            UrlRules = _col;
+            foreach (var urlRule in settings.UrlRules)
+                UrlRules.Add(urlRule);
+            _col.CollectionChanged += OnCollectionChanged;
+            Settings = settings;
+        }
+
+        public Settings Settings { get; private set; }
+
+        private void OnCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Settings.UrlRules = UrlRules.ToArray();
         }
         
         // TODO Ensure that we cannot add duplicates!!!! Porably best to put that in the custom ObservableCollection class.
-        public ICollection<SettingBase> Redirects { get; private set; }
+        public ICollection<Config.UrlRule> UrlRules { get; private set; }
 
-        public Model.Redirect Create()
+
+        public Config.UrlRule Create()
         {
-            var redirect = new Model.Redirect();
-            var lastRedirect = Redirects.LastOrDefault();
-            if (lastRedirect != null)
-            {                
-                redirect.ToHost = lastRedirect.ToHost;
-            }
-            return redirect;
+            return Config.UrlRule.CreateDefault();
         }
         // TODO Add Clear method for example.
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fiddler.LocalRedirect.Config;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,9 +21,9 @@ namespace Fiddler.LocalRedirect.Model
             if (!settingsFile.Exists) // Ensure we always have a settings file
                 SaveSettingsToFile(settingsFile, settings);
             
-            this.settings = LoadSettingsFromFile(settingsFile);
-            this.settings.Matches.CollectionChanged += (s, e) => Persist();
-            this.settings.Matches.ItemPropertyChanged += (s, e) => Persist();
+            this.settings = LoadSettingsFromFile(settingsFile);            
+            //this.settings.Matches.CollectionChanged += (s, e) => Persist();
+            //this.settings.Matches.ItemPropertyChanged += (s, e) => Persist();
         }
         
 
@@ -40,9 +41,17 @@ namespace Fiddler.LocalRedirect.Model
         
         
         private Settings LoadSettingsFromFile(FileInfo settingsFile)
-        {
+        {            
             using (var s = settingsFile.OpenRead())
-                return settingsSerializer.Deserialize(s);
+            {
+                var settings = settingsSerializer.Deserialize(s);
+                foreach (var urlRule in settings)
+                {
+                    foreach (var child in urlRule)
+                        child.Parent = urlRule;
+                }
+                return settings;
+            }                                        
         }
 
         private void SaveSettingsToFile(FileInfo settingsFile, Settings settings)

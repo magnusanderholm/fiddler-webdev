@@ -4,15 +4,22 @@
     using System.Xml.Serialization;
 
     public partial class Redirect : ChildSetting
-    {
+    {        
+        public Redirect(UrlRule parent, string host, bool forceUnminfied)
+            : base(parent)
+        {            
+            this.ToHost = host;
+            this.ForceUnminified = ForceUnminified;
+        }
+
         [XmlIgnore()]                                           
         public bool CanRedirect
         {
             get 
             { 
                 return 
-                    (UrlRule.Url.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase) ||
-                    UrlRule.Url.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase)) &&
+                    (Parent.Url.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase) ||
+                    Parent.Url.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase)) &&
                     !string.IsNullOrEmpty(ToHost); 
             }
         }

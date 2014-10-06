@@ -2,6 +2,15 @@
 {
     public partial class BrowserLink : ChildSetting
     {
+        public BrowserLink()
+        {
+        }
+
+        public BrowserLink(UrlRule parent)
+            : base(parent)
+        {
+        }
+
         public override void RequestBefore(Session session)
         {
             base.RequestBefore(session);

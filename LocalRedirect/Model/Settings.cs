@@ -1,32 +1,18 @@
 ﻿namespace Fiddler.LocalRedirect.Config
 {
-    public partial class Settings
+    using System.Collections.Generic;
+    using System.Linq;
+    public partial class Settings : IEnumerable<UrlRule>
     {
 
-        // private ObservableItemCollection<UrlRule> urlRules;
+        public IEnumerator<UrlRule> GetEnumerator()
+        {
+            return UrlRules.AsEnumerable().GetEnumerator();
+        }
 
-        public Settings()
-        {                        
-        }                
-        
-        
-        //public ObservableItemCollection<UrlRule> UrlRules
-        //{
-        //    get
-        //    {
-        //        urlRules = urlRules ?? new ObservableItemCollection<UrlRule>();
-        //        return urlRules;
-        //    }
-        //    set
-        //    {
-        //        var _urlRules = UrlRules;
-        //        _urlRules.Clear();
-        //        if (value != null)
-        //        {
-        //            foreach (var val in value)
-        //                _urlRules.Add(val);
-        //        }
-        //    }
-        //}
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

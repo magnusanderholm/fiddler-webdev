@@ -88,9 +88,9 @@ namespace Fiddler.LocalRedirect.View
                 var fiddlerSessions = (Fiddler.Session[])e.Data.GetData("Fiddler.Session[]") ?? new Fiddler.Session[] { };
                 foreach (var session in fiddlerSessions)
                 {
-                    var redirect = ViewModel.Create();
-                    redirect.FromUrl = session.fullUrl;
-                    ViewModel.Redirects.Add(redirect);
+                    var urlRule = ViewModel.Create();
+                    urlRule.Url = session.fullUrl;
+                    ViewModel.UrlRules.Add(urlRule);
                 }                    
             }
         }
