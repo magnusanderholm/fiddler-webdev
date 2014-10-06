@@ -13,6 +13,7 @@
     </UserControl.Resources>
     <Grid>        
         <Grid.RowDefinitions>
+            <!-- TODO Replace this with a TreeView instead???-->
             <!-- TODO Need a toolbar row with export, import, add and delete buttons. -->
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>

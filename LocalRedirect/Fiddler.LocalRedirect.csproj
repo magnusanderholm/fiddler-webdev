@@ -51,7 +51,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\HostUtil.cs" />
+    <Compile Include="Model\HostName.cs" />
     <Compile Include="Model\SessionModifier.cs" />
     <Compile Include="Model\UrlMatcher.cs" />
     <Compile Include="Plugin\LocaRedirect.cs" />

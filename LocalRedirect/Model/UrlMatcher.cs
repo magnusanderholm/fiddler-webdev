@@ -7,6 +7,10 @@
     using System.Text;
     using System.Collections.Concurrent;
 
+
+    // TODO Need to rewrite this
+    //      1. We have a Setting class
+    //      2.    Below the Setting class we have several more settings
     public class UrlMatcher
     {
         private readonly ConcurrentDictionary<Fiddler.Session, SessionModifier> map =
