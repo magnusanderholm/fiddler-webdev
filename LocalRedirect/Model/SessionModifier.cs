@@ -1,88 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System.Collections.Generic;
+
     public class SessionModifier
     {
         public static readonly SessionModifier Empty = new SessionModifier(null, null);
 
-        public SessionModifier(Fiddler.Session session, IEnumerable<SettingBase> settings)
+        public SessionModifier(Fiddler.Session session, IEnumerable<ISessionModifier> modifiers)
         {
-            Settings = settings;
+            Modifiers = modifiers;
             Session = session;
         }
 
-        public IEnumerable<SettingBase> Settings { get; private set; }
+        public IEnumerable<ISessionModifier> Modifiers { get; private set; }
 
         public Fiddler.Session Session { get; private set; }
 
         public void PeekAtResponseHeaders()
         {
-            
+            foreach (var m in Modifiers)
+                m.PeekAtResponseHeaders(Session);
         }
 
         public void RequestAfter()
         {
-            
+            foreach (var m in Modifiers)
+                m.RequestAfter(Session);
         }
 
         public void RequestBefore()
         {
-            foreach (var setting in Settings)
-            {
-                if (Redirect.IsEnabled && Redirect.CanRedirect)
-                {
-                    // Prevent this request from going through an upstream proxy              
-                    Session.bypassGateway = true;
-                    // override host and port. Host can be IP or name but most likely ip.
-                    Session["x-overrideHost"] = Redirect.ToHost.ToString();
-
-                    if (!Redirect.ForceUnminified)
-                    {
-                        Session.url = Session.url.Replace(".min.css", ".css");
-                        Session.url = Session.url.Replace(".min.js", ".js");
-                    }
-
-                    // We always use http for local redirects since https goes bananas because the certificates are different.             
-                    // its also easier to handle in the iis.
-                    Session.oRequest.headers.UriScheme = "http";
-                }
-
-                if ((Redirect.IsHeaderScriptEnabled && Redirect.HasHeaderScript) || Redirect.BrowserLinkEnabled)
-                {
-                    // In order to be able to inject data in the response we need to buffer it.
-                    Session.bBufferResponse = true;
-                }
-            }          
+            foreach (var m in Modifiers)
+                m.RequestBefore(Session);
         }
 
         public void ResponseAfter()
         {
-            
+            foreach (var m in Modifiers)
+                m.ResponseAfter(Session);
         }
 
         public void ResponseBefore()
         {
-            if (Redirect.IsHeaderScriptEnabled && Redirect.HasHeaderScript && Session.oResponse.headers.ExistsAndContains("Content-Type","text/html"))
-            {                 
-                // TODO UseHtmlAgility pack for this
-                Session.utilDecodeResponse();                                    
-                Session.utilReplaceInResponse("</head>", "<!-- Injected by fiddler -->" + Redirect.HeaderScript + "</head>");    
-            }
-
-            if (Redirect.BrowserLinkEnabled)
-            {
-                // Enable browser link by injecting corresponding scripts. Don't think we need to cache
-                // anything as browserlink reads its config via memory mapped files.
-            }      
+            foreach (var m in Modifiers)
+                m.ResponseBefore(Session);
         }
 
         public void BeforeReturningError()
         {
-            
+            foreach (var m in Modifiers)
+                m.BeforeReturningError(Session);
         }
     }
 }

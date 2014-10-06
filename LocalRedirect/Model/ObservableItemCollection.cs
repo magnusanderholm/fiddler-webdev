@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-
-namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+
     public class ObservableItemCollection<T> : ObservableCollection<T> where T:INotifyPropertyChanged
     {
         // TODO Can we avoid getting duplicates in Add???

@@ -1,33 +1,22 @@
-﻿namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Config
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using System.IO;
-    using System.Linq;
-    using System.Runtime.Serialization;
-    using System.Text;
-
-    [DataContract(Name = "headerscript", Namespace = "")]
-    public class HeaderScript : ChildSetting
+    using System.Xml.Serialization;
+    
+    public partial class HeaderScript : ChildSetting
     {
         private string headerScriptPath = string.Empty;
-        
-        [DataMember(Name = "headerscriptpath", IsRequired = true, EmitDefaultValue = true), DefaultValue("")]
-        public string HeaderScriptPath
-        {
-            get { return headerScriptPath; }
-            set { Update(ref headerScriptPath, value ?? string.Empty, "HeaderScriptPath"); }
-        }
-        
+
+        [XmlIgnore()]
         public bool HasScript
         {
             get
-            {
+            {                
                 bool hasHeaderScript = false;
-                if (!string.IsNullOrWhiteSpace(HeaderScriptPath))
+                if (!string.IsNullOrWhiteSpace(Path))
                 {
-                    var headerScriptFile = new FileInfo(HeaderScriptPath);
+                    var headerScriptFile = new FileInfo(Path);
                     hasHeaderScript = headerScriptFile.Exists && headerScriptFile.Length > 0;
                 }
 
@@ -35,14 +24,36 @@
             }
         }
 
+        [XmlIgnore()]
         public string Script
         {
             get
             {
                 // TODO Use cache to reread file at regular intervals instead.
                 return HasScript
-                    ? File.ReadAllText(new FileInfo(HeaderScriptPath).FullName)
+                    ? File.ReadAllText(new FileInfo(Path).FullName)
                     : String.Empty;
+            }
+        }
+
+        public override void RequestBefore(Session session)
+        {
+            base.RequestBefore(session);
+            if (IsEnabled && HasScript)
+            {
+                // In order to be able to inject data in the response we need to buffer it.
+                session.bBufferResponse = true;
+            }
+        }
+
+        public override void ResponseBefore(Session session)
+        {
+            base.ResponseBefore(session);
+            if (IsEnabled && HasScript && session.oResponse.headers.ExistsAndContains("Content-Type", "text/html"))
+            {
+                // TODO UseHtmlAgility pack for this
+                session.utilDecodeResponse();
+                session.utilReplaceInResponse("</head>", "<!-- Injected by fiddler -->" + Script + "</head>");
             }
         }
     }

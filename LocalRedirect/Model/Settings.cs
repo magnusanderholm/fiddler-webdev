@@ -1,42 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Collections.Specialized;
-
-namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Config
 {
-    [DataContract(Name="settings", Namespace="")]
-    public class Settings
+    public partial class Settings
     {
-        private ObservableItemCollection<UrlRule> urlRules;
+
+        // private ObservableItemCollection<UrlRule> urlRules;
 
         public Settings()
         {                        
         }                
         
-
-        [DataMember(Name="urlrules")]
-        public ObservableItemCollection<UrlRule> UrlRules
-        {
-            get
-            {
-                urlRules = urlRules ?? new ObservableItemCollection<UrlRule>();
-                return urlRules;
-            }
-            set
-            {
-                var _urlRules = UrlRules;
-                _urlRules.Clear();
-                if (value != null)
-                {
-                    foreach (var val in value)
-                        _urlRules.Add(val);
-                }
-            }
-        }
+        
+        //public ObservableItemCollection<UrlRule> UrlRules
+        //{
+        //    get
+        //    {
+        //        urlRules = urlRules ?? new ObservableItemCollection<UrlRule>();
+        //        return urlRules;
+        //    }
+        //    set
+        //    {
+        //        var _urlRules = UrlRules;
+        //        _urlRules.Clear();
+        //        if (value != null)
+        //        {
+        //            foreach (var val in value)
+        //                _urlRules.Add(val);
+        //        }
+        //    }
+        //}
     }
 }

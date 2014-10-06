@@ -52,54 +52,53 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\BrowserLink.cs" />
+    <Compile Include="Model\ChildSetting.cs" />
+    <Compile Include="Model\Config.cs">
+      <DependentUpon>Config.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Model\HeaderScript.cs" />
     <Compile Include="Model\HostName.cs" />
+    <Compile Include="Model\ISessionModifier.cs" />
+    <Compile Include="Model\ObservableItemCollection.cs" />
+    <Compile Include="Model\Redirect.cs" />
+    <Compile Include="Model\SerializerEx.cs" />
     <Compile Include="Model\SessionModifier.cs" />
     <Compile Include="Model\Setting.cs" />
-    <Compile Include="Model\UrlMatcher.cs" />
-    <Compile Include="Plugin\LocaRedirect.cs" />
-    <Compile Include="Model\ObservableItemCollection.cs" />
-    <Compile Include="Model\SerializerEx.cs" />
-    <Compile Include="Model\Redirect.cs" />
-    <Compile Include="Model\Settings.cs" />
-    <Compile Include="Model\SettingsRepository.cs" />
+    <Compile Include="Model\Settings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\UrlMatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\UrlRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModel\RedirectViewModel.cs" />
-    <Compile Include="View\LocalRedirect.xaml.cs">
-      <DependentUpon>LocalRedirect.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\LocalRedirectHost.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="View\LocalRedirectHost.Designer.cs">
-      <DependentUpon>LocalRedirectHost.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\LocalRedirectSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="View\LocalRedirectSettings.Designer.cs">
-      <DependentUpon>LocalRedirectSettings.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="View\LocalRedirectHost.resx">
-      <DependentUpon>LocalRedirectHost.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\LocalRedirectSettings.resx">
-      <DependentUpon>LocalRedirectSettings.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="View\LocalRedirect.xaml">
+    <EmbeddedResource Include="Model\Config.xsd">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Plugin\" />
+    <Folder Include="ViewModel\" />
+    <Folder Include="View\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>-->
+       Other similar extension points exist, see Microsoft.Common.targets. -->
+  <Target Name="AutoGenerateFromXsd" BeforeTargets="Build">
+  </Target>
+  <UsingTask TaskName="XSD" AssemblyName="Microsoft.Build.CppTasks.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <Target Name="EnumerateXsdFiles" Outputs="@(XsdFiles)" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <XsdFiles Include="$(MSBuildProjectDirectory)\**\*.xsd" />
+      <XsdGeneratedFiles Include="@(XsdFiles -> '$(MSBuildProjectDirectory)\%(RecursiveDir)\%(Filename).cs')" />
+    </ItemGroup>
+  </Target>
+  <Target Name="BeforeBuild" Inputs="@(XsdFiles)" Outputs="@(XsdGeneratedFiles)">
+    <Message Text="XSD code generation of %(XsdFiles.FullPath)" />
+    <XSD GenerateFromSchema="classes" Namespace="$(RootNamespace).Config" AdditionalOptions="/edb /o:@(XsdFiles -> '$(MSBuildProjectDirectory)\%(RecursiveDir)')" Sources="%(XsdFiles.FullPath)" />
+  </Target>
   <Target Name="AfterBuild">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(USERPROFILE)\Documents\Fiddler2\Scripts\" SkipUnchangedFiles="true" />
   </Target>

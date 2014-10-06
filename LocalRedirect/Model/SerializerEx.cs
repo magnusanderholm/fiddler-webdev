@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Xml;
-
-namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System.IO;
+    using System.Runtime.Serialization;
+    using System.Text;
+    using System.Xml;
+
     public class SerializerEx<T>
     {
         private readonly DataContractSerializer serializer = new DataContractSerializer(typeof(T));

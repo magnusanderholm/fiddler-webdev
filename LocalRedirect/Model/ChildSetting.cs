@@ -1,18 +1,36 @@
-﻿namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Config
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
-    using System.Text;
-
-    [DataContract(Name = "child", Namespace = "")]
-    [KnownType(typeof(BrowserLink))]
-    [KnownType(typeof(HeaderScript))]
-    [KnownType(typeof(Redirect))]        
-    public abstract class ChildSetting : SettingBase
+    using Fiddler.LocalRedirect.Model;
+    using System.Xml.Serialization;
+    
+    public partial class ChildSetting: ISessionModifier
     {
         // Must be set during deserialization.
+        [XmlIgnore()]
         public UrlRule UrlRule { get; set; }
+
+        public virtual void PeekAtResponseHeaders(Session session)
+        {            
+        }
+
+        public virtual void RequestAfter(Session session)
+        {            
+        }
+
+        public virtual void RequestBefore(Session session)
+        {            
+        }
+
+        public virtual void ResponseAfter(Session session)
+        {            
+        }
+
+        public virtual void ResponseBefore(Session session)
+        {         
+        }
+
+        public virtual void BeforeReturningError(Session session)
+        {            
+        }
     }
 }

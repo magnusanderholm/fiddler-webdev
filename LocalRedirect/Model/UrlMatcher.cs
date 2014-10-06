@@ -1,16 +1,10 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
-
+    using Fiddler.LocalRedirect.Config;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Collections.Concurrent;
-
-
-    // TODO Need to rewrite this
-    //      1. We have a Setting class
-    //      2.    Below the Setting class we have several more settings
+    using System.Linq;    
+    
     public class UrlMatcher
     {
         private readonly ConcurrentDictionary<Fiddler.Session, SessionModifier> map =
@@ -54,10 +48,10 @@
                     var sessionUrl = s.fullUrl.ToLower();
 
                     // TODO If Redirects are ordered to begin with we can avoid some overhead here.
-                    var orderedRedirects = settings.Matches.OrderByDescending(r => r.FromUrl.Length).ToArray();
-                    var bestMatch = orderedRedirects.FirstOrDefault(r => sessionUrl.StartsWith(r.FromUrl));
-                    if (bestMatch != null)                    
-                        sessionModifier = new SessionModifier(s, bestMatch);
+                    var orderedRedirects = settings.UrlRules.OrderByDescending(r => r.Url.Length).ToArray();
+                    var bestMatch = orderedRedirects.FirstOrDefault(r => sessionUrl.StartsWith(r.Url));
+                    if (bestMatch != null && bestMatch.Children.Any())                    
+                        sessionModifier = new SessionModifier(s, bestMatch.Children);
                 }
 
                 return sessionModifier; 
