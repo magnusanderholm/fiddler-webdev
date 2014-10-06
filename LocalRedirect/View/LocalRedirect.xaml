@@ -23,33 +23,25 @@
         </DataTemplate>
         
         <DataTemplate DataType="{x:Type config:UrlRule}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <CheckBox Grid.Column="0" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
+            <Grid>                               
                 <TextBox Grid.Column="1" Text="{Binding Path=Url, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" />
             </Grid>            
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type config:BrowserLink}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <CheckBox Grid.Column="0" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
+            <Grid>                                
                 <TextBlock>Enable browser link.</TextBlock>
             </Grid>
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type config:HeaderScript}">
-            <Grid>
+            <Grid>                
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Width"/>
                 </Grid.ColumnDefinitions>
-                <CheckBox Grid.Column="0" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock>Header script.</TextBlock>
+                <TextBlock Grid.Column="0"><Hyperlink Click="OnSetHeaderScriptClick">Select file...</Hyperlink></TextBlock>
+                <TextBlock Grid.Column="1" Text="Path" />
             </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type config:Redirect}">
@@ -57,16 +49,16 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <CheckBox Grid.Column="0" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock>Redirect.</TextBlock>
+                </Grid.ColumnDefinitions>                
+                <TextBlock Grid.Column="0">Host:</TextBlock>
+                <TextBox Grid.Column="1" Text="localhost:80"></TextBox>
             </Grid>
         </DataTemplate>
 
         <HierarchicalDataTemplate x:Key="ChildSettingTemplate"  >
-            <ContentPresenter Content="{Binding}"/>
+            <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource CommonSetting}" />
         </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate x:Key="UrlRuleTemplate" ItemsSource="{Binding}" ItemTemplate="{StaticResource CommonSetting}">
+        <HierarchicalDataTemplate x:Key="UrlRuleTemplate" ItemsSource="{Binding}" ItemTemplate="{StaticResource ChildSettingTemplate}">
             <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource CommonSetting}"/>            
         </HierarchicalDataTemplate>
     </UserControl.Resources>
