@@ -9,8 +9,9 @@ using System.Windows.Forms;
 
 public class LocalRedirect : Fiddler.IAutoTamper2
 {            
-    private readonly SettingsRepository settingsRepository = 
-        new SettingsRepository(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")));
+    //private readonly SettingsRepository settingsRepository = 
+    //    new SettingsRepository(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")));
+    private readonly SettingsRepository settingsRepository = new SettingsRepository();
     private readonly UrlRuleSelector urlMatcher = new UrlRuleSelector();
     
     public LocalRedirect()
@@ -27,16 +28,14 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         var oPage = new TabPage("Redirector");
         oPage.ImageIndex = (int)Fiddler.SessionIcons.Redirect;
         var view = new Fiddler.LocalRedirect.View.LocalRedirectHost();
-        view.ViewModel = new Fiddler.LocalRedirect.ViewModel.RedirectViewModel(settingsRepository.Settings);
+        view.ViewModel = new Fiddler.LocalRedirect.ViewModel.RedirectViewModel(settingsRepository);
         oPage.Controls.Add(view);
         oPage.Padding = new Padding(0);
         view.Dock = DockStyle.Fill;        
-        FiddlerApplication.UI.tabsViews.TabPages.Add(oPage);        
+        FiddlerApplication.UI.tabsViews.TabPages.Add(oPage);
 
-        
-        //settingsRepository.Settings.Matches.CollectionChanged  += (s, e) => AssingSettingsToRedirectEngine();
-        //settingsRepository.Settings.Matches.ItemPropertyChanged += (s, e) => AssingSettingsToRedirectEngine();
-        //AssingSettingsToRedirectEngine();                       
+        settingsRepository.Saved += (s, e) => AssingSettingsToRedirectEngine();        
+        AssingSettingsToRedirectEngine();                       
     }
     
 

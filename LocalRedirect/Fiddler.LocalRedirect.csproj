@@ -54,11 +54,15 @@
     <Compile Include="Model\BrowserLink.cs" />
     <Compile Include="Model\CallerMemberNameAttribute.cs" />
     <Compile Include="Model\ChildSetting.cs" />
+    <Compile Include="Model\CSSCombiner.cs" />
+    <Compile Include="Model\GlobalSettings.cs" />
+    <Compile Include="Model\JavascriptCombiner.cs" />
     <Compile Include="Model\HeaderScript.cs" />
     <Compile Include="Model\HostName.cs" />
     <Compile Include="Model\ISessionModifier.cs" />
     <Compile Include="Model\ObservableItemCollection.cs" />
     <Compile Include="Model\PropertyChanged.cs" />
+    <Compile Include="Model\ForceUnminified.cs" />
     <Compile Include="Model\Redirect.cs" />
     <Compile Include="Model\SerializerEx.cs" />
     <Compile Include="Model\SessionModifier.cs" />
@@ -83,13 +87,16 @@
     <Compile Include="View\LocalRedirectHost.Designer.cs">
       <DependentUpon>LocalRedirectHost.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\VisibilityToBooleanConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="View\LocalRedirectHost.resx">
       <DependentUpon>LocalRedirectHost.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\lock_open.png" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="View\LocalRedirect.xaml">
       <Generator>MSBuild:Compile</Generator>

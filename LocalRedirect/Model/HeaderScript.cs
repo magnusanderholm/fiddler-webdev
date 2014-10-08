@@ -6,7 +6,7 @@
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
-    [DataContract(Name = "redirect", Namespace = "")]
+    [DataContract(Name = "headerscript", Namespace = "")]
     public class HeaderScript : ChildSetting
     {
         private string htmlFragmentPath;

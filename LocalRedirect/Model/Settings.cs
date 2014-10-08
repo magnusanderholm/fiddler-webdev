@@ -9,7 +9,7 @@
     [DataContract(Name = "settings", Namespace = "")]
     public partial class Settings : IEnumerable<UrlRule>
     {
-        private ICollection<UrlRule> urlRules;
+        private ObservableItemCollection<UrlRule> urlRules;
         protected NotifyPropertyChanged pC;
 
         public Settings()
@@ -19,7 +19,7 @@
 
         /// <remarks/>
         [DataMember(Name = "urlrules", IsRequired=false)]
-        public ICollection<UrlRule> UrlRules
+        public ObservableItemCollection<UrlRule> UrlRules
         {
             get { return this.urlRules; }
             set { pC.Update(ref urlRules, value); }

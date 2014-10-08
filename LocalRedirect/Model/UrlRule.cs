@@ -21,8 +21,11 @@
             var rule = new UrlRule();
             var children = new List<ChildSetting>();
             children.Add(new Redirect(rule, "localhost:80", false));
+            children.Add(new ForceUnminified(rule)); 
             children.Add(new HeaderScript(rule));
             children.Add(new BrowserLink(rule));
+            children.Add(new JavascriptCombiner(rule));
+            children.Add(new CSSCombiner(rule));
             rule.Children = children.ToArray();
             return rule;
         }

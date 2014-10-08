@@ -1,8 +1,10 @@
 ﻿namespace Fiddler.LocalRedirect.Config
 {
     using Fiddler.LocalRedirect.Model;
+    using System.Runtime.Serialization;
     using System.Xml.Serialization;
-    
+
+    [DataContract()]
     public abstract class ChildSetting: Setting,  ISessionModifier
     {
         public ChildSetting()

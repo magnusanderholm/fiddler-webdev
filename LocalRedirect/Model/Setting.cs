@@ -8,6 +8,9 @@
     [KnownType(typeof(Redirect))]
     [KnownType(typeof(BrowserLink))]
     [KnownType(typeof(HeaderScript))]
+    [KnownType(typeof(ForceUnminified))]
+    [KnownType(typeof(JavascriptCombiner))]
+    [KnownType(typeof(CSSCombiner))]
     public abstract class Setting  : INotifyPropertyChanged
     {
         private bool isEnabled;

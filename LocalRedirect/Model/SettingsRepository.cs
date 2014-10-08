@@ -12,16 +12,13 @@ namespace Fiddler.LocalRedirect.Model
     {
         private readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();
         private readonly Settings settings = Settings.CreateDefault();
-        private readonly FileInfo settingsFile;
+        // private readonly FileInfo settingsFile;
 
-        public SettingsRepository(FileInfo settingsFile)
+        public SettingsRepository()
         {                       
-            this.settingsFile = settingsFile;
-            
-            if (!settingsFile.Exists) // Ensure we always have a settings file
-                SaveSettingsToFile(settingsFile, settings);
-            
-            this.settings = LoadSettingsFromFile(settingsFile);            
+            // this.settingsFile = settingsFile;
+                                    
+            // this.settings = LoadSettingsFromFile(settingsFile);            
             //this.settings.Matches.CollectionChanged += (s, e) => Persist();
             //this.settings.Matches.ItemPropertyChanged += (s, e) => Persist();
         }
@@ -29,9 +26,29 @@ namespace Fiddler.LocalRedirect.Model
 
         public Settings Settings { get { return settings; } }
 
-        public void Persist()
+        public void Save(FileInfo fI)
         {
-            SaveSettingsToFile(settingsFile, Settings);
+            SaveSettingsToFile(fI, Settings);
+            OnSaved(EventArgs.Empty);
+        }
+
+        public event EventHandler<EventArgs> Saved;
+
+        protected virtual void OnSaved(EventArgs e)
+        {
+            var h = Saved;
+            if (h != null)
+                h(this, e);
+        }
+
+
+        public Settings Open(FileInfo fI)
+        {
+            var newSettings = LoadSettingsFromFile(fI);
+            settings.UrlRules.Clear();
+            foreach (var urlRule in newSettings.UrlRules)
+                settings.UrlRules.Add(urlRule);
+            return settings;
         }
 
         public Settings CopySettings()
@@ -61,6 +78,6 @@ namespace Fiddler.LocalRedirect.Model
                 fS.SetLength(0);
                 settingsSerializer.Serialize(settings, fS);
             }                       
-        }
+        }        
     }
 }

@@ -4,111 +4,155 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:doc="http://schemas.microsoft.com/xps/2005/06/documentstructure"
-             xmlns:config="clr-namespace:Fiddler.LocalRedirect.Config"
+             xmlns:config="clr-namespace:Fiddler.LocalRedirect.Config"             
+             xmlns:view="clr-namespace:Fiddler.LocalRedirect.View"
              mc:Ignorable="d" AllowDrop="True" Height="372.903" Width="477.398">
     <UserControl.Resources>
+        <BitmapImage x:Key="imgHttp" UriSource="/images/lock_open.png" />
+        <BitmapImage x:Key="imgHttps" UriSource="/images/lock_open.png" />
+        
         <Style x:Key="ItemPadding" TargetType="FrameworkElement">
-            <Setter Property="Margin" Value="2,2,0,0" />      
+            <Setter Property="Margin" Value="2,2,0,0" />
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        <DataTemplate x:Key="CommonSetting">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <CheckBox Grid.Column="0" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
-                <ContentPresenter Style="{StaticResource ItemPadding}" Grid.Column="1" Content="{Binding}"/>
-            </Grid>            
-        </DataTemplate>
-        
-        <DataTemplate DataType="{x:Type config:UrlRule}">
-            <Grid>                               
-                <TextBox Grid.Column="1" Text="{Binding Path=Url, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" />
-            </Grid>            
-        </DataTemplate>
-        
+                
+       
         <DataTemplate DataType="{x:Type config:BrowserLink}">
-            <Grid>                                
+            <Grid>
                 <TextBlock>Enable browser link.</TextBlock>
             </Grid>
         </DataTemplate>
-        
+
         <DataTemplate DataType="{x:Type config:HeaderScript}">
-            <Grid>                
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Width"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"><Hyperlink Click="OnSetHeaderScriptClick">Select file...</Hyperlink></TextBlock>
-                <TextBlock Grid.Column="1" Text="Path" />
+                <TextBlock Grid.Column="0"><Hyperlink Click="OnSetHeaderScriptClick">Inject html fragment in head</Hyperlink></TextBlock>
+                <TextBlock Grid.Column="1" Text="{Binding HtmlFragmentPath}" />
             </Grid>
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type config:Redirect}">
-            <Grid>
+            <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>                
-                <TextBlock Grid.Column="0">Host:</TextBlock>
-                <TextBox Grid.Column="1" Text="localhost:80"></TextBox>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Redirect to:"></TextBlock>
+                <TextBox Grid.Column="1" Text="{Binding ToHost, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </Grid>
         </DataTemplate>
 
-        <HierarchicalDataTemplate x:Key="ChildSettingTemplate"  >
-            <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource CommonSetting}" />
-        </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate x:Key="UrlRuleTemplate" ItemsSource="{Binding}" ItemTemplate="{StaticResource ChildSettingTemplate}">
-            <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource CommonSetting}"/>            
-        </HierarchicalDataTemplate>
+        <DataTemplate DataType="{x:Type config:ForceUnminified}">
+            <Grid>                
+                <TextBlock Text="Force unminfied js and css."></TextBlock>                
+            </Grid>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type config:JavascriptCombiner}">
+            <Grid>
+                <TextBlock Text="Concatenate all javascript and put in header."></TextBlock>
+                <!-- TODO Checkbox indicating wether the element shall be async or not-->
+            </Grid>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type config:CSSCombiner}">
+            <Grid>
+                <TextBlock Text="Concatenate all css and put in header."></TextBlock>
+                <!-- TODO Checkbox indicating wether the element shall be async or not-->
+            </Grid>
+        </DataTemplate>
+
+        
     </UserControl.Resources>
-    <Grid>        
+    <Grid>
         <Grid.RowDefinitions>
             <!-- TODO Replace this with a TreeView instead???-->
             <!-- TODO Need a toolbar row with export, import, add and delete buttons. -->
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>            
         </Grid.RowDefinitions>
-        <TreeView Grid.Row="0" x:Name="myTreeView" ItemsSource="{Binding UrlRules}" ItemTemplate="{StaticResource UrlRuleTemplate}"  />
-        <!--<DataGrid Grid.Row="0" ItemsSource="{Binding UrlRules}" CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False"  Grid.RowSpan="2" AllowDrop="True" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" HorizontalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" GridLinesVisibility="Horizontal" >
-            <DataGrid.Columns>                
-                --><!-- TODO Colorize http part??? Could even have own column for it that is colorized??? Then we can use a 
-                     combobox to set protocol as well.. Probably a lot nicer.--><!--
-                <DataGridTextColumn Header="Scheme" Binding="{Binding Scheme}" Width="Auto"/>
-                <DataGridTextColumn Header="From url" Binding="{Binding Url}" Width="*"/>                
+        <ToolBarTray>
+            <ToolBar>
+                <Button Content="Open.." Click="OnBtnOpenClick"/>
+                <Button Content="Save.." Click="OnBtnSaveClick"/>
+            </ToolBar>
+            <ToolBar>
+                <Button Content="Add.." Click="OnBtnAddClick"/>
+            </ToolBar>
+        </ToolBarTray>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding UrlRules}" CanUserAddRows="False" CanUserDeleteRows="True" AutoGenerateColumns="False"  Grid.RowSpan="2" AllowDrop="True" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" HorizontalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" GridLinesVisibility="Horizontal" >
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                    <Setter Property="FontStyle" Value="Oblique" />                    
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ToggleButton 
+                            Name="ShowDetails" 
+                            IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, 
+                            Path=DetailsVisibility, 
+                            Converter={view:VisibilityToBooleanConverter}, 
+                            Mode=TwoWay}"  Margin="4" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn CanUserSort="True" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Width="16" Height="16">
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Scheme, UpdateSourceTrigger=PropertyChanged}" Value="HTTP">
+                                                <Setter Property="Source" Value="{StaticResource imgHttps}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Scheme, UpdateSourceTrigger=PropertyChanged}" Value="HTTPS">
+                                                <Setter Property="Source" Value="{StaticResource imgHttp}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="E" CanUserSort="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <!-- TODO Remake Scheme column into a icon column. PadLock for https url's. Probably put it before the enabled button. -->                
+                <DataGridTextColumn Header="From url" Binding="{Binding Url}" Width="*"/>
             </DataGrid.Columns>
-            --><!--<DataGrid.RowDetailsTemplate>
-                <DataTemplate>
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <CheckBox Grid.Column="0" Grid.Row="0" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock Grid.Column="1" Grid.Row="0" Style="{StaticResource ItemPadding}">Redirect to:</TextBlock>
-                        <TextBox Grid.Column="2" Grid.Row="0" Style="{StaticResource ItemPadding}" Text="{Binding ToHost, UpdateSourceTrigger=PropertyChanged}"/>
-
-                        <CheckBox Grid.Column="0" Grid.Row="1" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=ForceUnminified, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock Grid.Column="1" Grid.Row="1" Style="{StaticResource ItemPadding}">Force unminified</TextBlock>
-
-                        
-                        <CheckBox Grid.Column="0" Grid.Row="2" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=BrowserLinkEnabled, UpdateSourceTrigger=PropertyChanged}"  />
-                        <TextBlock Grid.Column="1" Grid.Row="2" Style="{StaticResource ItemPadding}">Enable browser link</TextBlock>
-
-                        <CheckBox Grid.Column="0" Grid.Row="3" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=IsHeaderScriptEnabled, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock Grid.Column="1" Grid.Row="3" Style="{StaticResource ItemPadding}"><Hyperlink Click="OnSetHeaderScriptClick">Header script...</Hyperlink></TextBlock>
-                        <TextBlock Grid.Column="2" Grid.Row="3" Style="{StaticResource ItemPadding}" Text="{Binding HeaderScriptPath}" ></TextBlock>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>                    
+                    <Grid Margin="40,0,0,0">                        
+                        <ListView ItemsSource="{Binding Children}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
+                                        <ContentPresenter Style="{StaticResource ItemPadding}" Grid.Column="1" Content="{Binding}"/>
+                                    </Grid>                                    
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>                                                          
                     </Grid>
                 </DataTemplate>
-            </DataGrid.RowDetailsTemplate>--><!--
-        </DataGrid>-->
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
     </Grid>
 </UserControl>
