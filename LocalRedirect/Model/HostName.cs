@@ -31,5 +31,10 @@
 
             return string.Compare(this.Name, hostName.Name, true) == 0;
         }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
     }
 }

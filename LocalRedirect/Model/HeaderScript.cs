@@ -1,52 +1,62 @@
 ﻿namespace Fiddler.LocalRedirect.Config
 {
     using System;
+    using System.ComponentModel;
     using System.IO;
+    using System.Runtime.Serialization;
     using System.Xml.Serialization;
-    
-    public partial class HeaderScript : ChildSetting
+
+    [DataContract(Name = "redirect", Namespace = "")]
+    public class HeaderScript : ChildSetting
     {
-        private string headerScriptPath = string.Empty;
+        private string htmlFragmentPath;
 
         public HeaderScript()
         {
+            Initialize();            
         }
 
         public HeaderScript(UrlRule parent)
             :base(parent)
         {
+            htmlFragmentPath = string.Empty;
         }
 
         public HeaderScript(UrlRule parent, FileInfo fI)
             : this(parent)
-        {            
-            Path = fI.FullName;
+        {                        
+            htmlFragmentPath = fI.FullName;
         }
 
-        [XmlIgnore()]
+        [DataMember(Name = "htmlfragmentpath", IsRequired = false), DefaultValue("")]
+        public string HtmlFragmentPath
+        {
+            get { return this.htmlFragmentPath; }
+            set { pC.Update(ref htmlFragmentPath, value).Extra("HasScript", "HtmlFragment"); }
+        }
+        
         public bool HasScript
         {
             get
             {                
                 bool hasHeaderScript = false;
-                if (!string.IsNullOrWhiteSpace(Path))
+                if (!string.IsNullOrWhiteSpace(HtmlFragmentPath))
                 {
-                    var headerScriptFile = new FileInfo(Path);
+                    var headerScriptFile = new FileInfo(HtmlFragmentPath);
                     hasHeaderScript = headerScriptFile.Exists && headerScriptFile.Length > 0;
                 }
 
                 return hasHeaderScript;
             }
         }
-
-        [XmlIgnore()]
-        public string Script
+        
+        public string HtmlFragment
         {
             get
             {
                 // TODO Use cache to reread file at regular intervals instead.
                 return HasScript
-                    ? File.ReadAllText(new FileInfo(Path).FullName)
+                    ? File.ReadAllText(new FileInfo(HtmlFragmentPath).FullName)
                     : String.Empty;
             }
         }
@@ -68,8 +78,19 @@
             {
                 // TODO UseHtmlAgility pack for this
                 session.utilDecodeResponse();
-                session.utilReplaceInResponse("</head>", "<!-- Injected by fiddler -->" + Script + "</head>");
+                session.utilReplaceInResponse("</head>", "<!-- Injected by fiddler -->" + HtmlFragment + "</head>");
             }
+        }
+
+        private void Initialize()
+        {
+            htmlFragmentPath = string.Empty;            
+        }
+
+        [OnDeserializing]
+        private void DeserializationInitializer(StreamingContext ctx)
+        {
+            this.Initialize();
         }
     }
 }

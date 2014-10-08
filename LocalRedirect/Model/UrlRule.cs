@@ -1,12 +1,21 @@
 ﻿namespace Fiddler.LocalRedirect.Config
 {
+    using Fiddler.LocalRedirect.Model;
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
     using System.Linq;
+    using System.Runtime.Serialization;
 
-    public partial class UrlRule : IEnumerable<ChildSetting>
+    [DataContract(Name = "urlrule", Namespace = "")]
+    public class UrlRule : Setting, IEnumerable<ChildSetting>
     {
+        private ICollection<ChildSetting> children;
+        private string url;
+
+        public UrlRule()
+        {
+            Initialize();
+        }
         public static UrlRule CreateDefault()
         {
             var rule = new UrlRule();
@@ -18,7 +27,19 @@
             return rule;
         }
 
-        [XmlIgnore()]
+        [DataMember(Name = "children", IsRequired = true)]
+        public ICollection<ChildSetting> Children {
+            get { return this.children;}
+            set { pC.Update(ref children, value);}
+        }
+
+        [DataMember(Name = "url", IsRequired = true)]
+        public string Url {
+            get { return this.url;}
+            set { pC.Update(ref url, value).Extra("Scheme");}
+        }
+
+        
         public string Scheme
         {
             get
@@ -37,6 +58,18 @@
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        private void Initialize()
+        {
+            url = "";
+            children = new ObservableItemCollection<ChildSetting>();
+        }
+
+        [OnDeserializing]
+        private void DeserializationInitializer(StreamingContext ctx)
+        {
+            this.Initialize();
         }
     }
 }

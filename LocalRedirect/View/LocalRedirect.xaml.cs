@@ -36,7 +36,7 @@ namespace Fiddler.LocalRedirect.View
             if (result != null && result.Value)
             {
                 var headerScript = (Config.HeaderScript)((System.Windows.FrameworkContentElement)(e.Source)).DataContext;
-                headerScript.Path = dlg.FileName;
+                headerScript.HtmlFragmentPath = dlg.FileName;
                 headerScript.IsEnabled = true;
             }
         }        

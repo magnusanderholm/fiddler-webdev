@@ -1,14 +1,28 @@
-﻿namespace Fiddler.LocalRedirect.Config
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
+namespace Fiddler.LocalRedirect.Config
 {
-    public partial class BrowserLink : ChildSetting
+    [DataContract(Name = "browserlink", Namespace = "")]
+    public class BrowserLink : ChildSetting
     {
+        private string visualStudioProjectPath;
+        
         public BrowserLink()
         {
+            Initialize();
         }
 
         public BrowserLink(UrlRule parent)
             : base(parent)
         {
+            Initialize();
+        }
+
+        [DataMember(Name = "visualstudioprojectpath", IsRequired = false), DefaultValue("")]
+        public string VisualStudioProjectPath
+        {
+            get { return this.visualStudioProjectPath; }
+            set { pC.Update(ref visualStudioProjectPath, value); }
         }
 
         public override void RequestBefore(Session session)
@@ -30,5 +44,16 @@
                 // anything as browserlink reads its config via memory mapped files.
             } 
         }        
+
+        private void Initialize()
+        {
+            visualStudioProjectPath = "";
+        }
+
+        [OnDeserializing]
+        private void DeserializationInitializer(StreamingContext ctx)
+        {
+            this.Initialize();
+        }
     }
 }
