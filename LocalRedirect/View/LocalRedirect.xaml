@@ -13,59 +13,86 @@
         <Style x:Key="ItemPadding" TargetType="FrameworkElement">
             <Setter Property="Margin" Value="2,2,2,2" />
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
+
+        <Style x:Key="SettingStyle" TargetType="FrameworkElement">
+            <Setter Property="Margin" Value="2,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>        
 
 
         <DataTemplate DataType="{x:Type config:BrowserLink}">
-            <Grid>
-                <TextBlock>Enable browser link.</TextBlock>
+            <Grid >                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource SettingStyle}" >Enable browser link.</TextBlock>
             </Grid>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type config:HeaderScript}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"><Hyperlink Click="OnSetHeaderScriptClick">Inject html fragment in head</Hyperlink></TextBlock>
-                <TextBlock Grid.Column="1" Text="{Binding HtmlFragmentPath}" />
+                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0"><Hyperlink Click="OnSetHeaderScriptClick">Inject in head</Hyperlink></TextBlock>
+                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="1" Text="{Binding HtmlFragmentPath}" />
             </Grid>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type config:Redirect}">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Redirect to:"></TextBlock>
-                <TextBox Grid.Column="1" Text="{Binding ToHost, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0" Text="Redirect to:"></TextBlock>
+                <TextBox  Style="{StaticResource SettingStyle}" Grid.Column="1" Text="{Binding ToHost, UpdateSourceTrigger=PropertyChanged}" Width="300" ></TextBox>
             </Grid>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type config:ForceUnminified}">
             <Grid>
-                <TextBlock Text="Force unminfied js and css."></TextBlock>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource SettingStyle}" Text="Force unmin .js/.css"></TextBlock>
             </Grid>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type config:ForceSharepointDebugJavascript}">
             <Grid>
-                <TextBlock Text="Force Sharepoint .debug.js"></TextBlock>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource SettingStyle}" Text="Force SP .debug.js"></TextBlock>
             </Grid>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type config:JavascriptCombiner}">
             <Grid>
-                <TextBlock Text="Concatenate all javascript and put in header."></TextBlock>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource SettingStyle}" Text="Combine Js to head."></TextBlock>
                 <!-- TODO Checkbox indicating wether the element shall be async or not-->
             </Grid>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type config:CSSCombiner}">
             <Grid>
-                <TextBlock Text="Concatenate all css and put in header."></TextBlock>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource SettingStyle}" Text="Combine css to head."></TextBlock>
                 <!-- TODO Checkbox indicating wether the element shall be async or not-->
             </Grid>
         </DataTemplate>
@@ -88,11 +115,13 @@
             </ToolBar>
         </ToolBarTray>
         <DataGrid Grid.Row="1" ItemsSource="{Binding UrlRules}" CanUserAddRows="False" CanUserDeleteRows="True" AutoGenerateColumns="False"  Grid.RowSpan="2" AllowDrop="True" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" HorizontalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" GridLinesVisibility="Horizontal"  RowDetailsVisibilityMode="Collapsed">
-            <!--<DataGrid.RowStyle>
+            <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
-                    <Setter Property="FontStyle" Value="Oblique" />
+                    <!--<Setter Property="FontStyle" Value="Oblique" />-->
+                    <Setter Property="Background" Value="{StaticResource {x:Static SystemColors.MenuBrushKey}}" />
+                    <!--<Setter Property="FontWeight" Value="Bold" />-->
                 </Style>
-            </DataGrid.RowStyle>-->
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTemplateColumn IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
@@ -116,7 +145,7 @@
                 <DataGridTemplateColumn CanUserSort="False" Width="Auto" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Stretch="Uniform">
+                            <Image Stretch="Uniform" Width="12" Height="12">
                                 <Image.Style>
                                     <Style TargetType="{x:Type Image}">
                                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -138,17 +167,17 @@
                 <DataGridTemplateColumn Header="E" CanUserSort="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ItemPadding}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="From url" Binding="{Binding Url}" Width="*"/>
+                <DataGridTextColumn Header="From url" Binding="{Binding Url, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <Grid Margin="40,0,0,0">
-                        <ListView ItemsSource="{Binding Children}" BorderThickness="0" SelectionMode="Single">
+                    <Grid Margin="39.5,0,0,0" Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"  >
+                        <ListView ItemsSource="{Binding Children}" BorderThickness="0" SelectionMode="Single" FontWeight="Normal" Grid.IsSharedSizeScope="True">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -166,6 +195,5 @@
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
-        <Image Grid.Row="2" Source="{StaticResource imgHttps}" Width="16" Height="16" />
     </Grid>
 </UserControl>
