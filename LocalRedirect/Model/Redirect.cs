@@ -58,7 +58,7 @@
         public override void RequestBefore(Session session)
         {
             base.RequestBefore(session);
-            if (IsEnabled && CanRedirect)
+            if (Parent.IsEnabled && IsEnabled && CanRedirect)
             {
                 // Prevent this request from going through an upstream proxy              
                 session.bypassGateway = true;

@@ -28,7 +28,7 @@ namespace Fiddler.LocalRedirect.Config
         public override void RequestBefore(Session session)
         {
             base.RequestBefore(session);
-            if (IsEnabled /*&& this.HasScript*/)
+            if (Parent.IsEnabled && IsEnabled /*&& this.HasScript*/)
             {
                 // In order to be able to inject data in the response we need to buffer it.
                 session.bBufferResponse = true;

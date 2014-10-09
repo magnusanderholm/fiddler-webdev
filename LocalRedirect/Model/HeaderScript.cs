@@ -74,7 +74,7 @@
         public override void ResponseBefore(Session session)
         {
             base.ResponseBefore(session);
-            if (IsEnabled && HasScript && session.oResponse.headers.ExistsAndContains("Content-Type", "text/html"))
+            if (Parent.IsEnabled && IsEnabled && HasScript && session.oResponse.headers.ExistsAndContains("Content-Type", "text/html"))
             {
                 // TODO UseHtmlAgility pack for this
                 session.utilDecodeResponse();
