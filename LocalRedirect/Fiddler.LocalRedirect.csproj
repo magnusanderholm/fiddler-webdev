@@ -63,7 +63,7 @@
     <Compile Include="Model\HostName.cs" />
     <Compile Include="Model\ISessionModifier.cs" />
     <Compile Include="Model\ObservableItemCollection.cs" />
-    <Compile Include="Model\PropertyChanged.cs" />
+    <Compile Include="Model\NotifyPropertyChanged.cs" />
     <Compile Include="Model\ForceUnminified.cs" />
     <Compile Include="Model\Redirect.cs" />
     <Compile Include="Model\SerializerEx.cs" />

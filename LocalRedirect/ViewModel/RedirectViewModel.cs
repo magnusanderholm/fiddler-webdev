@@ -26,7 +26,7 @@ namespace Fiddler.LocalRedirect.ViewModel
 
         public Config.UrlRule Create()
         {
-            return Config.UrlRule.CreateDefault();
+            return SettingsRepository.Settings.CreateUrlRule();
         }
 
         public FileInfo CurrentSettingsFile { get;set; }

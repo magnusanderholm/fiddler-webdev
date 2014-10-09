@@ -47,29 +47,19 @@ namespace Fiddler.LocalRedirect.Model
             var newSettings = LoadSettingsFromFile(fI);
             settings.UrlRules.Clear();
             foreach (var urlRule in newSettings.UrlRules)
+            {
+                urlRule.Parent = settings;
                 settings.UrlRules.Add(urlRule);
+            }
+
             this.OnChanged(EventArgs.Empty);
             return settings;
-        }
-
-        public Settings CopySettings()
-        {
-            return settingsSerializer.DeepCopy(settings);
-        }
-        
-        
+        }        
+                
         private Settings LoadSettingsFromFile(FileInfo settingsFile)
         {            
-            using (var s = settingsFile.OpenRead())
-            {
-                var settings = settingsSerializer.Deserialize(s);
-                foreach (var urlRule in settings)
-                {
-                    foreach (var child in urlRule)
-                        child.Parent = urlRule;
-                }
-                return settings;
-            }                                        
+            using (var s = settingsFile.OpenRead())            
+                return settingsSerializer.Deserialize(s);
         }
 
         private void SaveSettingsToFile(FileInfo settingsFile, Settings settings)

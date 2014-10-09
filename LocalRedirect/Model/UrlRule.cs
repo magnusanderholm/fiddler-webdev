@@ -3,36 +3,43 @@
     using Fiddler.LocalRedirect.Model;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Runtime.Serialization;
 
     [DataContract(Name = "urlrule", Namespace = "")]
     public class UrlRule : Setting, IEnumerable<ChildSetting>
     {
-        private ICollection<ChildSetting> children;
+        private ObservableCollection<ChildSetting> children;
         private string url;
+        private Settings parent;
 
         public UrlRule()
+            : this(null)
+        {         
+        }
+
+        public UrlRule(Settings settings)
+            : base()
         {
             Initialize();
+            Parent = settings;
         }
-        public static UrlRule CreateDefault()
+        
+        public Settings Parent
         {
-            var rule = new UrlRule();
-            var children = new List<ChildSetting>();
-            children.Add(new Redirect(rule, "localhost:80", false));
-            children.Add(new ForceUnminified(rule));
-            children.Add(new ForceSharepointDebugJavascript(rule));             
-            children.Add(new HeaderScript(rule));
-            children.Add(new BrowserLink(rule));
-            children.Add(new JavascriptCombiner(rule));
-            children.Add(new CSSCombiner(rule));
-            rule.Children = children.ToArray();
-            return rule;
+            get { return parent; }
+            set
+            {
+                pC.Update(ref parent, value);
+                pC.Parent = parent != null
+                 ? parent.pC
+                 : null;
+            }
         }
 
         [DataMember(Name = "children", IsRequired = true)]
-        public ICollection<ChildSetting> Children {
+        public ObservableCollection<ChildSetting> Children {
             get { return this.children;}
             set { pC.Update(ref children, value);}
         }
@@ -68,12 +75,20 @@
         {
             url = "";
             children = new ObservableItemCollection<ChildSetting>();
+            pC.Register(children);
         }
 
         [OnDeserializing]
-        private void DeserializationInitializer(StreamingContext ctx)
+        private void OnDeserializing(StreamingContext ctx)
         {
             this.Initialize();
+        }
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext ctx)
+        {
+            foreach (var c in children)
+                c.Parent = this;
         }
     }
 }

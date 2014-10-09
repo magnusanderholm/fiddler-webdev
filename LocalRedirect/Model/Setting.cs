@@ -15,13 +15,14 @@
     public abstract class Setting  : INotifyPropertyChanged
     {
         private bool isEnabled;
-        protected NotifyPropertyChanged pC;
+        public NotifyPropertyChanged pC;
         
         public Setting()
         {
             Initialize();
         }
 
+        
         /// <remarks/>
         [DataMember(Name = "isenabled", IsRequired = false), DefaultValue(false)]
         public bool IsEnabled
@@ -46,9 +47,16 @@
         }
 
         [OnDeserializing]
-        private void DeserializationInitializer(StreamingContext ctx)
+        private void OnDeserializing(StreamingContext ctx)
         {
             this.Initialize();
+            this.pC.Enabled = false;            
+        }
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext ctx)
+        {
+            this.pC.Enabled = true;
         }
     }
 }

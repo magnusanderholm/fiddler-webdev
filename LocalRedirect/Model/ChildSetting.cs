@@ -7,19 +7,34 @@
     [DataContract()]
     public abstract class ChildSetting: Setting,  ISessionModifier
     {
+        private UrlRule parent;
         public ChildSetting()
-        {
+            : this(null)
+        {         
         }
 
         public ChildSetting(UrlRule parent)
+            : base()
         {
             Parent = parent;
         }
-
-        // Must be set during deserialization.
-        // TODO Set in a OnDeserialize method if possible
-        public UrlRule Parent { get; set; }
         
+        // TODO Hook in the point our pC.Parent = Parent.pC so parent is autmatically aware
+        //      of changes in child. If we also register 
+        public UrlRule Parent 
+        {
+            get { return parent; }
+            set
+            {
+                pC.Update(ref parent, value);
+                pC.Parent = parent != null
+                    ? parent.pC
+                    : null;
+            }
+        }
+        
+
+
 
         public virtual void PeekAtResponseHeaders(Session session)
         {            

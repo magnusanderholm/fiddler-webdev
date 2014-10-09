@@ -34,7 +34,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         view.Dock = DockStyle.Fill;        
         FiddlerApplication.UI.tabsViews.TabPages.Add(oPage);
 
-        settingsRepository.Changed += (s, e) => urlMatcher.AssignSettings(settingsRepository.Settings);
+        settingsRepository.Settings.pC.Changed += (s, e) => urlMatcher.AssignSettings(settingsRepository.Settings);
         urlMatcher.AssignSettings(settingsRepository.Settings);
     }        
 
