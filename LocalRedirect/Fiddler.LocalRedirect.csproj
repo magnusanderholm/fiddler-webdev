@@ -55,6 +55,8 @@
     <Compile Include="Model\CallerMemberNameAttribute.cs" />
     <Compile Include="Model\ChildSetting.cs" />
     <Compile Include="Model\CSSCombiner.cs" />
+    <Compile Include="Model\ForceSharepointDebugJavascript.cs" />
+    <Compile Include="Model\UrlFileReplace.cs" />
     <Compile Include="Model\GlobalSettings.cs" />
     <Compile Include="Model\JavascriptCombiner.cs" />
     <Compile Include="Model\HeaderScript.cs" />

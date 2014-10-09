@@ -3,52 +3,51 @@
     using Fiddler.LocalRedirect.Config;
     using System;
     using System.Collections.Concurrent;
-    using System.Linq;    
+    using System.Linq;
+    using System.Threading;    
     
     public class UrlRuleSelector
     {
+        // TODO Can probably replace with a thread storage dictionary instead to avoid locking.
         private readonly ConcurrentDictionary<Fiddler.Session, SessionModifier> map =
             new ConcurrentDictionary<Session, SessionModifier>();
 
+        private static readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();
+        private Settings settings = null;
+
         public UrlRuleSelector()
         {
+        }                
+
+        public void AssignSettings(Settings settings)
+        {            
+            lock (settingsSerializer)
+            {
+                var settingsCopy = settingsSerializer.DeepCopy(settings);
+                this.settings = settingsCopy;                
+            }            
         }
-
-
-        private Settings settings;
-        private object _lock = new object();
-
-        public Settings Settings
-        {
-            get
-            {
-                lock (_lock)
-                    return settings;
-
-            }
-
-            set
-            {
-                lock (_lock)
-                    settings = value;
-            }
-
-        }        
-        
+                        
         public SessionModifier Get(Session oSession)
         {            
+            // Method will be called from many threads so all accessed data must be thredsafe.
+            // we therefore get the local copy of the current settings. 
+            Settings _settings = null;
+            lock (settingsSerializer)            
+                _settings = settings;                        
+
             var redirect = map.GetOrAdd(oSession, s => 
             {
                 oSession.OnCompleteTransaction += OnCompleteTransaction;
                 var sessionModifier = SessionModifier.Empty;
-                if (Settings != null && !s.HTTPMethodIs("CONNECT"))
+                
+                if (_settings != null && !s.HTTPMethodIs("CONNECT"))
                 {
-                    // Find best matching redirect rule (ie the one that is longest and matches the url in oSession). 
-                    var settings = Settings;
+                    // Find best matching redirect rule (ie the one that is longest and matches the url in oSession).                     
                     var sessionUrl = s.fullUrl.ToLower();
 
                     // TODO If Redirects are ordered to begin with we can avoid some overhead here.
-                    var orderedRedirects = settings.UrlRules.OrderByDescending(r => r.Url.Length).ToArray();
+                    var orderedRedirects = _settings.UrlRules.OrderByDescending(r => r.Url.Length).ToArray();
                     var bestMatch = orderedRedirects.FirstOrDefault(r => sessionUrl.StartsWith(r.Url));
                     if (bestMatch != null && bestMatch.Children.Any())                    
                         sessionModifier = new SessionModifier(s, bestMatch.Children);

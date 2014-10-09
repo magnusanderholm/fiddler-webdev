@@ -9,14 +9,14 @@
              mc:Ignorable="d" AllowDrop="True" Height="372.903" Width="477.398">
     <UserControl.Resources>
         <BitmapImage x:Key="imgHttp" UriSource="/images/lock_open.png" />
-        <BitmapImage x:Key="imgHttps" UriSource="/images/lock_open.png" />
-        
+        <BitmapImage x:Key="imgHttps" UriSource="images/lock_open.png" />
+
         <Style x:Key="ItemPadding" TargetType="FrameworkElement">
-            <Setter Property="Margin" Value="2,2,0,0" />
+            <Setter Property="Margin" Value="2,2,2,2" />
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-                
-       
+
+
         <DataTemplate DataType="{x:Type config:BrowserLink}">
             <Grid>
                 <TextBlock>Enable browser link.</TextBlock>
@@ -33,7 +33,7 @@
                 <TextBlock Grid.Column="1" Text="{Binding HtmlFragmentPath}" />
             </Grid>
         </DataTemplate>
-        
+
         <DataTemplate DataType="{x:Type config:Redirect}">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
@@ -46,18 +46,24 @@
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type config:ForceUnminified}">
-            <Grid>                
-                <TextBlock Text="Force unminfied js and css."></TextBlock>                
+            <Grid>
+                <TextBlock Text="Force unminfied js and css."></TextBlock>
             </Grid>
         </DataTemplate>
-        
+
+        <DataTemplate DataType="{x:Type config:ForceSharepointDebugJavascript}">
+            <Grid>
+                <TextBlock Text="Force Sharepoint .debug.js"></TextBlock>
+            </Grid>
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type config:JavascriptCombiner}">
             <Grid>
                 <TextBlock Text="Concatenate all javascript and put in header."></TextBlock>
                 <!-- TODO Checkbox indicating wether the element shall be async or not-->
             </Grid>
         </DataTemplate>
-        
+
         <DataTemplate DataType="{x:Type config:CSSCombiner}">
             <Grid>
                 <TextBlock Text="Concatenate all css and put in header."></TextBlock>
@@ -65,14 +71,13 @@
             </Grid>
         </DataTemplate>
 
-        
+
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <!-- TODO Replace this with a TreeView instead???-->
-            <!-- TODO Need a toolbar row with export, import, add and delete buttons. -->
+        <Grid.RowDefinitions>            
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>            
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ToolBarTray>
             <ToolBar>
@@ -83,32 +88,40 @@
                 <Button Content="Add.." Click="OnBtnAddClick"/>
             </ToolBar>
         </ToolBarTray>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding UrlRules}" CanUserAddRows="False" CanUserDeleteRows="True" AutoGenerateColumns="False"  Grid.RowSpan="2" AllowDrop="True" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" HorizontalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" GridLinesVisibility="Horizontal" >
-            <DataGrid.RowStyle>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding UrlRules}" CanUserAddRows="False" CanUserDeleteRows="True" AutoGenerateColumns="False"  Grid.RowSpan="2" AllowDrop="True" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" HorizontalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" GridLinesVisibility="Horizontal"  RowDetailsVisibilityMode="Collapsed">
+            <!--<DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
-                    <Setter Property="FontStyle" Value="Oblique" />                    
+                    <Setter Property="FontStyle" Value="Oblique" />
                 </Style>
-            </DataGrid.RowStyle>
+            </DataGrid.RowStyle>-->
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ToggleButton 
-                            Name="ShowDetails" 
-                            IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, 
-                            Path=DetailsVisibility, 
-                            Converter={view:VisibilityToBooleanConverter}, 
-                            Mode=TwoWay}"  Margin="4" />
+                            <Viewbox StretchDirection="Both" Stretch="Uniform" Height="16" Width="16">
+                                <Expander 
+                                    Name="ShowDetails" 
+                                    IsExpanded="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},
+                                    Path=DetailsVisibility, 
+                                    Converter={view:VisibilityToBooleanConverter}, 
+                                    Mode=TwoWay,
+                                    NotifyOnSourceUpdated=True,
+                                    NotifyOnTargetUpdated=True,
+                                    UpdateSourceTrigger=PropertyChanged}" >                                    
+                                </Expander>
+                            </Viewbox>                                                        
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserSort="True" Width="Auto">
+                <DataGridTemplateColumn CanUserSort="False" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Width="16" Height="16">
-                                <Image.Style>
+                            <Grid>
+                                <Image Source="{StaticResource imgHttp}" >
+                                    <!--<Image.Style>
                                     <Style TargetType="{x:Type Image}">
-                                        <Style.Triggers>
+                                        <Setter Property="Source" Value="{StaticResource imgHttp}"/>
+                                        <Style.Triggers>                                            
                                             <DataTrigger Binding="{Binding Scheme, UpdateSourceTrigger=PropertyChanged}" Value="HTTP">
                                                 <Setter Property="Source" Value="{StaticResource imgHttps}"/>
                                             </DataTrigger>
@@ -117,8 +130,9 @@
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </Image.Style>
-                            </Image>
+                                </Image.Style>-->
+                                </Image>
+                            </Grid>                            
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -129,14 +143,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
-                <!-- TODO Remake Scheme column into a icon column. PadLock for https url's. Probably put it before the enabled button. -->                
+
                 <DataGridTextColumn Header="From url" Binding="{Binding Url}" Width="*"/>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
-                <DataTemplate>                    
-                    <Grid Margin="40,0,0,0">                        
-                        <ListView ItemsSource="{Binding Children}">
+                <DataTemplate>
+                    <Grid Margin="40,0,0,0">
+                        <ListView ItemsSource="{Binding Children}" BorderThickness="0" SelectionMode="Single">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -146,13 +159,14 @@
                                         </Grid.ColumnDefinitions>
                                         <CheckBox Grid.Column="0" Style="{StaticResource ItemPadding}" IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
                                         <ContentPresenter Style="{StaticResource ItemPadding}" Grid.Column="1" Content="{Binding}"/>
-                                    </Grid>                                    
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
-                        </ListView>                                                          
+                        </ListView>
                     </Grid>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
+        <Image Grid.Row="2" Source="{StaticResource imgHttps}" Width="16" Height="16" />
     </Grid>
 </UserControl>

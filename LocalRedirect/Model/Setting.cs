@@ -11,6 +11,7 @@
     [KnownType(typeof(ForceUnminified))]
     [KnownType(typeof(JavascriptCombiner))]
     [KnownType(typeof(CSSCombiner))]
+    [KnownType(typeof(ForceSharepointDebugJavascript))]    
     public abstract class Setting  : INotifyPropertyChanged
     {
         private bool isEnabled;

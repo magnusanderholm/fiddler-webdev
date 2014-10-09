@@ -29,14 +29,14 @@ namespace Fiddler.LocalRedirect.Model
         public void Save(FileInfo fI)
         {
             SaveSettingsToFile(fI, Settings);
-            OnSaved(EventArgs.Empty);
+            OnChanged(EventArgs.Empty);
         }
 
-        public event EventHandler<EventArgs> Saved;
+        public event EventHandler<EventArgs> Changed;
 
-        protected virtual void OnSaved(EventArgs e)
+        protected virtual void OnChanged(EventArgs e)
         {
-            var h = Saved;
+            var h = Changed;
             if (h != null)
                 h(this, e);
         }
@@ -48,6 +48,7 @@ namespace Fiddler.LocalRedirect.Model
             settings.UrlRules.Clear();
             foreach (var urlRule in newSettings.UrlRules)
                 settings.UrlRules.Add(urlRule);
+            this.OnChanged(EventArgs.Empty);
             return settings;
         }
 

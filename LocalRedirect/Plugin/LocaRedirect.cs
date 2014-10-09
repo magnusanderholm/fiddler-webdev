@@ -34,16 +34,9 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         view.Dock = DockStyle.Fill;        
         FiddlerApplication.UI.tabsViews.TabPages.Add(oPage);
 
-        settingsRepository.Saved += (s, e) => AssingSettingsToRedirectEngine();        
-        AssingSettingsToRedirectEngine();                       
-    }
-    
-
-    private void AssingSettingsToRedirectEngine()
-    {        
-        urlMatcher.Settings = settingsRepository.CopySettings();
-    }
-
+        settingsRepository.Changed += (s, e) => urlMatcher.AssignSettings(settingsRepository.Settings);
+        urlMatcher.AssignSettings(settingsRepository.Settings);
+    }        
 
     public void OnPeekAtResponseHeaders(Fiddler.Session oSession)
     {
