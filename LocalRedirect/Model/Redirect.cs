@@ -61,16 +61,10 @@
             if (Parent.IsEnabled && IsEnabled && CanRedirect)
             {
                 // Prevent this request from going through an upstream proxy              
-                session.bypassGateway = true;
+                //session.bypassGateway = true;
                 // override host and port. Host can be IP or name but most likely ip.
-                session["x-overrideHost"] = ToHost.ToString();
-
-                if (!ForceUnminified)
-                {
-                    session.url = session.url.Replace(".min.css", ".css");
-                    session.url = session.url.Replace(".min.js", ".js");
-                }
-
+                // session["x-overrideHost"] = ;
+                session.host = ToHost.ToString();
                 // We always use http for local redirects since https goes bananas because the certificates are different.             
                 // its also easier to handle in the iis.
                 session.oRequest.headers.UriScheme = "http";
