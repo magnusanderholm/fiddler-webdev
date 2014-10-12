@@ -61,7 +61,7 @@
         private static void ApplySessionModification(IEnumerable<ISessionModifier> modifiers, Session session, Func<ISessionModifier, Action<Session>> method)
         {
             if (modifiers != null && modifiers.Any() && session != null)
-                foreach (var m in modifiers)
+                foreach (var m in modifiers)                    
                     method(m)(session);
         }
     }

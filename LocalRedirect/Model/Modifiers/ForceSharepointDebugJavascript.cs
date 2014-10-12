@@ -29,7 +29,7 @@ using System.Xml.Serialization;
         public override void RequestBefore(Session session)
         {
             base.RequestBefore(session);
-            if (Parent.IsEnabled && IsEnabled)
+            if (IsEnabled)
             {                
                 session.url = regex.Replace( session.url, ".debug.js");                
             }

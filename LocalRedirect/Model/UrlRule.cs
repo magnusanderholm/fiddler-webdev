@@ -43,8 +43,17 @@
         [DataMember(Name = "url", IsRequired = true)]
         public string Url {
             get { return this.url;}
-            set { pC.Update(ref url, value).Extra("Scheme");}
+            set 
+            {                
+                var val = value;
+                if (!string.IsNullOrEmpty(val))
+                    val = new Uri(value, UriKind.Absolute).ToString();
+
+                pC.Update(ref url, val).Extra("Scheme");
+            }
         }
+
+        public bool IsValid { get { return !string.IsNullOrEmpty(Url); } }
         
         public string Scheme
         {
@@ -56,16 +65,11 @@
             }
         }        
         
-
-        private void Initialize()
-        {
-            
-        }
-
+        
         [OnDeserializing]
         private void OnInitializing(StreamingContext ctx)
         {
-            url = "";
+            url = string.Empty;
             children = new ObservableCollection<ChildSetting>();                        
         }
 

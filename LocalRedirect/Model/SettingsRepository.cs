@@ -20,7 +20,7 @@ namespace Fiddler.LocalRedirect.Model
 
             currentSettingsFile = defaultSettingsFile;
             settings = new Settings();
-            if (!defaultSettingsFile.Exists)
+            if (!defaultSettingsFile.Exists || defaultSettingsFile.Length == 0)
                 SaveSettingsToFile(defaultSettingsFile, settings);
             else
                 settings = LoadSettingsFromFile(defaultSettingsFile);

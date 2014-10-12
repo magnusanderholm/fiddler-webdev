@@ -33,6 +33,16 @@
             </Grid>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type config:DisableCache}">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource SettingStyle}" >Disable cache.</TextBlock>
+            </Grid>
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type config:HeaderScript}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -51,7 +61,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0" Text="Redirect to:"></TextBlock>
-                <TextBox  Style="{StaticResource SettingStyle}" Grid.Column="1" Text="{Binding ToHost, UpdateSourceTrigger=PropertyChanged}" Width="300" ></TextBox>
+                <TextBox  Style="{StaticResource SettingStyle}" Grid.Column="1" Text="{Binding ToUrl, ValidatesOnExceptions=True}" MinWidth="150" ></TextBox>
             </Grid>
         </DataTemplate>
 
@@ -64,9 +74,9 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0" Text="Override DNS:"></TextBlock>
-                <TextBox  Style="{StaticResource SettingStyle}" Grid.Column="1" Text="{Binding ToHost, UpdateSourceTrigger=PropertyChanged}" Width="300" ></TextBox>
+                <TextBox  Style="{StaticResource SettingStyle}" Grid.Column="1" Text="{Binding ToHost, ValidatesOnExceptions=True}" MinWidth="150" ></TextBox>
                 <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="2" Text=":"></TextBlock>
-                <TextBox  Style="{StaticResource SettingStyle}" Grid.Column="3" Text="{Binding ToPort, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox  Style="{StaticResource SettingStyle}" Grid.Column="3" Text="{Binding ToPort, ValidatesOnExceptions=True}"></TextBox>
             </Grid>
         </DataTemplate>
 
@@ -138,7 +148,8 @@
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
-                <DataGridTemplateColumn IsReadOnly="True">
+                <!-- TODO Add color column so we can colorize sessions that match a url rule. -->
+                <DataGridTemplateColumn IsReadOnly="True">                    
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Viewbox StretchDirection="Both" Stretch="Uniform" Height="16" Width="16">
@@ -187,7 +198,14 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="From url" Binding="{Binding Url, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                <DataGridTextColumn Header="Url" Binding="{Binding Url, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                <!--<DataGridTemplateColumn Header="Url" CanUserSort="True" Width="*" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Path=Url, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" HorizontalAlignment="Stretch"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>

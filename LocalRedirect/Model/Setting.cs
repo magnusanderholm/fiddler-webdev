@@ -13,6 +13,7 @@
     [KnownType(typeof(CSSCombiner))]
     [KnownType(typeof(ForceSharepointDebugJavascript))]
     [KnownType(typeof(OverrideDNS))]    
+    [KnownType(typeof(DisableCache))]        
     public abstract class Setting  : INotifyPropertyChanged
     {
         private bool isEnabled;

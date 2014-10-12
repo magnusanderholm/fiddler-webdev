@@ -1,13 +1,9 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
-    using Fiddler.LocalRedirect.Model;
-    using Fiddler.LocalRedirect.Model.Modifiers;
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
-    using System.Linq;
     using System.Runtime.Serialization;
 
     [DataContract(Name = "settings", Namespace = "")]
@@ -93,6 +89,10 @@
         private void SetParentAndObserveHiearchyChanges(UrlRule rule)
         {
             rule.Parent = this;
+
+            // TODO ChangeObserver is still not working satisfactory. It cannot handle the case
+            //      where rule.Children gets new items. New items will not be observed correctly.
+            //      not an issue right now but might become later on.
             changeObserver.Observe(rule);
             changeObserver.Observe(rule.Children);
             foreach (var c in rule.Children)

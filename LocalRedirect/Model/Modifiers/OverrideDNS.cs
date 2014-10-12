@@ -1,13 +1,11 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
-    using System;
     using System.ComponentModel;
     using System.Net;
     using System.Runtime.Serialization;
-    using System.Xml.Serialization;
 
     [DataContract(Name="overridedns", Namespace="")]
-    [Modifier(Order = 0, IsEnabled = true)] 
+    [Modifier(Order = 1, IsEnabled = true)] 
     public class OverrideDNS : ChildSetting
     {
         private string toHost;
@@ -50,7 +48,7 @@
         public override void RequestBefore(Session session)
         {
             base.RequestBefore(session);
-            if (Parent.IsEnabled && IsEnabled)
+            if (IsEnabled)
             {
                 // Prevent this request from going through an upstream proxy              
                 // override host and port. Host can be IP or name but most likely ip.
@@ -75,5 +73,7 @@
         {
             this.Initialize();
         }
+
+   
     }
 }

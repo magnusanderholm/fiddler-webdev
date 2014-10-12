@@ -51,6 +51,8 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Modifiers\DisableCache.cs" />
+    <Compile Include="Model\Property.cs" />
     <Compile Include="Model\Modifiers\SessionModifierFactory.cs" />
     <Compile Include="Model\Modifiers\BrowserLink.cs" />
     <Compile Include="Model\CallerMemberNameAttribute.cs" />
@@ -64,7 +66,6 @@
     <Compile Include="Model\UrlFileReplace.cs" />
     <Compile Include="Model\Modifiers\JavascriptCombiner.cs" />
     <Compile Include="Model\Modifiers\HeaderScript.cs" />
-    <Compile Include="Model\HostName.cs" />
     <Compile Include="Model\ISessionModifier.cs" />
     <Compile Include="Model\NotifyPropertyChanged.cs" />
     <Compile Include="Model\Modifiers\ForceUnminified.cs" />

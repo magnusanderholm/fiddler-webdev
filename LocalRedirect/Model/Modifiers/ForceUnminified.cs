@@ -26,7 +26,7 @@
         public override void RequestBefore(Session session)
         {
             base.RequestBefore(session);
-            if (Parent.IsEnabled && IsEnabled)
+            if (IsEnabled)
             {
                 // TODO Convert to a URL instead. Read PathAndQuery and then
                 //      the file part. This is what we need to perform replace on.

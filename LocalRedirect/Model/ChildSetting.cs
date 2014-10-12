@@ -18,9 +18,7 @@
         {
             Parent = parent;
         }
-        
-        // TODO Hook in the point our pC.Parent = Parent.pC so parent is autmatically aware
-        //      of changes in child. If we also register 
+                
         public UrlRule Parent 
         {
             get { return parent; }

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-
-namespace Fiddler.LocalRedirect.Model.Modifiers
+﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+
     public class SessionModifierFactory
     {
         private static IEnumerable<ConstructorInfo> availableSessionModifierConstructors;
