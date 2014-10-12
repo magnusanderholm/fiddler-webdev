@@ -53,35 +53,26 @@ namespace Fiddler.LocalRedirect.View
             if (result != null && result.Value)
             {
                 fI = new FileInfo(dlg.FileName);
-                ViewModel.OpenSettings(fI);
+                ViewModel.SettingsRepository.Open(fI);
             }                        
         }
 
         private void OnBtnSaveClick(object sender, RoutedEventArgs e)
-        {
-            // Open a file dialog and let us save a configuration             
-            if (ViewModel.CurrentSettingsFile == null)
+        {            
+            // Show save dialog and set ViewModel.CurrentSettingsFile. Otherwise just save.
+            var dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.DefaultExt = ".config";
+            dlg.Filter = "Config (*.config)|*.conf";
+            bool? result = dlg.ShowDialog();
+            if (result != null && result.Value)
             {
-                // Show save dialog and set ViewModel.CurrentSettingsFile. Otherwise just save.
-                var dlg = new Microsoft.Win32.SaveFileDialog();
-                dlg.DefaultExt = ".config";
-                dlg.Filter = "Config (*.config)|*.conf";
-                bool? result = dlg.ShowDialog();
-                if (result != null && result.Value)
-                {
-                    ViewModel.CurrentSettingsFile = new FileInfo(dlg.FileName);
-                    ViewModel.SaveSettings();
-                }
-            }
-            else
-            {
-                ViewModel.SaveSettings();
-            }            
+                ViewModel.SettingsRepository.Save(new FileInfo(dlg.FileName));
+            }                        
         }
 
         private void OnBtnAddClick(object sender, RoutedEventArgs e)
         {
-            ViewModel.SettingsRepository.Settings.AddUrlRule();            
+            ViewModel.SettingsRepository.Settings.CreateUrlRule();            
         }        
     }
 }

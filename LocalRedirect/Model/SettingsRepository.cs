@@ -11,38 +11,56 @@ namespace Fiddler.LocalRedirect.Model
     public class SettingsRepository
     {
         private readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();
-        private readonly Settings settings;        
+        private readonly Settings settings;                
+        private FileInfo currentSettingsFile;
+        public SettingsRepository(FileInfo defaultSettingsFile)
+        {
+            if (defaultSettingsFile == null)
+                throw new ArgumentNullException("defaultSettingsFile");
 
-        public SettingsRepository(FileInfo settingsFile)
-        {            
+            currentSettingsFile = defaultSettingsFile;
             settings = new Settings();
+            if (!defaultSettingsFile.Exists)
+                SaveSettingsToFile(defaultSettingsFile, settings);
+            else
+                settings = LoadSettingsFromFile(defaultSettingsFile);
+            
             settings.Observer.Changed  += OnSettingsChanged;
-        }
-
-        private void OnSettingsChanged(object sender, EventArgs e)
-        {            
         }
         
         public Settings Settings { get { return settings; } }
 
+        public FileInfo CurrentFile
+        {
+            get { return currentSettingsFile; }
+            set 
+            {
+                if (value == null)
+                    throw new ArgumentNullException("value");
+                if (string.Compare(value.FullName, currentSettingsFile.FullName) != 0)
+                    currentSettingsFile = value; 
+            }
+        }
+
         public void Save(FileInfo fI)
         {
-            SaveSettingsToFile(fI, Settings);
+            CurrentFile = fI;
+            SaveSettingsToFile(CurrentFile, Settings);
         }
 
         public Settings Open(FileInfo fI)
         {
-            var newSettings = LoadSettingsFromFile(fI);
-            settings.ClearUrlRules();
-            foreach (var urlRule in newSettings.UrlRules)
-            {
-                urlRule.Parent = settings;
-                settings.AddUrlRule();
-            }
-            
+            CurrentFile = fI;
+            var newSettings = LoadSettingsFromFile(CurrentFile);
+            settings.ReplaceUrlRulesWith(newSettings.UrlRules);                        
             return settings;
-        }        
-                
+        }
+
+        private void OnSettingsChanged(object sender, EventArgs e)
+        {
+            SaveSettingsToFile(currentSettingsFile, settings);
+        }
+
         private Settings LoadSettingsFromFile(FileInfo settingsFile)
         {            
             using (var s = settingsFile.OpenRead())            

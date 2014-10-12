@@ -10,17 +10,17 @@
     using System.Runtime.Serialization;
 
     [DataContract(Name = "settings", Namespace = "")]
-    public partial class Settings : IEnumerable<UrlRule>, INotifyPropertyChanged
+    public partial class Settings : INotifyPropertyChanged
     {
         private ObservableCollection<UrlRule> urlRules;
         private NotifyPropertyChanged pC;
         private ObserveChange changeObserver;
+        private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
 
         public Settings()
-        {
-            Initialize();
-            changeObserver.Observe(urlRules);            
-            changeObserver.Observe(this);
+        {            
+            OnInitializing(emptyStreamingContext);
+            OnInitialized(emptyStreamingContext);
         }
 
         public IChange Observer
@@ -28,7 +28,14 @@
             get { return changeObserver; }
         }
 
-        public UrlRule AddUrlRule()
+        public void ReplaceUrlRulesWith(IEnumerable<UrlRule> rules)
+        {
+            urlRules.Clear();
+            foreach (var r in rules)            
+                urlRules.Add(r);            
+        }
+        
+        public UrlRule CreateUrlRule()
         {
             // TODO Create this list by looking at class attributes instead. If we write it 
             // propery we do not need to think about adding new sessionmodifiers. It will just happen automatically
@@ -39,11 +46,8 @@
             rule.Children.Add(new HeaderScript(rule));
             rule.Children.Add(new BrowserLink(rule));
             rule.Children.Add(new JavascriptCombiner(rule));
-            rule.Children.Add(new CSSCombiner(rule));
-                       
-            urlRules.Add(rule);
-            ObserveRuleAndChildrenForChanges(rule);
-
+            rule.Children.Add(new CSSCombiner(rule));                       
+            urlRules.Add(rule);           
             return rule;
         }
 
@@ -51,17 +55,12 @@
         {
            urlRules.Clear();
         }
-
-        // TODO Can't we fallback on the class IEnumerable inteface instead????
-        //      Would look a lot cleaner
-
+        
         /// <remarks/>
         [DataMember(Name = "urlrules", IsRequired=false)]
-        public IEnumerable<UrlRule> UrlRules
+        public ObservableCollection<UrlRule> UrlRules
         {
-            get { return this.urlRules; }
-            //set { pC.Update(ref urlRules, value); }
-            set { } // Needed for serialization purposes. Don't call
+            get { return this.urlRules; }            
         }
         
         public event PropertyChangedEventHandler PropertyChanged;
@@ -73,47 +72,42 @@
                 h(this, pCe);
         }        
         
-
-        public IEnumerator<UrlRule> GetEnumerator()
-        {
-            return UrlRules.AsEnumerable().GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        private void Initialize()
+        
+        [OnDeserializing]
+        private void OnInitializing(StreamingContext ctx)
         {
             pC = new NotifyPropertyChanged(OnPropertyChanged);
             urlRules = new ObservableCollection<UrlRule>();
-            changeObserver = new ObserveChange();                        
-        }
-        
-
-        [OnDeserializing]
-        private void OnDeserializing(StreamingContext ctx)
-        {
-            this.Initialize();
+            changeObserver = new ObserveChange();           
             this.pC.Enabled = false;
         }
 
         [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
+        private void OnInitialized(StreamingContext ctx)
         {
             foreach (var urlRule in urlRules) { 
                 urlRule.Parent = this;
-                ObserveRuleAndChildrenForChanges(urlRule);
+                SetParentAndObserveHiearchyChanges(urlRule);
             }
 
             changeObserver.Observe(urlRules);
             changeObserver.Observe(this);
-            this.pC.Enabled = true;            
+            this.pC.Enabled = true;
+            urlRules.CollectionChanged += OnUrlRulesCollectionChanged;
         }
 
-        private void ObserveRuleAndChildrenForChanges(UrlRule rule)
+        private void OnUrlRulesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (UrlRule r in e.NewItems)
+                    SetParentAndObserveHiearchyChanges(r);
+            }
+        }
+
+        private void SetParentAndObserveHiearchyChanges(UrlRule rule)
+        {
+            rule.Parent = this;
             changeObserver.Observe(rule);
             changeObserver.Observe(rule.Children);
             foreach (var c in rule.Children)

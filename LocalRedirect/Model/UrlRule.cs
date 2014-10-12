@@ -4,26 +4,29 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.Linq;
     using System.Runtime.Serialization;
 
     [DataContract(Name = "urlrule", Namespace = "")]
-    public class UrlRule : Setting, IEnumerable<ChildSetting>
+    public class UrlRule : Setting
     {
         private ObservableCollection<ChildSetting> children;
         private string url;
         private Settings parent;
+        private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
 
         public UrlRule()
             : this(null)
-        {         
+        {            
         }
 
         public UrlRule(Settings settings)
             : base()
         {
-            Initialize();
-            Parent = settings;
+            OnInitializing(emptyStreamingContext);
+            Parent = settings;            
+            OnInitialized(emptyStreamingContext);            
         }
         
         public Settings Parent
@@ -34,8 +37,7 @@
 
         [DataMember(Name = "children", IsRequired = true)]
         public ObservableCollection<ChildSetting> Children {
-            get { return this.children;}
-            set { pC.Update(ref children, value);}
+            get { return this.children;}            
         }
 
         [DataMember(Name = "url", IsRequired = true)]
@@ -43,7 +45,6 @@
             get { return this.url;}
             set { pC.Update(ref url, value).Extra("Scheme");}
         }
-
         
         public string Scheme
         {
@@ -54,34 +55,35 @@
                   : "NONE";
             }
         }        
-
-        public IEnumerator<ChildSetting> GetEnumerator()
-        {
-            return Children.AsEnumerable().GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        
 
         private void Initialize()
         {
-            url = "";
-            children = new ObservableCollection<ChildSetting>();            
+            
         }
 
         [OnDeserializing]
-        private void OnDeserializing(StreamingContext ctx)
+        private void OnInitializing(StreamingContext ctx)
         {
-            this.Initialize();
+            url = "";
+            children = new ObservableCollection<ChildSetting>();                        
         }
 
         [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
+        private void OnInitialized(StreamingContext ctx)
         {
-            foreach (var c in children)
+            foreach (var c in children)            
                 c.Parent = this;
+            children.CollectionChanged += OnChildrenCollectionChanged;
+        }
+
+        private void OnChildrenCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (ChildSetting c in e.NewItems)
+                    c.Parent = this;
+            }
         }
     }
 }

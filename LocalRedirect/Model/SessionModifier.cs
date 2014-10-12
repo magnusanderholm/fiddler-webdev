@@ -30,35 +30,35 @@
 
         public void PeekAtResponseHeaders()
         {            
-            Apply(Modifiers, Session, m => m.PeekAtResponseHeaders);            
+            ApplySessionModification(Modifiers, Session, m => m.PeekAtResponseHeaders);            
         }
 
         public void RequestAfter()
         {
-            Apply(Modifiers, Session, m => m.RequestAfter);            
+            ApplySessionModification(Modifiers, Session, m => m.RequestAfter);            
         }
 
         public void RequestBefore()
         {
-            Apply(Modifiers, Session, m => m.RequestBefore);            
+            ApplySessionModification(Modifiers, Session, m => m.RequestBefore);            
         }
 
         public void ResponseAfter()
         {
-            Apply(Modifiers, Session, m => m.ResponseAfter);            
+            ApplySessionModification(Modifiers, Session, m => m.ResponseAfter);            
         }
 
         public void ResponseBefore()
         {
-            Apply(Modifiers, Session, m => m.ResponseBefore);
+            ApplySessionModification(Modifiers, Session, m => m.ResponseBefore);
         }
 
         public void BeforeReturningError()
         {
-            Apply(Modifiers, Session, m => m.BeforeReturningError);            
+            ApplySessionModification(Modifiers, Session, m => m.BeforeReturningError);            
         }
 
-        private static void Apply(IEnumerable<ISessionModifier> modifiers, Session session, Func<ISessionModifier, Action<Session>> method)
+        private static void ApplySessionModification(IEnumerable<ISessionModifier> modifiers, Session session, Func<ISessionModifier, Action<Session>> method)
         {
             if (modifiers != null && modifiers.Any() && session != null)
                 foreach (var m in modifiers)
