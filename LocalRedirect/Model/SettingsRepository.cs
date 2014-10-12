@@ -11,48 +11,35 @@ namespace Fiddler.LocalRedirect.Model
     public class SettingsRepository
     {
         private readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();
-        private readonly Settings settings = Settings.CreateDefault();
-        // private readonly FileInfo settingsFile;
+        private readonly Settings settings;        
 
-        public SettingsRepository()
-        {                       
-            // this.settingsFile = settingsFile;
-                                    
-            // this.settings = LoadSettingsFromFile(settingsFile);            
-            //this.settings.Matches.CollectionChanged += (s, e) => Persist();
-            //this.settings.Matches.ItemPropertyChanged += (s, e) => Persist();
+        public SettingsRepository(FileInfo settingsFile)
+        {            
+            settings = new Settings();
+            settings.Observer.Changed  += OnSettingsChanged;
+        }
+
+        private void OnSettingsChanged(object sender, EventArgs e)
+        {            
         }
         
-
         public Settings Settings { get { return settings; } }
 
         public void Save(FileInfo fI)
         {
             SaveSettingsToFile(fI, Settings);
-            OnChanged(EventArgs.Empty);
         }
-
-        public event EventHandler<EventArgs> Changed;
-
-        protected virtual void OnChanged(EventArgs e)
-        {
-            var h = Changed;
-            if (h != null)
-                h(this, e);
-        }
-
 
         public Settings Open(FileInfo fI)
         {
             var newSettings = LoadSettingsFromFile(fI);
-            settings.UrlRules.Clear();
+            settings.ClearUrlRules();
             foreach (var urlRule in newSettings.UrlRules)
             {
                 urlRule.Parent = settings;
-                settings.UrlRules.Add(urlRule);
+                settings.AddUrlRule();
             }
-
-            this.OnChanged(EventArgs.Empty);
+            
             return settings;
         }        
                 

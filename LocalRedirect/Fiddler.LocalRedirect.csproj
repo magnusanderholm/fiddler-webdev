@@ -56,13 +56,14 @@
     <Compile Include="Model\ChildSetting.cs" />
     <Compile Include="Model\CSSCombiner.cs" />
     <Compile Include="Model\ForceSharepointDebugJavascript.cs" />
+    <Compile Include="Model\IObserveChange.cs" />
+    <Compile Include="Model\ObserveChange.cs" />
     <Compile Include="Model\UrlFileReplace.cs" />
     <Compile Include="Model\GlobalSettings.cs" />
     <Compile Include="Model\JavascriptCombiner.cs" />
     <Compile Include="Model\HeaderScript.cs" />
     <Compile Include="Model\HostName.cs" />
     <Compile Include="Model\ISessionModifier.cs" />
-    <Compile Include="Model\ObservableItemCollection.cs" />
     <Compile Include="Model\NotifyPropertyChanged.cs" />
     <Compile Include="Model\ForceUnminified.cs" />
     <Compile Include="Model\Redirect.cs" />

@@ -24,17 +24,8 @@
         public UrlRule Parent 
         {
             get { return parent; }
-            set
-            {
-                pC.Update(ref parent, value);
-                pC.Parent = parent != null
-                    ? parent.pC
-                    : null;
-            }
-        }
-        
-
-
+            set { pC.Update(ref parent, value); }
+        }        
 
         public virtual void PeekAtResponseHeaders(Session session)
         {            

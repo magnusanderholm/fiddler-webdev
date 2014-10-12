@@ -1,13 +1,25 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class SessionModifier
     {
-        public static readonly SessionModifier Empty = new SessionModifier(null, new ISessionModifier[]{});
+        public static readonly SessionModifier Empty = new SessionModifier();
+
+        public SessionModifier()
+        {
+            Modifiers = new ISessionModifier[] { };
+        }
 
         public SessionModifier(Fiddler.Session session, IEnumerable<ISessionModifier> modifiers)
         {
+            if (session == null)
+                throw new ArgumentNullException("session");
+            if (modifiers == null)
+                throw new ArgumentNullException("modifiers");
+
             Modifiers = modifiers;
             Session = session;
         }
@@ -17,39 +29,41 @@
         public Fiddler.Session Session { get; private set; }
 
         public void PeekAtResponseHeaders()
-        {
-            foreach (var m in Modifiers)
-                m.PeekAtResponseHeaders(Session);
+        {            
+            Apply(Modifiers, Session, m => m.PeekAtResponseHeaders);            
         }
 
         public void RequestAfter()
         {
-            foreach (var m in Modifiers)
-                m.RequestAfter(Session);
+            Apply(Modifiers, Session, m => m.RequestAfter);            
         }
 
         public void RequestBefore()
         {
-            foreach (var m in Modifiers)
-                m.RequestBefore(Session);
+            Apply(Modifiers, Session, m => m.RequestBefore);            
         }
 
         public void ResponseAfter()
         {
-            foreach (var m in Modifiers)
-                m.ResponseAfter(Session);
+            Apply(Modifiers, Session, m => m.ResponseAfter);            
         }
 
         public void ResponseBefore()
         {
-            foreach (var m in Modifiers)
-                m.ResponseBefore(Session);
+            Apply(Modifiers, Session, m => m.ResponseBefore);
         }
 
         public void BeforeReturningError()
         {
-            foreach (var m in Modifiers)
-                m.BeforeReturningError(Session);
+            Apply(Modifiers, Session, m => m.BeforeReturningError);            
+        }
+
+        private static void Apply(IEnumerable<ISessionModifier> modifiers, Session session, Func<ISessionModifier, Action<Session>> method)
+        {
+            if (modifiers != null && modifiers.Any() && session != null)
+                foreach (var m in modifiers)
+                    method(m)(session);
         }
     }
+    
 }

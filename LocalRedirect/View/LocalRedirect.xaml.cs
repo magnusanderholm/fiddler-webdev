@@ -81,7 +81,7 @@ namespace Fiddler.LocalRedirect.View
 
         private void OnBtnAddClick(object sender, RoutedEventArgs e)
         {
-            ViewModel.UrlRules.Add(ViewModel.SettingsRepository.Settings.CreateUrlRule());
+            ViewModel.SettingsRepository.Settings.AddUrlRule();            
         }        
     }
 }

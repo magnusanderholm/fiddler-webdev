@@ -22,11 +22,11 @@ namespace Fiddler.LocalRedirect.ViewModel
         public SettingsRepository SettingsRepository { get; private set; }        
         
         // TODO Ensure that we cannot add duplicates!!!! Porably best to put that in the custom ObservableCollection class.
-        public ICollection<Config.UrlRule> UrlRules { get; private set; }
+        public IEnumerable<Config.UrlRule> UrlRules { get; private set; }
 
         public Config.UrlRule Create()
         {
-            return SettingsRepository.Settings.CreateUrlRule();
+            return SettingsRepository.Settings.AddUrlRule();
         }
 
         public FileInfo CurrentSettingsFile { get;set; }

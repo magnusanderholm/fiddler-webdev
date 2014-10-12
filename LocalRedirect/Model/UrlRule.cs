@@ -29,13 +29,7 @@
         public Settings Parent
         {
             get { return parent; }
-            set
-            {
-                pC.Update(ref parent, value);
-                pC.Parent = parent != null
-                 ? parent.pC
-                 : null;
-            }
+            set { pC.Update(ref parent, value); }
         }
 
         [DataMember(Name = "children", IsRequired = true)]
@@ -74,8 +68,7 @@
         private void Initialize()
         {
             url = "";
-            children = new ObservableItemCollection<ChildSetting>();
-            pC.Register(children);
+            children = new ObservableCollection<ChildSetting>();            
         }
 
         [OnDeserializing]

@@ -8,10 +8,9 @@ using System.Windows.Forms;
 
 
 public class LocalRedirect : Fiddler.IAutoTamper2
-{            
-    //private readonly SettingsRepository settingsRepository = 
-    //    new SettingsRepository(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")));
-    private readonly SettingsRepository settingsRepository = new SettingsRepository();
+{
+    private readonly SettingsRepository settingsRepository =
+        new SettingsRepository(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")));        
     private readonly UrlRuleSelector urlMatcher = new UrlRuleSelector();
     
     public LocalRedirect()
@@ -24,7 +23,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     }
 
     public void OnLoad()
-    {        
+    {                       
         var oPage = new TabPage("Redirector");
         oPage.ImageIndex = (int)Fiddler.SessionIcons.Redirect;
         var view = new Fiddler.LocalRedirect.View.LocalRedirectHost();
@@ -33,8 +32,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         oPage.Padding = new Padding(0);
         view.Dock = DockStyle.Fill;        
         FiddlerApplication.UI.tabsViews.TabPages.Add(oPage);
-
-        settingsRepository.Settings.pC.Changed += (s, e) => urlMatcher.AssignSettings(settingsRepository.Settings);
+        settingsRepository.Settings.Observer.Changed += (s,e) => urlMatcher.AssignSettings(settingsRepository.Settings);        
         urlMatcher.AssignSettings(settingsRepository.Settings);
     }        
 
