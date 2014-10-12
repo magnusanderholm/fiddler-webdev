@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:doc="http://schemas.microsoft.com/xps/2005/06/documentstructure"
-             xmlns:config="clr-namespace:Fiddler.LocalRedirect.Config"             
+             xmlns:config="clr-namespace:Fiddler.LocalRedirect.Model"             
              xmlns:view="clr-namespace:Fiddler.LocalRedirect.View"
              mc:Ignorable="d" AllowDrop="True" Height="372.903" Width="477.398">
     <UserControl.Resources>        
@@ -52,6 +52,21 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0" Text="Redirect to:"></TextBlock>
                 <TextBox  Style="{StaticResource SettingStyle}" Grid.Column="1" Text="{Binding ToHost, UpdateSourceTrigger=PropertyChanged}" Width="300" ></TextBox>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type config:OverrideDNS}">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0" Text="Override DNS:"></TextBlock>
+                <TextBox  Style="{StaticResource SettingStyle}" Grid.Column="1" Text="{Binding ToHost, UpdateSourceTrigger=PropertyChanged}" Width="300" ></TextBox>
+                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="2" Text=":"></TextBlock>
+                <TextBox  Style="{StaticResource SettingStyle}" Grid.Column="3" Text="{Binding ToPort, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </Grid>
         </DataTemplate>
 
@@ -107,11 +122,11 @@
         </Grid.RowDefinitions>
         <ToolBarTray>
             <ToolBar>
-                <Button Content="Open.." Click="OnBtnOpenClick"/>
-                <Button Content="Save.." Click="OnBtnSaveClick"/>
+                <Button Content="Open" Click="OnBtnOpenClick"/>
+                <Button Content="Save As" Click="OnBtnSaveClick"/>
             </ToolBar>
             <ToolBar>
-                <Button Content="Add.." Click="OnBtnAddClick"/>
+                <Button Content="Add" Click="OnBtnAddClick"/>
             </ToolBar>
         </ToolBarTray>
         <DataGrid Grid.Row="1" ItemsSource="{Binding UrlRules}" CanUserAddRows="False" CanUserDeleteRows="True" AutoGenerateColumns="False"  Grid.RowSpan="2" AllowDrop="True" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" HorizontalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" GridLinesVisibility="Horizontal"  RowDetailsVisibilityMode="Collapsed">

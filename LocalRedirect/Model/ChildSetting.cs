@@ -1,4 +1,4 @@
-﻿namespace Fiddler.LocalRedirect.Config
+﻿namespace Fiddler.LocalRedirect.Model
 {
     using Fiddler.LocalRedirect.Model;
     using System.Runtime.Serialization;

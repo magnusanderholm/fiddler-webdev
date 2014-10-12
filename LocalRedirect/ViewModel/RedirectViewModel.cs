@@ -1,15 +1,8 @@
-﻿using Fiddler.LocalRedirect.Config;
-using Fiddler.LocalRedirect.Model;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows.Markup;
-
-namespace Fiddler.LocalRedirect.ViewModel
+﻿namespace Fiddler.LocalRedirect.ViewModel
 {
+    using Fiddler.LocalRedirect.Model;
+    using System.Collections.Generic;
+
     public class RedirectViewModel
     {        
 
@@ -21,6 +14,6 @@ namespace Fiddler.LocalRedirect.ViewModel
 
         public SettingsRepository SettingsRepository { get; private set; }        
                 
-        public IEnumerable<Config.UrlRule> UrlRules { get; private set; }                       
+        public IEnumerable<Model.UrlRule> UrlRules { get; private set; }                       
     }
 }

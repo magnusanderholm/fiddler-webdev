@@ -36,7 +36,7 @@ namespace Fiddler.LocalRedirect.View
             bool? result = dlg.ShowDialog();
             if (result != null && result.Value)
             {
-                var headerScript = (Config.HeaderScript)((System.Windows.FrameworkContentElement)(e.Source)).DataContext;
+                var headerScript = (Model.HeaderScript)((System.Windows.FrameworkContentElement)(e.Source)).DataContext;
                 headerScript.HtmlFragmentPath = dlg.FileName;
                 headerScript.IsEnabled = true;
             }
@@ -72,7 +72,8 @@ namespace Fiddler.LocalRedirect.View
 
         private void OnBtnAddClick(object sender, RoutedEventArgs e)
         {
-            ViewModel.SettingsRepository.Settings.CreateUrlRule();            
+            var urlRule = ViewModel.SettingsRepository.Settings.UrlRuleFactory.Create();
+            ViewModel.SettingsRepository.Settings.UrlRules.Add(urlRule);
         }        
     }
 }

@@ -51,15 +51,17 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Modifiers\SessionModifierFactory.cs" />
     <Compile Include="Model\Modifiers\BrowserLink.cs" />
     <Compile Include="Model\CallerMemberNameAttribute.cs" />
     <Compile Include="Model\ChildSetting.cs" />
     <Compile Include="Model\Modifiers\CSSCombiner.cs" />
     <Compile Include="Model\Modifiers\ForceSharepointDebugJavascript.cs" />
     <Compile Include="Model\IObserveChange.cs" />
+    <Compile Include="Model\Modifiers\ModifierAttribute.cs" />
+    <Compile Include="Model\Modifiers\OverrideDNS.cs" />
     <Compile Include="Model\ObserveChange.cs" />
     <Compile Include="Model\UrlFileReplace.cs" />
-    <Compile Include="Model\GlobalSettings.cs" />
     <Compile Include="Model\Modifiers\JavascriptCombiner.cs" />
     <Compile Include="Model\Modifiers\HeaderScript.cs" />
     <Compile Include="Model\HostName.cs" />

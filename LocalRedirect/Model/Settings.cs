@@ -1,6 +1,7 @@
-﻿namespace Fiddler.LocalRedirect.Config
+﻿namespace Fiddler.LocalRedirect.Model
 {
     using Fiddler.LocalRedirect.Model;
+    using Fiddler.LocalRedirect.Model.Modifiers;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -16,6 +17,7 @@
         private NotifyPropertyChanged pC;
         private ObserveChange changeObserver;
         private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
+        
 
         public Settings()
         {            
@@ -28,34 +30,16 @@
             get { return changeObserver; }
         }
 
+        // TODO Put in extension method of ObservableCollection<UrlRule>
         public void ReplaceUrlRulesWith(IEnumerable<UrlRule> rules)
         {
             urlRules.Clear();
             foreach (var r in rules)            
                 urlRules.Add(r);            
         }
-        
-        public UrlRule CreateUrlRule()
-        {
-            // TODO Create this list by looking at class attributes instead. If we write it 
-            // propery we do not need to think about adding new sessionmodifiers. It will just happen automatically
-            var rule = new UrlRule(this);
-            rule.Children.Add(new Redirect(rule, "localhost:80", false));
-            rule.Children.Add(new ForceUnminified(rule));
-            rule.Children.Add(new ForceSharepointDebugJavascript(rule));
-            rule.Children.Add(new HeaderScript(rule));
-            rule.Children.Add(new BrowserLink(rule));
-            rule.Children.Add(new JavascriptCombiner(rule));
-            rule.Children.Add(new CSSCombiner(rule));                       
-            urlRules.Add(rule);           
-            return rule;
-        }
 
-        public void ClearUrlRules()
-        {
-           urlRules.Clear();
-        }
-        
+        public SessionModifierFactory UrlRuleFactory { get; private set;}       
+                
         /// <remarks/>
         [DataMember(Name = "urlrules", IsRequired=false)]
         public ObservableCollection<UrlRule> UrlRules
@@ -76,6 +60,7 @@
         [OnDeserializing]
         private void OnInitializing(StreamingContext ctx)
         {
+            UrlRuleFactory = new SessionModifierFactory(this);
             pC = new NotifyPropertyChanged(OnPropertyChanged);
             urlRules = new ObservableCollection<UrlRule>();
             changeObserver = new ObserveChange();           

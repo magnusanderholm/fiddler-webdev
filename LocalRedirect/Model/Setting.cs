@@ -1,4 +1,4 @@
-﻿namespace Fiddler.LocalRedirect.Config
+﻿namespace Fiddler.LocalRedirect.Model
 {
     using System.ComponentModel;
     using System.Runtime.Serialization;
@@ -11,7 +11,8 @@
     [KnownType(typeof(ForceUnminified))]
     [KnownType(typeof(JavascriptCombiner))]
     [KnownType(typeof(CSSCombiner))]
-    [KnownType(typeof(ForceSharepointDebugJavascript))]    
+    [KnownType(typeof(ForceSharepointDebugJavascript))]
+    [KnownType(typeof(OverrideDNS))]    
     public abstract class Setting  : INotifyPropertyChanged
     {
         private bool isEnabled;

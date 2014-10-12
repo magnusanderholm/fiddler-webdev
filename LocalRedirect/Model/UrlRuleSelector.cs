@@ -1,6 +1,6 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
-    using Fiddler.LocalRedirect.Config;
+    using Fiddler.LocalRedirect.Model;
     using System;
     using System.Collections.Concurrent;
     using System.Linq;

@@ -1,4 +1,4 @@
-﻿namespace Fiddler.LocalRedirect.Config
+﻿namespace Fiddler.LocalRedirect.Model
 {
     using Fiddler.LocalRedirect.Model;
     using System;
@@ -16,7 +16,7 @@
         private Settings parent;
         private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
 
-        public UrlRule()
+        private UrlRule()
             : this(null)
         {            
         }

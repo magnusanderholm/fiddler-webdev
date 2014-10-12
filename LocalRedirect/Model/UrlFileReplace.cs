@@ -1,4 +1,4 @@
-﻿namespace Fiddler.LocalRedirect.Config
+﻿namespace Fiddler.LocalRedirect.Model
 {
     using System;
     using System.Collections.Generic;
