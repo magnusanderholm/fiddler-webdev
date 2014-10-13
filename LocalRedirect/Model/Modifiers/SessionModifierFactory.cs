@@ -23,7 +23,7 @@
                  let modAttr = (ModifierAttribute)t.GetCustomAttributes(modifierAttributeType, true).FirstOrDefault()
                  let constr = t.GetConstructor(constructorParemeterTypes)
                  where modAttr != null && constr != null && modAttr.IsEnabled
-                 orderby modAttr.Order ascending
+                 orderby modAttr.Order ascending, t.Name ascending
                  select constr).ToArray();
         }
 
