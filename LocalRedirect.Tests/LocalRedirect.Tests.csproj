@@ -59,6 +59,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTest1.cs" />
+    <Compile Include="UrlRuleTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LocalRedirect\Fiddler.LocalRedirect.csproj">

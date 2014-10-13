@@ -45,16 +45,26 @@ using System.Threading;
                 if (_settings != null) // && !s.HTTPMethodIs("CONNECT"))
                 {
                     // Find best matching redirect rule (ie the one that is longest and matches the url in oSession).                     
-                    var sessionUrl = s.fullUrl.ToLower();
+                    var sessionUrl = new Uri(s.fullUrl.ToLower());
 
+                    // Notice that we treat HTTPS CONNECT a little bit different. To match a HTTPS CONNECT we know that 
+                    // we must have a matching urlrule for a https://* url. Now the CONNECT comes in the form of http://<host>:443.
+                    // To get a match on that against our current rules we simply replace http:// with https:// and see if 
+                    // we get a match. If we do get a match we fake the tunnel.
+                    bool isHttpsConnect = s.HTTPMethodIs("CONNECT") && sessionUrl.Scheme == "http";
+                                                                                    
                     // TODO If Redirects are ordered to begin with we can avoid some overhead here.
-                    var orderedRedirects = _settings.UrlRules.Where(r => r.IsValid && r.IsEnabled).OrderByDescending(r => r.Url.Length).ToArray();
-                    var bestMatch = orderedRedirects.FirstOrDefault(r => sessionUrl.StartsWith(r.Url));
+                    var orderedRedirects = _settings.UrlRules.Where(r => r.IsValid && r.IsEnabled).OrderByDescending(r => r.UrlString.Length).ToArray();
+                    var bestMatch = orderedRedirects.FirstOrDefault(r => r.IsMatch(sessionUrl, isHttpsConnect));
                     if (bestMatch != null) 
                     {
                         var tmp = new List<ISessionModifier>();
                         tmp.Add(bestMatch);
-                        tmp.AddRange(bestMatch.Children);
+                        if (isHttpsConnect)                        
+                            tmp.Add(new FakeHTTPSTunnel());                        
+                        else                        
+                            tmp.AddRange(bestMatch.Children);
+                                                                        
                         sessionModifier = new SessionModifier(s, tmp);
                     }                        
                 }
@@ -64,6 +74,8 @@ using System.Threading;
             
             return redirect;
         }
+
+        
 
         private void OnCompleteTransaction(object sender, EventArgs e)
         {

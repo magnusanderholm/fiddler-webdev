@@ -51,8 +51,10 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Modifiers\FakeHTTPSTunnel.cs" />
     <Compile Include="Model\Modifiers\FileResponse.cs" />
     <Compile Include="Model\Modifiers\DisableCache.cs" />
+    <Compile Include="Model\Modifiers\SimpleExternalProxySettings.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\Modifiers\SessionModifierFactory.cs" />
     <Compile Include="Model\Modifiers\BrowserLink.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="Model\Modifiers\ModifierAttribute.cs" />
     <Compile Include="Model\Modifiers\OverrideDNS.cs" />
     <Compile Include="Model\ObserveChange.cs" />
+    <Compile Include="Model\UriExtensions.cs" />
     <Compile Include="Model\UrlFileReplace.cs" />
     <Compile Include="Model\Modifiers\JavascriptCombiner.cs" />
     <Compile Include="Model\Modifiers\HeaderScript.cs" />

@@ -89,7 +89,7 @@ namespace Fiddler.LocalRedirect.View
                 foreach (var session in fiddlerSessions)
                 {
                     var urlRule = ViewModel.SettingsRepository.Settings.UrlRuleFactory.Create(); 
-                    urlRule.Url = session.fullUrl;         
+                    urlRule.UrlString = session.fullUrl;         
                     ViewModel.SettingsRepository.Settings.UrlRules.Add(urlRule);
                 }                    
             }

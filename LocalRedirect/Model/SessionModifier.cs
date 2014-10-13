@@ -64,7 +64,7 @@
 
         private static void ApplySessionModification(IEnumerable<ISessionModifier> modifiers, Session session, Func<ISessionModifier, Action<Session>> method)
         {
-            if (session != null && !session.HTTPMethodIs("CONNECT") && modifiers != null && modifiers.Any() && session != null)
+            if (session != null && !session.HTTPMethodIs("CONNECT") && modifiers != null && modifiers.Any())
                 foreach (var m in modifiers)                    
                     method(m)(session);
         }

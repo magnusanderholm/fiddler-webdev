@@ -14,7 +14,7 @@
     public class UrlRule : Setting
     {
         private ObservableCollection<ChildSetting> children;
-        private string url;
+        private string urlString;
         private Settings parent;
         private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
         private string color;
@@ -44,17 +44,42 @@
         }
 
         [DataMember(Name = "url", IsRequired = true)]
-        public string Url {
-            get { return this.url;}
+        public string UrlString {
+            get { return this.urlString;}
             set 
             {                
                 var val = value;
                 if (!string.IsNullOrEmpty(val))
+                {
                     val = new Uri(value, UriKind.Absolute).ToString();
+                    if (!(val.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase) || 
+                        val.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase)))
+                        throw new FormatException("Url must start with http:// or https://");
+                }
 
-                pC.Update(ref url, val).Extra("Scheme");
+                pC.Update(ref urlString, val);
+                if (pC.IsChanged)
+                {
+                    Url = new Uri(urlString, UriKind.Absolute);
+                    pC.Extra("Url");
+                }
             }
         }
+
+        public Uri Url { get; private set; }
+
+        public bool IsMatch(Uri sessionUrl, bool isHttpConnect)
+        {
+            return 
+                IsValid && IsEnabled && 
+                (!isHttpConnect
+                    ? sessionUrl.IsPartialMatch(Url)
+                    : Url.Scheme == "https" && sessionUrl.Scheme == "http" && string.Compare(
+                        Url.GetComponents(UriComponents.HostAndPort, UriFormat.SafeUnescaped),
+                        sessionUrl.GetComponents(UriComponents.HostAndPort, UriFormat.Unescaped), true) == 0);
+        }
+
+        
 
         [DataMember(Name = "color", IsRequired = false, EmitDefaultValue=false), DefaultValue(null)]
         public string HtmlColor
@@ -74,6 +99,7 @@
                 pC.Update(ref color, val).Extra("Color");
             }
         }
+        
 
         public Color Color
         {
@@ -88,34 +114,20 @@
 
 
 
-        public bool IsValid { get { return !string.IsNullOrEmpty(Url); } }
-        
-        public string Scheme
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(Url)
-                  ? new Uri(Url).Scheme.ToUpper()
-                  : "NONE";
-            }
-        }
+        public bool IsValid { get { return UrlString != null; } }
 
+        
         public override void RequestBefore(Session session)
         {
             base.RequestBefore(session);
-            if (IsEnabled)
-            {
-                if (session.HTTPMethodIs("CONNECT"))                
-                    session["x-replywithtunnel"] = "FakeTunnel so we can get the actual HTTPS requests.";                    
-                
-                session.oFlags["ui-backcolor"] = HtmlColor;
-            }
+            if (IsEnabled)            
+                session.oFlags["ui-backcolor"] = HtmlColor;            
         }
         
         [OnDeserializing]
         private void OnInitializing(StreamingContext ctx)
         {
-            url = string.Empty;
+            urlString = string.Empty;
             children = new ObservableCollection<ChildSetting>();
             color = null;         
         }

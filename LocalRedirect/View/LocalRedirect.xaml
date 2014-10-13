@@ -216,7 +216,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="Url" Binding="{Binding Url, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                <DataGridTextColumn Header="Url" Binding="{Binding UrlString, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" Width="*"/>
                 
                 <DataGridTemplateColumn Header="" CanUserSort="True">
                     <DataGridTemplateColumn.CellTemplate>
