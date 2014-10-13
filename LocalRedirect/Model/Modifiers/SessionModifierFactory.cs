@@ -45,7 +45,7 @@
             var urlRule = new UrlRule(settings);
             var constructorParameters = new object[] { urlRule };
             foreach (var m in availableSessionModifierConstructors.Select(c => (ChildSetting)c.Invoke(constructorParameters)))
-                urlRule.Children.Add(m);
+                urlRule.Modifiers.Add(m);
             return urlRule;
         }
     }

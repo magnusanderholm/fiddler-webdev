@@ -7,6 +7,8 @@
 
     [DataContract(Name="csscombiner", Namespace="")]
     [Modifier(Order = 0, IsEnabled = false)] 
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "csscombiner")]
     public class CSSCombiner : ChildSetting
     {
         private CSSCombiner()

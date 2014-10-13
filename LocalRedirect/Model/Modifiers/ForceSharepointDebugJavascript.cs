@@ -12,6 +12,8 @@ using System.Xml.Serialization;
     //      instead using regular expressions.
     [DataContract(Name="forcesharepointdebugjavascript", Namespace="")]
     [Modifier(Order = 4, IsEnabled = true)] 
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "forcesharepointdebugjavascript")]
     public class ForceSharepointDebugJavascript : ChildSetting
     {
         private static Regex regex = new Regex(@"\.(min\.)?js", RegexOptions.Compiled | RegexOptions.IgnoreCase);

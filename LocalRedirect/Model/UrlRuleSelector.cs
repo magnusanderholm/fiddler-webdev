@@ -42,7 +42,7 @@ using System.Threading;
                 oSession.OnCompleteTransaction += OnCompleteTransaction;
                 var sessionModifier = SessionModifier.Empty;
                 
-                if (_settings != null) // && !s.HTTPMethodIs("CONNECT"))
+                if (_settings != null)
                 {
                     // Find best matching redirect rule (ie the one that is longest and matches the url in oSession).                     
                     var sessionUrl = new Uri(s.fullUrl.ToLower());
@@ -58,14 +58,14 @@ using System.Threading;
                     var bestMatch = orderedRedirects.FirstOrDefault(r => r.IsMatch(sessionUrl, isHttpsConnect));
                     if (bestMatch != null) 
                     {
-                        var tmp = new List<ISessionModifier>();
-                        tmp.Add(bestMatch);
+                        var modifiers = new List<ISessionModifier>();
+                        modifiers.Add(bestMatch);
                         if (isHttpsConnect)                        
-                            tmp.Add(new FakeHTTPSTunnel());                        
+                            modifiers.Add(new FakeHTTPSTunnel());                        
                         else                        
-                            tmp.AddRange(bestMatch.Children);
+                            modifiers.AddRange(bestMatch.Modifiers);
                                                                         
-                        sessionModifier = new SessionModifier(s, tmp);
+                        sessionModifier = new SessionModifier(s, modifiers);
                     }                        
                 }
 

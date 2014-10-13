@@ -9,8 +9,11 @@
     using System.Drawing;
     using System.Linq;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     [DataContract(Name = "urlrule", Namespace = "")]
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName="urlrule")]
     public class UrlRule : Setting
     {
         private ObservableCollection<ChildSetting> children;
@@ -32,18 +35,21 @@
             OnInitialized(emptyStreamingContext);            
         }
         
+        [XmlIgnore()]
         public Settings Parent
         {
             get { return parent; }
             set { pC.Update(ref parent, value); }
         }
 
-        [DataMember(Name = "children", IsRequired = true)]
-        public ObservableCollection<ChildSetting> Children {
+        [DataMember(Name = "modifiers", IsRequired = true)]
+        [XmlArray("modifiers", IsNullable = false), XmlArrayItem(IsNullable=false,ElementName="modifier", Type=typeof(ChildSetting))]
+        public ObservableCollection<ChildSetting> Modifiers {
             get { return this.children;}            
         }
 
         [DataMember(Name = "url", IsRequired = true)]
+        [XmlAttribute(AttributeName = "url")]
         public string UrlString {
             get { return this.urlString;}
             set 
@@ -66,6 +72,7 @@
             }
         }
 
+        [XmlIgnore()]
         public Uri Url { get; private set; }
 
         public bool IsMatch(Uri sessionUrl, bool isHttpConnect)
@@ -82,6 +89,7 @@
         
 
         [DataMember(Name = "color", IsRequired = false, EmitDefaultValue=false), DefaultValue(null)]
+        [XmlAttribute(AttributeName = "color")]
         public string HtmlColor
         {
             get { return this.color; }
@@ -100,7 +108,7 @@
             }
         }
         
-
+        [XmlIgnore()]
         public Color Color
         {
             get { return ColorTranslator.FromHtml(HtmlColor); }
@@ -113,7 +121,7 @@
         }
 
 
-
+        [XmlIgnore()]
         public bool IsValid { get { return UrlString != null; } }
 
         

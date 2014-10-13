@@ -1,11 +1,15 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System;
     using System.ComponentModel;
     using System.Net;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     [DataContract(Name="overridedns", Namespace="")]
     [Modifier(Order = 1, IsEnabled = true)] 
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "overridedns")]
     public class OverrideDNS : ChildSetting
     {
         private string toHost;
@@ -23,6 +27,7 @@
         }        
                
         [DataMember(Name="tohost", IsRequired=false), DefaultValue("127.0.0.1")]
+        [XmlAttribute(AttributeName = "tohost")]
         public string ToHost
         {
             get { return toHost; }
@@ -38,6 +43,7 @@
         }
 
         [DataMember(Name = "toport", IsRequired = false), DefaultValue(80)]
+        [XmlAttribute(AttributeName = "toport")]
         public ushort ToPort
         {
             get { return toPort; }

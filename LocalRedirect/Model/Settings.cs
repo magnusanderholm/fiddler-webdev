@@ -1,12 +1,16 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     [DataContract(Name = "settings", Namespace = "")]
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "settings")]
     public partial class Settings : INotifyPropertyChanged
     {
         private ObservableCollection<UrlRule> urlRules;
@@ -21,6 +25,7 @@
             OnInitialized(emptyStreamingContext);
         }
 
+        [XmlIgnore()]
         public IChange Observer
         {
             get { return changeObserver; }
@@ -34,10 +39,12 @@
                 urlRules.Add(r);            
         }
 
+        [XmlIgnore()]
         public SessionModifierFactory UrlRuleFactory { get; private set;}       
                 
         /// <remarks/>
         [DataMember(Name = "urlrules", IsRequired=false)]
+        [XmlArray(ElementName = "urlrules"), XmlArrayItem(ElementName="urlrule",IsNullable=false, Type= typeof(UrlRule))]
         public ObservableCollection<UrlRule> UrlRules
         {
             get { return this.urlRules; }            
@@ -94,8 +101,8 @@
             //      where rule.Children gets new items. New items will not be observed correctly.
             //      not an issue right now but might become later on.
             changeObserver.Observe(rule);
-            changeObserver.Observe(rule.Children);
-            foreach (var c in rule.Children)
+            changeObserver.Observe(rule.Modifiers);
+            foreach (var c in rule.Modifiers)
                 changeObserver.Observe(c);
         }
     }

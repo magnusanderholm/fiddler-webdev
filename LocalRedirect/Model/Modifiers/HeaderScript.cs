@@ -8,6 +8,8 @@
 
     [DataContract(Name = "headerscript", Namespace = "")]
     [Modifier(Order = 3, IsEnabled = true)] 
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "headerscript")]
     public class HeaderScript : ChildSetting
     {
         private string htmlFragmentPath;
@@ -30,6 +32,7 @@
         }
 
         [DataMember(Name = "htmlfragmentpath", IsRequired = false, EmitDefaultValue=false), DefaultValue(null)]
+        [XmlAttribute(AttributeName = "htmlfragmentpath")]
         public string HtmlFragmentPath
         {
             get 
@@ -49,12 +52,13 @@
                 pC.Update(ref htmlFragmentPath, val).Extra("HasScript", "HtmlFragment"); 
             }
         }
-        
+        [XmlIgnore()]
         public bool HasScript
         {
             get { return HtmlFragmentPath != null &&  File.Exists(HtmlFragmentPath); }
         }
         
+        [XmlIgnore()]
         public string HtmlFragment
         {
             get

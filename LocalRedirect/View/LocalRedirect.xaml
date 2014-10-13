@@ -238,7 +238,7 @@
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <Grid Margin="39.5,0,0,0" Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"  >
-                        <ListView ItemsSource="{Binding Children}" BorderThickness="0" SelectionMode="Single" FontWeight="Normal" Grid.IsSharedSizeScope="True">
+                        <ListView ItemsSource="{Binding Modifiers}" BorderThickness="0" SelectionMode="Single" FontWeight="Normal" Grid.IsSharedSizeScope="True">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>

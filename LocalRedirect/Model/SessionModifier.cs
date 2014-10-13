@@ -21,11 +21,7 @@
                 throw new ArgumentNullException("modifiers");
 
             Modifiers = modifiers;
-            Session = session;
-
-            // FAKE HTTPS tunnels.
-            if (!Session.HTTPMethodIs("CONNECT"))            
-                Session["x-replywithtunnel"] = "FakeTunnel so we can get the actual HTTPS requests.";                            
+            Session = session;            
         }
 
         public IEnumerable<ISessionModifier> Modifiers { get; private set; }
@@ -64,7 +60,7 @@
 
         private static void ApplySessionModification(IEnumerable<ISessionModifier> modifiers, Session session, Func<ISessionModifier, Action<Session>> method)
         {
-            if (session != null && !session.HTTPMethodIs("CONNECT") && modifiers != null && modifiers.Any())
+            if (session != null && modifiers != null && modifiers.Any())
                 foreach (var m in modifiers)                    
                     method(m)(session);
         }

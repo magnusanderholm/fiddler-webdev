@@ -65,7 +65,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
 
     public void OnBeforeReturningError(Fiddler.Session oSession)
     {
-        urlMatcher.Get(oSession).BeforeReturningError();        
+        // urlMatcher.Get(oSession).BeforeReturningError();        
     }
 }
 

@@ -4,9 +4,12 @@
     using System.ComponentModel;
     using System.IO;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     [DataContract(Name = "fileresponse", Namespace = "")]
     [Modifier(Order=0, IsEnabled=true)]
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "fileresponse")]
     public class FileResponse : ChildSetting
     {
         private string baseDirectory;
@@ -21,6 +24,7 @@
         }
 
         [DataMember(Name = "directorypath", IsRequired = false, EmitDefaultValue=false)]
+        [XmlAttribute(AttributeName = "directorypath"), DefaultValue(null)]
         public string DirectoryPath
         {
             get 
@@ -47,7 +51,7 @@
             base.RequestBefore(session);
             if (IsEnabled /*&& this.HasScript*/)
             {
-                var localFile = new FileInfo(Path.Combine(baseDirectory, new Uri(session.PathAndQuery).LocalPath));
+                var localFile = new FileInfo(Path.Combine(baseDirectory, new Uri(session.fullUrl).LocalPath.TrimStart('/')));
                 if (localFile.Exists)
                     session.oFlags["x-replywithfile"] = localFile.FullName;
             }

@@ -7,6 +7,8 @@
 
     [DataContract(Name="javascriptcombiner", Namespace="")]
     [Modifier(Order = 0, IsEnabled=false)] 
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "javascriptcombiner")]
     public class JavascriptCombiner : ChildSetting
     {
         private JavascriptCombiner()

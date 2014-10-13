@@ -3,9 +3,12 @@
     using System;
     using System.ComponentModel;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     [DataContract(Name="redirect", Namespace="")]
     [Modifier(Order = 0, IsEnabled = true)] 
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "redirect")]
     public class Redirect : ChildSetting
     {
         private string toUrl;        
@@ -27,13 +30,14 @@
         }        
                
         [DataMember(Name="tourl", IsRequired=false), DefaultValue("")]
+        [XmlAttribute(AttributeName = "toport")]
         public string ToUrl
         {
             get { return this.toUrl; }
             set 
             {
                 var val = value;
-                if (!string.IsNullOrEmpty(val))
+                if (val != null)
                     val = new Uri(val, UriKind.Absolute).ToString();
                 pC.Update(ref toUrl, val); 
             }

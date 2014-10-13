@@ -1,24 +1,29 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System;
     using System.ComponentModel;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     [DataContract(Name="setting", Namespace="")]
-    [KnownType(typeof(UrlRule))]
-    [KnownType(typeof(Redirect))]
-    [KnownType(typeof(BrowserLink))]
-    [KnownType(typeof(HeaderScript))]
-    [KnownType(typeof(ForceUnminified))]
-    [KnownType(typeof(JavascriptCombiner))]
-    [KnownType(typeof(CSSCombiner))]
-    [KnownType(typeof(ForceSharepointDebugJavascript))]
-    [KnownType(typeof(OverrideDNS))]    
-    [KnownType(typeof(DisableCache))]
-    [KnownType(typeof(FileResponse))]
+    [KnownType(typeof(UrlRule)), XmlInclude(typeof(UrlRule))]
+    [KnownType(typeof(Redirect)), XmlInclude(typeof(Redirect))]
+    [KnownType(typeof(BrowserLink)), XmlInclude(typeof(BrowserLink))]
+    [KnownType(typeof(HeaderScript)), XmlInclude(typeof(HeaderScript))]
+    [KnownType(typeof(ForceUnminified)), XmlInclude(typeof(ForceUnminified))]
+    [KnownType(typeof(JavascriptCombiner)), XmlInclude(typeof(JavascriptCombiner))]
+    [KnownType(typeof(CSSCombiner)), XmlInclude(typeof(CSSCombiner))]
+    [KnownType(typeof(ForceSharepointDebugJavascript)), XmlInclude(typeof(ForceSharepointDebugJavascript))]
+    [KnownType(typeof(OverrideDNS)), XmlInclude(typeof(OverrideDNS))]
+    [KnownType(typeof(DisableCache)), XmlInclude(typeof(DisableCache))]
+    [KnownType(typeof(FileResponse)), XmlInclude(typeof(FileResponse))]
+    [KnownType(typeof(ChildSetting)), XmlInclude(typeof(ChildSetting))]
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "setting")]
     public abstract class Setting : INotifyPropertyChanged, ISessionModifier
     {
         private bool isEnabled;
-        public NotifyPropertyChanged pC;
+        protected NotifyPropertyChanged pC;
         
         public Setting()
         {
@@ -28,11 +33,13 @@
         
         /// <remarks/>
         [DataMember(Name = "isenabled", IsRequired = false), DefaultValue(false)]
+        [XmlAttribute(AttributeName = "isenabled")]
         public bool IsEnabled
         {
             get { return this.isEnabled; }
             set { pC.Update(ref isEnabled, value); }            
         }
+        
         
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -1,9 +1,13 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     [DataContract(Name = "disablecache", Namespace = "")]
     [Modifier(Order = -1, IsEnabled = true)] 
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "disablecache")]
     public class DisableCache : ChildSetting
     {
         private DisableCache()

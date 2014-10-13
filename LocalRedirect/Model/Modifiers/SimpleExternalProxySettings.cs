@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Fiddler.LocalRedirect.Model.Modifiers
 {
+    // TODO When executed it will render a simple html page in the repsonse.
+    //      This page will contain ip + port (proxy settings) that can be copied
+    //      to clipboard just by clicking. It will also contain the certificate link
+    //      and also inform the user if bcert is not installed.
     public class SimpleExternalProxySettings : ISessionModifier
     {
         // public string const

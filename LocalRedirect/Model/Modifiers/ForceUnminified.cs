@@ -11,6 +11,8 @@
     //      instead using regular expressions.
     [DataContract(Name="forceunminified", Namespace="")]
     [Modifier(Order = 2, IsEnabled = true)] 
+    [Serializable()]
+    [XmlRoot(Namespace = "", ElementName = "forceunminified")]
     public class ForceUnminified : ChildSetting
     {
         private ForceUnminified()
