@@ -74,6 +74,34 @@ namespace Fiddler.LocalRedirect.View
         {
             var urlRule = ViewModel.SettingsRepository.Settings.UrlRuleFactory.Create();
             ViewModel.SettingsRepository.Settings.UrlRules.Add(urlRule);
+        }
+
+        private void OnSetFileResponseDirectory(object sender, RoutedEventArgs e)
+        {
+            using (var dlg = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK && 
+                    !string.IsNullOrEmpty(dlg.SelectedPath) && 
+                    System.IO.Directory.Exists(dlg.SelectedPath))
+                {
+                    var fileResponse = (Model.FileResponse)((System.Windows.FrameworkContentElement)(e.Source)).DataContext;
+                    fileResponse.DirectoryPath = dlg.SelectedPath;                    
+                }
+            }                                    
+        }
+
+        private void OnSelectUrlRuleColor(object sender, RoutedEventArgs e)
+        {
+            using (var dlg = new System.Windows.Forms.ColorDialog())
+            {
+                dlg.AllowFullOpen = true;
+                dlg.FullOpen = true;
+                if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {                              
+                    var urlRule = (Model.UrlRule)((System.Windows.FrameworkElement)(e.Source)).DataContext;
+                    urlRule.Color = dlg.Color;                  
+                }
+            }      
         }        
     }
 }

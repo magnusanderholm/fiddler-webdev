@@ -5,7 +5,7 @@
     using System.Xml.Serialization;
 
     [DataContract()]
-    public abstract class ChildSetting: Setting,  ISessionModifier
+    public abstract class ChildSetting: Setting
     {
         private UrlRule parent;
         public ChildSetting()
@@ -24,29 +24,5 @@
             get { return parent; }
             set { pC.Update(ref parent, value); }
         }        
-
-        public virtual void PeekAtResponseHeaders(Session session)
-        {            
-        }
-
-        public virtual void RequestAfter(Session session)
-        {            
-        }
-
-        public virtual void RequestBefore(Session session)
-        {            
-        }
-
-        public virtual void ResponseAfter(Session session)
-        {            
-        }
-
-        public virtual void ResponseBefore(Session session)
-        {         
-        }
-
-        public virtual void BeforeReturningError(Session session)
-        {            
-        }
     }
 }

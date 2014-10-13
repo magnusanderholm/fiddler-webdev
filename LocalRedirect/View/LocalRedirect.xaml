@@ -46,11 +46,29 @@
         <DataTemplate DataType="{x:Type config:HeaderScript}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>                    
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0"><Hyperlink Click="OnSetHeaderScriptClick">Inject in head</Hyperlink></TextBlock>
-                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="1" Text="{Binding HtmlFragmentPath}" />
+                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0">
+                    Inject
+                    <Hyperlink Click="OnSetHeaderScriptClick">
+                        <Run Text="{Binding Path=HtmlFragmentPath, TargetNullValue='...'}" />
+                    </Hyperlink>
+                    in head.
+                </TextBlock>                
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type config:FileResponse}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>                    
+                </Grid.ColumnDefinitions>                
+                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0">
+                    Read responses from 
+                    <Hyperlink Click="OnSetFileResponseDirectory" >
+                        <Run Text="{Binding Path=DirectoryPath, TargetNullValue='...'}" />
+                    </Hyperlink>
+                </TextBlock>                
             </Grid>
         </DataTemplate>
 
@@ -199,13 +217,23 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTextColumn Header="Url" Binding="{Binding Url, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" Width="*"/>
-                <!--<DataGridTemplateColumn Header="Url" CanUserSort="True" Width="*" >
+                
+                <DataGridTemplateColumn Header="" CanUserSort="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Path=Url, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" HorizontalAlignment="Stretch"/>
+                            <Button Height="8" Width="8" Click="OnSelectUrlRuleColor">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Border BorderBrush="Black" BorderThickness="1"  >
+                                            <Rectangle Fill="{Binding HtmlColor, TargetNullValue='Transparent'}"  />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>                            
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
+                </DataGridTemplateColumn>
+                
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>

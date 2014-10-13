@@ -13,14 +13,14 @@
         private string htmlFragmentPath;
 
         private HeaderScript()
-        {
-            Initialize();            
+            : this(null)
+        {            
         }
 
         public HeaderScript(UrlRule parent)
             :base(parent)
         {
-            htmlFragmentPath = string.Empty;
+            Initialize();
         }
 
         public HeaderScript(UrlRule parent, FileInfo fI)
@@ -29,26 +29,30 @@
             htmlFragmentPath = fI.FullName;
         }
 
-        [DataMember(Name = "htmlfragmentpath", IsRequired = false), DefaultValue("")]
+        [DataMember(Name = "htmlfragmentpath", IsRequired = false, EmitDefaultValue=false), DefaultValue(null)]
         public string HtmlFragmentPath
         {
-            get { return this.htmlFragmentPath; }
-            set { pC.Update(ref htmlFragmentPath, value).Extra("HasScript", "HtmlFragment"); }
+            get 
+            { 
+                return this.htmlFragmentPath; 
+            }
+            set 
+            {
+                var val = value;
+                if (value == null)
+                {
+                    // Make sure that the path looks valid (not that it exists). Also convert
+                    // to a absolute path
+                    var tmp = new FileInfo(value);
+                    val = tmp.FullName;
+                }
+                pC.Update(ref htmlFragmentPath, val).Extra("HasScript", "HtmlFragment"); 
+            }
         }
         
         public bool HasScript
         {
-            get
-            {                
-                bool hasHeaderScript = false;
-                if (!string.IsNullOrWhiteSpace(HtmlFragmentPath))
-                {
-                    var headerScriptFile = new FileInfo(HtmlFragmentPath);
-                    hasHeaderScript = headerScriptFile.Exists && headerScriptFile.Length > 0;
-                }
-
-                return hasHeaderScript;
-            }
+            get { return HtmlFragmentPath != null &&  File.Exists(HtmlFragmentPath); }
         }
         
         public string HtmlFragment
@@ -57,7 +61,7 @@
             {
                 // TODO Use cache to reread file at regular intervals instead.
                 return HasScript
-                    ? File.ReadAllText(new FileInfo(HtmlFragmentPath).FullName)
+                    ? File.ReadAllText(HtmlFragmentPath)
                     : String.Empty;
             }
         }
@@ -75,7 +79,7 @@
         public override void ResponseBefore(Session session)
         {
             base.ResponseBefore(session);
-            if (IsEnabled && HasScript && session.oResponse.headers.ExistsAndContains("Content-Type", "text/html"))
+            if (IsEnabled & HasScript && session.oResponse.headers.ExistsAndContains("Content-Type", "text/html"))
             {
                 // TODO UseHtmlAgility pack for this
                 session.utilDecodeResponse();
@@ -85,7 +89,7 @@
 
         private void Initialize()
         {
-            htmlFragmentPath = string.Empty;            
+            htmlFragmentPath = null;            
         }
 
         [OnDeserializing]

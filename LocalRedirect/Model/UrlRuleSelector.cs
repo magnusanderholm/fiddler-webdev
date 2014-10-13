@@ -1,10 +1,11 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
     using Fiddler.LocalRedirect.Model;
-    using System;
-    using System.Collections.Concurrent;
-    using System.Linq;
-    using System.Threading;    
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;    
     
     public class UrlRuleSelector
     {
@@ -49,8 +50,13 @@
                     // TODO If Redirects are ordered to begin with we can avoid some overhead here.
                     var orderedRedirects = _settings.UrlRules.Where(r => r.IsValid && r.IsEnabled).OrderByDescending(r => r.Url.Length).ToArray();
                     var bestMatch = orderedRedirects.FirstOrDefault(r => sessionUrl.StartsWith(r.Url));
-                    if (bestMatch != null && bestMatch.Children.Any())                    
-                        sessionModifier = new SessionModifier(s, bestMatch.Children);
+                    if (bestMatch != null) 
+                    {
+                        var tmp = new List<ISessionModifier>();
+                        tmp.Add(bestMatch);
+                        tmp.AddRange(bestMatch.Children);
+                        sessionModifier = new SessionModifier(s, tmp);
+                    }                        
                 }
 
                 return sessionModifier; 

@@ -6,72 +6,51 @@
     using System.Runtime.Serialization;
 
     [DataContract(Name = "fileresponse", Namespace = "")]
-    [Modifier(Order=0, IsEnabled=false)]
+    [Modifier(Order=0, IsEnabled=true)]
     public class FileResponse : ChildSetting
     {
         private string baseDirectory;
 
         private FileResponse()
-        {
-            Initialize();
+        {            
         }
 
         public FileResponse(UrlRule parent)
             : base(parent)
-        {
-            Initialize();
+        {         
         }
 
-        [DataMember(Name = "directorypath", IsRequired = false), DefaultValue("")]
+        [DataMember(Name = "directorypath", IsRequired = false, EmitDefaultValue=false)]
         public string DirectoryPath
         {
-            get { return this.baseDirectory; }
-            set { pC.Update(ref baseDirectory, value); }
+            get 
+            { 
+                return this.baseDirectory; 
+            }
+            set 
+            {
+                if (value != null && !Path.IsPathRooted(value))
+                    throw new ArgumentException("Not an absolute path", "value");
+
+                if (!string.IsNullOrEmpty(value))
+                {  
+                    // Make sure that the path looks valid.
+                    var dir = new DirectoryInfo(value);                                        
+                }
+                
+                pC.Update(ref baseDirectory, value); 
+            }
         }
 
         public override void RequestBefore(Session session)
         {
             base.RequestBefore(session);
-            if (Parent.IsEnabled && IsEnabled /*&& this.HasScript*/)
+            if (IsEnabled /*&& this.HasScript*/)
             {
-                // In order to be able to inject data in the response we need to buffer it.
-                session.bBufferResponse = true;
-                // TODO Hmm can we shortcircuit the request here and make sure
-                //      we return an answer immediatly??? That way we won't even
-                //     need to make the roundtrip to the server.... Look at how AutoResponder does this
-                //     right now.
+                var localFile = new FileInfo(Path.Combine(baseDirectory, new Uri(session.PathAndQuery).LocalPath));
+                if (localFile.Exists)
+                    session.oFlags["x-replywithfile"] = localFile.FullName;
             }
-        }
-
-        public override void ResponseBefore(Session session)
-        {
-            base.ResponseBefore(session);
-            if (IsEnabled)
-            {
-                // TODO Look in locally stored files and simply replace the response with them.
-                // TODO If basedirectory does not exist. Log it.
-                var path = new Uri(session.PathAndQuery).LocalPath;
-                path = Path.Combine(baseDirectory, path);
-                if (File.Exists(path))
-                {
-                    // TODO Must treat everything as binary (can be img's etc).
-                    // TODO Log when we do not find the file...
-                    var content = File.ReadAllText(path);
-                    session.utilDecodeResponse();
-                    session.utilSetResponseBody(content);
-                }                
-            } 
-        }        
-
-        private void Initialize()
-        {
-            baseDirectory = "";
-        }
-
-        [OnDeserializing]
-        private void DeserializationInitializer(StreamingContext ctx)
-        {
-            this.Initialize();
-        }
+        }                      
     }
 }

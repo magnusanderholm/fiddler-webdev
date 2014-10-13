@@ -13,8 +13,9 @@
     [KnownType(typeof(CSSCombiner))]
     [KnownType(typeof(ForceSharepointDebugJavascript))]
     [KnownType(typeof(OverrideDNS))]    
-    [KnownType(typeof(DisableCache))]        
-    public abstract class Setting  : INotifyPropertyChanged
+    [KnownType(typeof(DisableCache))]
+    [KnownType(typeof(FileResponse))]
+    public abstract class Setting : INotifyPropertyChanged, ISessionModifier
     {
         private bool isEnabled;
         public NotifyPropertyChanged pC;
@@ -34,6 +35,31 @@
         }
         
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public virtual void PeekAtResponseHeaders(Session session)
+        {
+        }
+
+        public virtual void RequestAfter(Session session)
+        {
+        }
+
+        public virtual void RequestBefore(Session session)
+        {
+        }
+
+        public virtual void ResponseAfter(Session session)
+        {
+        }
+
+        public virtual void ResponseBefore(Session session)
+        {
+        }
+
+        public virtual void BeforeReturningError(Session session)
+        {
+        }
+
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs pCe)
         {

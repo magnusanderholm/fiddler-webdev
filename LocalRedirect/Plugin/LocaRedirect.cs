@@ -1,5 +1,6 @@
 ﻿using Fiddler;
 using Fiddler.LocalRedirect.Model;
+using Fiddler.LocalRedirect.ViewModel;
 using System.IO;
 using System.Windows.Forms;
 
@@ -12,10 +13,13 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     private readonly SettingsRepository settingsRepository =
         new SettingsRepository(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")));        
     private readonly UrlRuleSelector urlMatcher = new UrlRuleSelector();
+    private readonly RedirectViewModel viewModel;
     
     public LocalRedirect()
     {
-        
+        settingsRepository.Settings.Observer.Changed += (s, e) => urlMatcher.AssignSettings(settingsRepository.Settings);
+        urlMatcher.AssignSettings(settingsRepository.Settings);
+        viewModel = new RedirectViewModel(settingsRepository);
     }
 
     public void OnBeforeUnload()
@@ -23,17 +27,15 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     }
 
     public void OnLoad()
-    {                       
+    {
+        var view = new Fiddler.LocalRedirect.View.LocalRedirectHost() { ViewModel = viewModel };
+           
         var oPage = new TabPage("Redirector");
-        oPage.ImageIndex = (int)Fiddler.SessionIcons.Redirect;
-        var view = new Fiddler.LocalRedirect.View.LocalRedirectHost();
-        view.ViewModel = new Fiddler.LocalRedirect.ViewModel.RedirectViewModel(settingsRepository);
+        oPage.ImageIndex = (int)Fiddler.SessionIcons.Redirect;        
         oPage.Controls.Add(view);
         oPage.Padding = new Padding(0);
         view.Dock = DockStyle.Fill;        
-        FiddlerApplication.UI.tabsViews.TabPages.Add(oPage);
-        settingsRepository.Settings.Observer.Changed += (s,e) => urlMatcher.AssignSettings(settingsRepository.Settings);        
-        urlMatcher.AssignSettings(settingsRepository.Settings);
+        FiddlerApplication.UI.tabsViews.TabPages.Add(oPage);        
     }        
 
     public void OnPeekAtResponseHeaders(Fiddler.Session oSession)
