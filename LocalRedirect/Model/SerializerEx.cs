@@ -8,6 +8,7 @@
 
     public class SerializerEx<T>
     {
+        // TODO Could make use of the "extras" parameter to avoid using XmlInclude everywhere.....
         private readonly XmlSerializer serializer = new XmlSerializer(typeof(T));
         
         public void Serialize(T t, Stream s)
