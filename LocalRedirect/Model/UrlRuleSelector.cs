@@ -42,7 +42,7 @@ using System.Threading;
                 oSession.OnCompleteTransaction += OnCompleteTransaction;
                 var sessionModifier = SessionModifier.Empty;
                 
-                if (_settings != null && !s.HTTPMethodIs("CONNECT"))
+                if (_settings != null) // && !s.HTTPMethodIs("CONNECT"))
                 {
                     // Find best matching redirect rule (ie the one that is longest and matches the url in oSession).                     
                     var sessionUrl = s.fullUrl.ToLower();

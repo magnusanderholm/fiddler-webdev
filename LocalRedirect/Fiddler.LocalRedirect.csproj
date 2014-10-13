@@ -81,7 +81,7 @@
     <Compile Include="Model\UrlRuleSelector.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\UrlRule.cs" />
+    <Compile Include="Model\Modifiers\UrlRule.cs" />
     <Compile Include="Plugin\LocaRedirect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\RedirectViewModel.cs" />
