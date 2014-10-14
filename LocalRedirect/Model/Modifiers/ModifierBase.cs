@@ -11,7 +11,7 @@
     [KnownType(typeof(UrlRule)), XmlInclude(typeof(UrlRule))]
     [KnownType(typeof(Redirect)), XmlInclude(typeof(Redirect))]
     [KnownType(typeof(BrowserLink)), XmlInclude(typeof(BrowserLink))]
-    [KnownType(typeof(HeaderScript)), XmlInclude(typeof(HeaderScript))]
+    [KnownType(typeof(InjectFragment)), XmlInclude(typeof(InjectFragment))]
     [KnownType(typeof(ForceUnminified)), XmlInclude(typeof(ForceUnminified))]
     [KnownType(typeof(JavascriptCombiner)), XmlInclude(typeof(JavascriptCombiner))]
     [KnownType(typeof(CSSCombiner)), XmlInclude(typeof(CSSCombiner))]

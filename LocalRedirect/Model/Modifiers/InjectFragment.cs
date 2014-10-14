@@ -7,40 +7,40 @@
     using System.Xml.Serialization;
     using System.Linq;
 
-    [DataContract(Name = "headerscript", Namespace = "")]
+    [DataContract(Name = "injectfragment", Namespace = "")]
     [Modifier(Order = 3, IsEnabled = true)] 
     [Serializable()]
-    [XmlRoot(Namespace = "", ElementName = "headerscript")]
-    public class HeaderScript : Modifier
+    [XmlRoot(Namespace = "", ElementName = "injectfragment")]
+    public class InjectFragment : Modifier
     {
-        private string htmlFragmentPath;
+        private string path;
         private string htmlSelector;
         private const string defaultHtmlSelector = "/html/head";
 
-        private HeaderScript()
+        private InjectFragment()
             : this(null)
         {            
         }
 
-        public HeaderScript(UrlRule parent)
+        public InjectFragment(UrlRule parent)
             :base(parent)
         {
             Initialize();
         }
 
-        public HeaderScript(UrlRule parent, FileInfo fI)
+        public InjectFragment(UrlRule parent, FileInfo fI)
             : this(parent)
         {                        
-            htmlFragmentPath = fI.FullName;
+            path = fI.FullName;
         }
 
-        [DataMember(Name = "htmlfragmentpath", IsRequired = false, EmitDefaultValue=false), DefaultValue(null)]
-        [XmlAttribute(AttributeName = "htmlfragmentpath")]
-        public string HtmlFragmentPath
+        [DataMember(Name = "path", IsRequired = false, EmitDefaultValue = false), DefaultValue(null)]
+        [XmlAttribute(AttributeName = "path")]
+        public string Path
         {
             get 
             { 
-                return this.htmlFragmentPath; 
+                return this.path; 
             }
             set 
             {
@@ -52,7 +52,7 @@
                     var tmp = new FileInfo(value);
                     val = tmp.FullName;
                 }
-                pC.Update(ref htmlFragmentPath, val).Extra("HasScript", "HtmlFragment"); 
+                pC.Update(ref path, val).Extra("HasScript", "HtmlFragment"); 
             }
         }
 
@@ -61,13 +61,13 @@
         public string HtmlSelector
         {
             get { return this.htmlSelector; }
-            set { pC.Update(ref htmlFragmentPath, value); }
+            set { pC.Update(ref path, value); }
         }
 
         [XmlIgnore()]
         public bool HasScript
         {
-            get { return HtmlFragmentPath != null &&  File.Exists(HtmlFragmentPath); }
+            get { return Path != null &&  File.Exists(Path); }
         }
         
         [XmlIgnore()]
@@ -77,7 +77,7 @@
             {
                 // TODO Use cache to reread file at regular intervals instead.
                 return HasScript
-                    ? File.ReadAllText(HtmlFragmentPath)
+                    ? File.ReadAllText(Path)
                     : String.Empty;
             }
         }
@@ -116,7 +116,7 @@
 
         private void Initialize()
         {
-            htmlFragmentPath = null;
+            path = null;
             htmlSelector = defaultHtmlSelector;
         }
 

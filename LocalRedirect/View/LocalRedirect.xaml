@@ -43,7 +43,7 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type config:HeaderScript}">
+        <DataTemplate DataType="{x:Type config:InjectFragment}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
@@ -51,8 +51,8 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                     <TextBlock>Append
-                        <Hyperlink Click="OnSetHeaderScriptClick">
-                            <Run Text="{Binding Path=HtmlFragmentPath, TargetNullValue='...'}" />
+                        <Hyperlink Click="OnSetInjectFragmentClick">
+                            <Run Text="{Binding Path=Path, TargetNullValue='...'}" />
                         </Hyperlink>
                     </TextBlock>
                     <TextBlock Text=" to "/>
@@ -64,9 +64,10 @@
         <DataTemplate DataType="{x:Type config:FileResponse}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>                    
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>                
-                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0">
+                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0" Grid.ColumnSpan="2">
                     Read responses from 
                     <Hyperlink Click="OnSetFileResponseDirectory" >
                         <Run Text="{Binding Path=DirectoryPath, TargetNullValue='...'}" />
@@ -117,7 +118,7 @@
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource SettingStyle}" Text="Force SP .debug.js"></TextBlock>
+                <TextBlock Style="{StaticResource SettingStyle}" Text="Force &lt;url&gt;.debug.js"></TextBlock>
             </Grid>
         </DataTemplate>
 

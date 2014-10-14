@@ -15,12 +15,11 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         new SettingsRepository(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")));        
     private readonly UrlRuleSelector urlMatcher = new UrlRuleSelector();
     private readonly RedirectViewModel viewModel;
-
+    private static readonly EmbeddedAssemblyLoader assemblyLoader;
+    
     static LocalRedirect()
     {
-        var assemblyLoader = new EmbeddedAssemblyLoader();
-        var loadedAssemblies = assemblyLoader.LoadEmbeddedAssemblies();
-        int i = 0;
+        assemblyLoader = new EmbeddedAssemblyLoader();               
     }
     
     public LocalRedirect()

@@ -28,7 +28,7 @@ namespace Fiddler.LocalRedirect.View
 
         public RedirectViewModel ViewModel { get { return DataContext as RedirectViewModel; } }
 
-        private void OnSetHeaderScriptClick(object sender, RoutedEventArgs e)
+        private void OnSetInjectFragmentClick(object sender, RoutedEventArgs e)
         {
             var dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".html";
@@ -36,9 +36,9 @@ namespace Fiddler.LocalRedirect.View
             bool? result = dlg.ShowDialog();
             if (result != null && result.Value)
             {
-                var headerScript = (Model.HeaderScript)((System.Windows.FrameworkContentElement)(e.Source)).DataContext;
-                headerScript.HtmlFragmentPath = dlg.FileName;
-                headerScript.IsEnabled = true;
+                var injectFragment = (Model.InjectFragment)((System.Windows.FrameworkContentElement)(e.Source)).DataContext;
+                injectFragment.Path = dlg.FileName;
+                injectFragment.IsEnabled = true;
             }
         }
 

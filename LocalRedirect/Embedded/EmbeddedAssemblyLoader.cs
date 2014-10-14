@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-
-namespace Fiddler.LocalRedirect.Embedded
+﻿namespace Fiddler.LocalRedirect.Embedded
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+
     public class EmbeddedAssemblyLoader
     {
         public EmbeddedAssemblyLoader()
         {
             AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-        }
-        
-        public IEnumerable<Assembly> LoadEmbeddedAssemblies()
-        {
-            return null;
-        }
+        }                
 
         private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
         {            
