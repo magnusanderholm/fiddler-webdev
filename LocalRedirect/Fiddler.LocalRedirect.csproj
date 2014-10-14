@@ -35,6 +35,10 @@
       <HintPath>..\..\..\Program Files (x86)\Fiddler2\Fiddler.exe</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net40\HtmlAgilityPack.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -51,15 +55,17 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Embedded\EmbeddedAssemblyLoader.cs" />
+    <Compile Include="Embedded\EmbeddedResourceExtensions.cs" />
     <Compile Include="Model\Modifiers\FakeHTTPSTunnel.cs" />
     <Compile Include="Model\Modifiers\FileResponse.cs" />
     <Compile Include="Model\Modifiers\DisableCache.cs" />
     <Compile Include="Model\Modifiers\SimpleExternalProxySettings.cs" />
     <Compile Include="Model\Property.cs" />
-    <Compile Include="Model\Modifiers\SessionModifierFactory.cs" />
+    <Compile Include="Model\Modifiers\ModifierFactory.cs" />
     <Compile Include="Model\Modifiers\BrowserLink.cs" />
     <Compile Include="Model\CallerMemberNameAttribute.cs" />
-    <Compile Include="Model\ChildSetting.cs" />
+    <Compile Include="Model\Modifiers\Modifier.cs" />
     <Compile Include="Model\Modifiers\CSSCombiner.cs" />
     <Compile Include="Model\Modifiers\ForceSharepointDebugJavascript.cs" />
     <Compile Include="Model\IObserveChange.cs" />
@@ -67,7 +73,7 @@
     <Compile Include="Model\Modifiers\OverrideDNS.cs" />
     <Compile Include="Model\ObserveChange.cs" />
     <Compile Include="Model\UriExtensions.cs" />
-    <Compile Include="Model\UrlFileReplace.cs" />
+    <Compile Include="Model\Modifiers\UrlFileReplace.cs" />
     <Compile Include="Model\Modifiers\JavascriptCombiner.cs" />
     <Compile Include="Model\Modifiers\HeaderScript.cs" />
     <Compile Include="Model\ISessionModifier.cs" />
@@ -76,7 +82,7 @@
     <Compile Include="Model\Modifiers\Redirect.cs" />
     <Compile Include="Model\SerializerEx.cs" />
     <Compile Include="Model\SessionModifier.cs" />
-    <Compile Include="Model\Setting.cs" />
+    <Compile Include="Model\Modifiers\ModifierBase.cs" />
     <Compile Include="Model\Settings.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -112,6 +118,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\packages\HtmlAgilityPack.1.4.9\lib\Net40\HtmlAgilityPack.dll">
+      <Link>Embedded\HtmlAgilityPack.dll</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

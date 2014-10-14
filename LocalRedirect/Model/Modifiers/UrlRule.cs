@@ -14,9 +14,9 @@
     [DataContract(Name = "urlrule", Namespace = "")]
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName="urlrule")]
-    public class UrlRule : Setting
+    public class UrlRule : ModifierBase
     {
-        private ObservableCollection<ChildSetting> children;
+        private ObservableCollection<Modifier> children;
         private string urlString;
         private Settings parent;
         private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
@@ -43,8 +43,8 @@
         }
 
         [DataMember(Name = "modifiers", IsRequired = true)]
-        [XmlArray("modifiers", IsNullable = false), XmlArrayItem(IsNullable=false,ElementName="modifier", Type=typeof(ChildSetting))]
-        public ObservableCollection<ChildSetting> Modifiers {
+        [XmlArray("modifiers", IsNullable = false), XmlArrayItem(IsNullable=false,ElementName="modifier", Type=typeof(Modifier))]
+        public ObservableCollection<Modifier> Modifiers {
             get { return this.children;}            
         }
 
@@ -136,7 +136,7 @@
         private void OnInitializing(StreamingContext ctx)
         {
             urlString = string.Empty;
-            children = new ObservableCollection<ChildSetting>();
+            children = new ObservableCollection<Modifier>();
             color = null;         
         }
 
@@ -152,7 +152,7 @@
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                foreach (ChildSetting c in e.NewItems)
+                foreach (Modifier c in e.NewItems)
                     c.Parent = this;
             }
         }        

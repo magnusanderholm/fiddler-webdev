@@ -46,15 +46,18 @@
         <DataTemplate DataType="{x:Type config:HeaderScript}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>                    
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource SettingStyle}" Grid.Column="0">
-                    Inject
-                    <Hyperlink Click="OnSetHeaderScriptClick">
-                        <Run Text="{Binding Path=HtmlFragmentPath, TargetNullValue='...'}" />
-                    </Hyperlink>
-                    in head.
-                </TextBlock>                
+                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                    <TextBlock>Append
+                        <Hyperlink Click="OnSetHeaderScriptClick">
+                            <Run Text="{Binding Path=HtmlFragmentPath, TargetNullValue='...'}" />
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock Text=" to "/>
+                    <TextBox Text="{Binding HtmlSelector, ValidatesOnExceptions=True}" MinWidth="100" VerticalAlignment="Stretch"/>
+                </StackPanel>                                
             </Grid>
         </DataTemplate>
 

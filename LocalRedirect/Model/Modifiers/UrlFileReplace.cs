@@ -38,7 +38,7 @@
     }
 
     [DataContract(Name = "urlfileregexreplace", Namespace = "")]
-    public class UrlFileRegexReplace : ChildSetting
+    public class UrlFileRegexReplace : Modifier
     {
         private static SearchAndReplace[] availableExpressions = new SearchAndReplace[]
         {

@@ -40,7 +40,7 @@
         }
 
         [XmlIgnore()]
-        public SessionModifierFactory UrlRuleFactory { get; private set;}       
+        public ModifierFactory UrlRuleFactory { get; private set;}       
                 
         /// <remarks/>
         [DataMember(Name = "urlrules", IsRequired=false)]
@@ -63,7 +63,7 @@
         [OnDeserializing]
         private void OnInitializing(StreamingContext ctx)
         {
-            UrlRuleFactory = new SessionModifierFactory(this);
+            UrlRuleFactory = new ModifierFactory(this);
             pC = new NotifyPropertyChanged(OnPropertyChanged);
             urlRules = new ObservableCollection<UrlRule>();
             changeObserver = new ObserveChange();           

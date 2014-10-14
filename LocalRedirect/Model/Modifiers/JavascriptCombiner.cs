@@ -9,7 +9,7 @@
     [Modifier(Order = 0, IsEnabled=false)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "javascriptcombiner")]
-    public class JavascriptCombiner : ChildSetting
+    public class JavascriptCombiner : Modifier
     {
         private JavascriptCombiner()
         {

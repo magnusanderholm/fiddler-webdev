@@ -10,7 +10,7 @@
     [Modifier(Order=0, IsEnabled=true)]
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "fileresponse")]
-    public class FileResponse : ChildSetting
+    public class FileResponse : Modifier
     {
         private string baseDirectory;
 

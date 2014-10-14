@@ -5,7 +5,9 @@
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
-    [DataContract(Name="setting", Namespace="")]
+    [Serializable()]    
+    [XmlRoot(Namespace = "", ElementName = "modifierbase")]        
+    [DataContract(Name = "modifierbase", Namespace = "")]
     [KnownType(typeof(UrlRule)), XmlInclude(typeof(UrlRule))]
     [KnownType(typeof(Redirect)), XmlInclude(typeof(Redirect))]
     [KnownType(typeof(BrowserLink)), XmlInclude(typeof(BrowserLink))]
@@ -17,15 +19,13 @@
     [KnownType(typeof(OverrideDNS)), XmlInclude(typeof(OverrideDNS))]
     [KnownType(typeof(DisableCache)), XmlInclude(typeof(DisableCache))]
     [KnownType(typeof(FileResponse)), XmlInclude(typeof(FileResponse))]
-    [KnownType(typeof(ChildSetting)), XmlInclude(typeof(ChildSetting))]
-    [Serializable()]
-    [XmlRoot(Namespace = "", ElementName = "setting")]
-    public abstract class Setting : INotifyPropertyChanged, ISessionModifier
+    [KnownType(typeof(Modifier)), XmlInclude(typeof(Modifier))]
+    public abstract class ModifierBase : INotifyPropertyChanged, ISessionModifier
     {
         private bool isEnabled;
         protected NotifyPropertyChanged pC;
         
-        public Setting()
+        public ModifierBase()
         {
             Initialize();
         }

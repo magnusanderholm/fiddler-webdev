@@ -13,7 +13,7 @@
     [Modifier(Order = 2, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "forceunminified")]
-    public class ForceUnminified : ChildSetting
+    public class ForceUnminified : Modifier
     {
         private ForceUnminified()
         {

@@ -14,7 +14,7 @@ using System.Xml.Serialization;
     [Modifier(Order = 4, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "forcesharepointdebugjavascript")]
-    public class ForceSharepointDebugJavascript : ChildSetting
+    public class ForceSharepointDebugJavascript : Modifier
     {
         private static Regex regex = new Regex(@"\.(min\.)?js", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 

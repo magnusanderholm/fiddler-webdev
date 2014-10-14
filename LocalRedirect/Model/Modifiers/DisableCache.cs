@@ -8,7 +8,7 @@
     [Modifier(Order = -1, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "disablecache")]
-    public class DisableCache : ChildSetting
+    public class DisableCache : Modifier
     {
         private DisableCache()
         {            

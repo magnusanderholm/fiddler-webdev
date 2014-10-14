@@ -5,14 +5,17 @@
     using System.IO;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
+    using System.Linq;
 
     [DataContract(Name = "headerscript", Namespace = "")]
     [Modifier(Order = 3, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "headerscript")]
-    public class HeaderScript : ChildSetting
+    public class HeaderScript : Modifier
     {
         private string htmlFragmentPath;
+        private string htmlSelector;
+        private const string defaultHtmlSelector = "/html/head";
 
         private HeaderScript()
             : this(null)
@@ -42,7 +45,7 @@
             set 
             {
                 var val = value;
-                if (value == null)
+                if (value != null)
                 {
                     // Make sure that the path looks valid (not that it exists). Also convert
                     // to a absolute path
@@ -52,6 +55,15 @@
                 pC.Update(ref htmlFragmentPath, val).Extra("HasScript", "HtmlFragment"); 
             }
         }
+
+        [DataMember(Name = "htmlselector", IsRequired = false, EmitDefaultValue = true), DefaultValue(defaultHtmlSelector)]
+        [XmlAttribute(AttributeName = "htmlselector")]
+        public string HtmlSelector
+        {
+            get { return this.htmlSelector; }
+            set { pC.Update(ref htmlFragmentPath, value); }
+        }
+
         [XmlIgnore()]
         public bool HasScript
         {
@@ -83,17 +95,29 @@
         public override void ResponseBefore(Session session)
         {
             base.ResponseBefore(session);
-            if (IsEnabled & HasScript && session.oResponse.headers.ExistsAndContains("Content-Type", "text/html"))
-            {
-                // TODO UseHtmlAgility pack for this
+            if (IsEnabled & HasScript && session.oResponse.headers.ExistsAndContains("Content-Type", "text/html") && !string.IsNullOrWhiteSpace(htmlSelector))
+            {                
                 session.utilDecodeResponse();
-                session.utilReplaceInResponse("</head>", "<!-- Injected by fiddler -->" + HtmlFragment + "</head>");
+                var htmlDoc = new HtmlAgilityPack.HtmlDocument()
+                {
+                     OptionCheckSyntax = false,
+                     OptionOutputOriginalCase = true
+                };
+   
+                htmlDoc.LoadHtml(session.GetResponseBodyAsString());
+                var head = htmlDoc.DocumentNode.SelectSingleNode(htmlSelector);
+                if (head != null) { 
+                    head.AppendChild(HtmlAgilityPack.HtmlNode.CreateNode("<!-- Injected by fiddler -->"));
+                    head.AppendChild(HtmlAgilityPack.HtmlNode.CreateNode(HtmlFragment));
+                }
+                session.utilSetResponseBody(htmlDoc.DocumentNode.OuterHtml);
             }
         }
 
         private void Initialize()
         {
-            htmlFragmentPath = null;            
+            htmlFragmentPath = null;
+            htmlSelector = defaultHtmlSelector;
         }
 
         [OnDeserializing]

@@ -9,7 +9,7 @@
     [Modifier(Order=0, IsEnabled=false)]
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "browserlink")]
-    public class BrowserLink : ChildSetting
+    public class BrowserLink : Modifier
     {
         private string visualStudioProjectPath;
         

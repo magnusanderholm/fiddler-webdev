@@ -5,21 +5,21 @@
     using System.Linq;
     using System.Reflection;
 
-    public class SessionModifierFactory
+    public class ModifierFactory
     {
         private static IEnumerable<ConstructorInfo> availableSessionModifierConstructors;
         private readonly Settings settings;
 
-        static SessionModifierFactory()
+        static ModifierFactory()
         {
-            var childSettingType = typeof(ChildSetting);
+            var modifierType = typeof(Modifier);
             var iSessionModifierType = typeof(ISessionModifier);
             var modifierAttributeType = typeof(ModifierAttribute);
             var constructorParemeterTypes = new Type[] { typeof(UrlRule) };
-            var assembly = typeof(SessionModifierFactory).Assembly;
+            var assembly = typeof(ModifierFactory).Assembly;
             availableSessionModifierConstructors =
                 (from t in assembly.GetTypes()
-                 where t.IsClass && childSettingType.IsAssignableFrom(t) && iSessionModifierType.IsAssignableFrom(t)
+                 where t.IsClass && modifierType.IsAssignableFrom(t) && iSessionModifierType.IsAssignableFrom(t)
                  let modAttr = (ModifierAttribute)t.GetCustomAttributes(modifierAttributeType, true).FirstOrDefault()
                  let constr = t.GetConstructor(constructorParemeterTypes)
                  where modAttr != null && constr != null && modAttr.IsEnabled
@@ -27,7 +27,7 @@
                  select constr).ToArray();
         }
 
-        public SessionModifierFactory(Settings settings)
+        public ModifierFactory(Settings settings)
         {
             this.settings = settings;
         }
@@ -36,7 +36,7 @@
         {
             var constructorParameters = new object[] { urlRule };
             return availableSessionModifierConstructors
-                .Select(c => (ChildSetting)c.Invoke(constructorParameters))
+                .Select(c => (Modifier)c.Invoke(constructorParameters))
                 .ToArray();
         }
 
@@ -44,7 +44,7 @@
         {
             var urlRule = new UrlRule(settings);
             var constructorParameters = new object[] { urlRule };
-            foreach (var m in availableSessionModifierConstructors.Select(c => (ChildSetting)c.Invoke(constructorParameters)))
+            foreach (var m in availableSessionModifierConstructors.Select(c => (Modifier)c.Invoke(constructorParameters)))
                 urlRule.Modifiers.Add(m);
             return urlRule;
         }

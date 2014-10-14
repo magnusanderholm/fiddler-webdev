@@ -10,7 +10,7 @@
     [Modifier(Order = 1, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "overridedns")]
-    public class OverrideDNS : ChildSetting
+    public class OverrideDNS : Modifier
     {
         private string toHost;
         private ushort toPort;

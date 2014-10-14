@@ -9,7 +9,7 @@
     [Modifier(Order = 0, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "redirect")]
-    public class Redirect : ChildSetting
+    public class Redirect : Modifier
     {
         private string toUrl;        
 

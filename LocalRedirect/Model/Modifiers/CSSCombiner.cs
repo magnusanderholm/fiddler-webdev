@@ -9,7 +9,7 @@
     [Modifier(Order = 0, IsEnabled = false)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "csscombiner")]
-    public class CSSCombiner : ChildSetting
+    public class CSSCombiner : Modifier
     {
         private CSSCombiner()
         {
