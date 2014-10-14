@@ -44,13 +44,8 @@ using System.Threading;
                 
                 if (_settings != null)
                 {
-                    // Find best matching redirect rule (ie the one that is longest and matches the url in oSession).                     
-                    var sessionUrl = new Uri(s.fullUrl.ToLower());
-
-                    // Notice that we treat HTTPS CONNECT a little bit different. To match a HTTPS CONNECT we know that 
-                    // we must have a matching urlrule for a https://* url. Now the CONNECT comes in the form of http://<host>:443.
-                    // To get a match on that against our current rules we simply replace http:// with https:// and see if 
-                    // we get a match. If we do get a match we fake the tunnel.
+                    
+                    var sessionUrl = new Uri(s.fullUrl.ToLower());                    
                     bool isHttpsConnect = s.HTTPMethodIs("CONNECT") && sessionUrl.Scheme == "http";
                                                                                     
                     // TODO If Redirects are ordered to begin with we can avoid some overhead here.
