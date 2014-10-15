@@ -10,6 +10,10 @@
     {
         public EmbeddedAssemblyLoader()
         {
+            // TODO Rewrite so we load all assemblies immediatly and then we only
+            //      look in AppDomain.CurrentDomain.GetAssemblies() and return the correct one
+            //      in OnAssemblyResolve(). Will probably give us a little performance boost if
+            //      we need to load lots of assemblies.
             AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
         }                
 
@@ -26,12 +30,11 @@
             
             if (dll != null)
             {
-                using (var s = dll.Open())
-                using (var mS = new MemoryStream((int)s.Length))
+                using (var s = dll.Open())                
                 {
-                    s.CopyTo(mS);
-                    mS.Position = 0;
-                    loadedAssembly = Assembly.Load(mS.ToArray());
+                    var dllContent = new byte[s.Length];
+                    s.Read(dllContent, 0, dllContent.Length);
+                    loadedAssembly = Assembly.Load(dllContent);
                 }            
             }
                 
