@@ -58,6 +58,9 @@
   <ItemGroup>
     <Compile Include="Embedded\EmbeddedAssemblyLoader.cs" />
     <Compile Include="Embedded\EmbeddedResourceExtensions.cs" />
+    <Compile Include="Model\ILogger.cs" />
+    <Compile Include="Model\Logger.cs" />
+    <Compile Include="Model\LogManager.cs" />
     <Compile Include="Model\Modifiers\FakeHTTPSTunnel.cs" />
     <Compile Include="Model\Modifiers\FileResponse.cs" />
     <Compile Include="Model\Modifiers\DisableCache.cs" />
