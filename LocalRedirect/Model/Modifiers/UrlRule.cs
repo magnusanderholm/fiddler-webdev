@@ -122,7 +122,7 @@
 
 
         [XmlIgnore()]
-        public bool IsValid { get { return UrlString != null; } }
+        public bool IsValid { get { return !string.IsNullOrWhiteSpace(UrlString); } }
 
         
         public override void RequestBefore(Session session)
