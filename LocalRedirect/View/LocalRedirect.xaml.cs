@@ -30,9 +30,8 @@ namespace Fiddler.LocalRedirect.View
 
         private void OnSetInjectFragmentClick(object sender, RoutedEventArgs e)
         {
-            var dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".html";
-            dlg.Filter = "Html (*.html)|*.htm";
+            var dlg = new Microsoft.Win32.OpenFileDialog();            
+            dlg.Filter = "All Files (*.*)|*.*";
             bool? result = dlg.ShowDialog();
             if (result != null && result.Value)
             {
@@ -48,7 +47,7 @@ namespace Fiddler.LocalRedirect.View
             FileInfo fI = null;
             var dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".config";
-            dlg.Filter = "Config (*.config)|*.conf";
+            dlg.Filter = "Redirect config (*.config)|*.conf, *.config|All Files (*.*)|*.*";
             bool? result = dlg.ShowDialog();
             if (result != null && result.Value)
             {
@@ -62,7 +61,7 @@ namespace Fiddler.LocalRedirect.View
             // Show save dialog and set ViewModel.CurrentSettingsFile. Otherwise just save.
             var dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.DefaultExt = ".config";
-            dlg.Filter = "Config (*.config)|*.conf";
+            dlg.Filter = "Redirect config (*.config)|*.conf, *.config|All Files (*.*)|*.*";            
             bool? result = dlg.ShowDialog();
             if (result != null && result.Value)
             {
