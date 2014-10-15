@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+using System.Runtime.CompilerServices;
 
     public class SessionModifier
     {
         public static readonly SessionModifier Empty = new SessionModifier();
+        private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
 
         public SessionModifier()
         {
@@ -58,11 +60,23 @@
             ApplySessionModification(Modifiers, Session, m => m.BeforeReturningError);            
         }
 
-        private static void ApplySessionModification(IEnumerable<ISessionModifier> modifiers, Session session, Func<ISessionModifier, Action<Session>> method)
-        {
-            if (session != null && modifiers != null && modifiers.Any())
-                foreach (var m in modifiers)                    
-                    method(m)(session);
+        private static void ApplySessionModification(IEnumerable<ISessionModifier> modifiers, Session session, Func<ISessionModifier, Action<Session>> method, [CallerMemberName]string callingMember = "")
+        {            
+                if (session != null && modifiers != null && modifiers.Any())
+                {
+                    foreach (var m in modifiers)
+                    {
+                        try
+                        {
+                            method(m)(session);
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Error(() => string.Format("Unexpected exception in {0}.{1}", m.GetType().FullName, callingMember), e);
+                        }                        
+                    }
+                }
+                        
         }
     }
     

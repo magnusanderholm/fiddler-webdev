@@ -13,18 +13,30 @@ namespace Fiddler.LocalRedirect.Model
         private readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();
         private readonly Settings settings;                
         private FileInfo currentSettingsFile;
+        private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
         public SettingsRepository(FileInfo defaultSettingsFile)
         {
             if (defaultSettingsFile == null)
-                throw new ArgumentNullException("defaultSettingsFile");
-
+                throw new ArgumentNullException("defaultSettingsFile");            
             currentSettingsFile = defaultSettingsFile;
             settings = new Settings();
-            if (!defaultSettingsFile.Exists || defaultSettingsFile.Length == 0)
-                SaveSettingsToFile(defaultSettingsFile, settings);
-            else
-                settings = LoadSettingsFromFile(defaultSettingsFile);
             
+            if (!defaultSettingsFile.Exists || defaultSettingsFile.Length == 0)
+            {
+                SaveSettingsToFile(defaultSettingsFile, settings);
+            }
+            else
+            {
+                try
+                {
+                    settings = LoadSettingsFromFile(defaultSettingsFile);
+                }
+                catch (Exception e)
+                {
+                    logger.Error(() => string.Format("{0} has invalid format.", currentSettingsFile.FullName), e);
+                }
+            }
+                            
             settings.Observer.Changed  += OnSettingsChanged;
         }
         
@@ -43,16 +55,24 @@ namespace Fiddler.LocalRedirect.Model
         }
 
         public void Save(FileInfo fI)
-        {
-            CurrentFile = fI;
+        {            
             SaveSettingsToFile(CurrentFile, Settings);
+            CurrentFile = fI;
         }
 
         public Settings Open(FileInfo fI)
         {
-            CurrentFile = fI;
-            var newSettings = LoadSettingsFromFile(CurrentFile);
-            settings.ReplaceUrlRulesWith(newSettings.UrlRules);                        
+            try
+            {
+                var newSettings = LoadSettingsFromFile(fI);
+                settings.ReplaceUrlRulesWith(newSettings.UrlRules);
+                CurrentFile = fI;                
+            }
+            catch (Exception e)
+            {
+                logger.Error(() => string.Format("{0} has invalid format.", CurrentFile.FullName), e);
+            }
+            
             return settings;
         }
 
