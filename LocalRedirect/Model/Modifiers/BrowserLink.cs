@@ -4,9 +4,10 @@
     using System.ComponentModel;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
+    using System.Linq;
 
     [DataContract(Name = "browserlink", Namespace = "")]
-    [Modifier(Order=0, IsEnabled=false)]
+    [Modifier(Order=0, IsEnabled=true)]
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "browserlink")]
     public class BrowserLink : Modifier
@@ -47,11 +48,28 @@
             base.ResponseBefore(session);
             if (IsEnabled)
             {
-                // Enable browser link by injecting corresponding scripts. Don't think we need to cache
-                // anything as browserlink reads its config via memory mapped files.
-                // NOTE Could be that we do not really need to read the browserlink configuration. What if we do a 
-                //      web request to the site in question instead? Then we'd get a page where the scripts are already
-                //      injected and we can just copy and paste that into all other pages... May have to modifiy guids and so on...
+                var browserLinkConnection = new Fiddler.LocalRedirect.BrowserLink.BrowserLinkConfiguration()
+                    .GetAllBrowserLinkConnections()
+                    .FirstOrDefault() ;
+                if (browserLinkConnection != null)
+                {
+                    session.utilDecodeResponse();
+                    var htmlDoc = new HtmlAgilityPack.HtmlDocument()
+                    {
+                        OptionCheckSyntax = false,
+                        OptionOutputOriginalCase = true
+                    };
+
+                    htmlDoc.LoadHtml(session.GetResponseBodyAsString());
+                    browserLinkConnection.Attach(htmlDoc);
+                    //var head = htmlDoc.DocumentNode.SelectSingleNode("/html/body");
+                    //if (head != null)
+                    //{
+                    //    head.AppendChild(HtmlAgilityPack.HtmlNode.CreateNode("<!-- Injected by fiddler -->"));
+                    //    head.AppendChild(HtmlAgilityPack.HtmlNode.CreateNode(browserLinkConnection.HtmlScript));
+                    //}
+                    session.utilSetResponseBody(htmlDoc.DocumentNode.OuterHtml);
+                }                
             } 
         }        
 
