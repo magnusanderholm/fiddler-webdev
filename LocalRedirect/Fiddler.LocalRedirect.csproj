@@ -56,6 +56,10 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BrowserLink\BrowserLinkConfiguration.cs" />
+    <Compile Include="BrowserLink\BrowserLinkConnection.cs" />
+    <Compile Include="BrowserLink\BrowserLinkConstants.cs" />
+    <Compile Include="BrowserLink\NativeMethods.cs" />
     <Compile Include="Embedded\EmbeddedAssemblyLoader.cs" />
     <Compile Include="Embedded\EmbeddedResourceExtensions.cs" />
     <Compile Include="Model\ILogger.cs" />
@@ -76,6 +80,7 @@
     <Compile Include="Model\Modifiers\ModifierAttribute.cs" />
     <Compile Include="Model\Modifiers\OverrideDNS.cs" />
     <Compile Include="Model\ObserveChange.cs" />
+    <Compile Include="Model\JsonSerializer.cs" />
     <Compile Include="Model\UriExtensions.cs" />
     <Compile Include="Model\Modifiers\UrlFileReplace.cs" />
     <Compile Include="Model\Modifiers\JavascriptCombiner.cs" />
