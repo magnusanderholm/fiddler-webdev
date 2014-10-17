@@ -16,6 +16,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     private readonly UrlRuleSelector urlMatcher = new UrlRuleSelector();
     private readonly RedirectViewModel viewModel;
     private static readonly EmbeddedAssemblyLoader assemblyLoader;
+    private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
     
     static LocalRedirect()
     {
@@ -26,7 +27,12 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     {
         settingsRepository.Settings.Observer.Changed += (s, e) => urlMatcher.AssignSettings(settingsRepository.Settings);
         urlMatcher.AssignSettings(settingsRepository.Settings);
-        viewModel = new RedirectViewModel(settingsRepository);
+        viewModel = new RedirectViewModel(settingsRepository);        
+    }
+
+    private void OnWebSocketsMessage(object sender, WebSocketMessageEventArgs e)
+    {
+        logger.Info(() => "Web socket message received.");        
     }
 
     public void OnBeforeUnload()
@@ -35,6 +41,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
 
     public void OnLoad()
     {
+        FiddlerApplication.OnWebSocketMessage += OnWebSocketsMessage;
         var view = new Fiddler.LocalRedirect.View.LocalRedirectHost() { ViewModel = viewModel };
            
         var oPage = new TabPage("Redirector");

@@ -20,19 +20,20 @@
             this.RequestSignalName = requestSignalName;
             this.ReadySignalName = readySignalName;
             this.ProjectPaths = projectPaths;
+            
+        }
 
-            HtmlScript = GetInitializationDataScript(
+        public string GetHtmlScript(bool isHttps, string browser="Chrome")
+        {
+            return GetInitializationDataScript(
                 Guid.NewGuid().ToString("N"), 
-                "InternetExplorer", 
-                ConnectionString);
+                browser, 
+                isHttps ? SslConnectionString : ConnectionString);
         }
 
         public void Attach(HtmlAgilityPack.HtmlDocument doc)
-        {
-            var node = HtmlAgilityPack.HtmlNode.CreateNode("<div></div>");
-            node.InnerHtml = HtmlScript;
-            doc.DocumentNode.SelectSingleNode("/html/body").AppendChild(node);
-            SignalArteryForStartup();
+        {            
+            //SignalArteryForStartup();
         }
 
         public string RequestSignalName { get; private set; }
@@ -45,7 +46,7 @@
 		
         public IEnumerable<string> ProjectPaths { get; private set; }
 
-        public string HtmlScript { get; private set; }
+//        public string HtmlScript { get; private set; }
 
 
 
