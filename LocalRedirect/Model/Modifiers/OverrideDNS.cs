@@ -7,7 +7,7 @@
     using System.Xml.Serialization;
 
     [DataContract(Name="overridedns", Namespace="")]
-    [Modifier(Order = 1, IsEnabled = true)] 
+    [Modifier(Order = 5, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "overridedns")]
     public class OverrideDNS : Modifier

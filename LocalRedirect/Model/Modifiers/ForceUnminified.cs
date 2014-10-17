@@ -10,7 +10,7 @@
     //      that way we can modify the file part of a url
     //      instead using regular expressions.
     [DataContract(Name="forceunminified", Namespace="")]
-    [Modifier(Order = 2, IsEnabled = true)] 
+    [Modifier(Order = 1, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "forceunminified")]
     public class ForceUnminified : Modifier

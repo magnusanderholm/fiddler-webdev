@@ -8,7 +8,7 @@
     using System.Linq;
 
     [DataContract(Name = "injectfragment", Namespace = "")]
-    [Modifier(Order = 3, IsEnabled = true)] 
+    [Modifier(Order = 6, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "injectfragment")]
     public class InjectFragment : Modifier

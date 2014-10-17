@@ -73,7 +73,9 @@
         [OnDeserialized]
         private void OnInitialized(StreamingContext ctx)
         {
-            foreach (var urlRule in urlRules) { 
+            // Sort rules according to their modifierattributes
+
+            foreach (var urlRule in urlRules) {                                 
                 urlRule.Parent = this;
                 SetParentAndObserveHiearchyChanges(urlRule);
             }

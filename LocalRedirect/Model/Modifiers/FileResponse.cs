@@ -7,7 +7,7 @@
     using System.Xml.Serialization;
 
     [DataContract(Name = "fileresponse", Namespace = "")]
-    [Modifier(Order=0, IsEnabled=true)]
+    [Modifier(Order=3, IsEnabled=true)]
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "fileresponse")]
     public class FileResponse : Modifier

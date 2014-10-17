@@ -11,7 +11,7 @@ using System.Xml.Serialization;
     //      that way we can modify the file part of a url
     //      instead using regular expressions.
     [DataContract(Name="forcesharepointdebugjavascript", Namespace="")]
-    [Modifier(Order = 4, IsEnabled = true)] 
+    [Modifier(Order = 2, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "forcesharepointdebugjavascript")]
     public class ForceSharepointDebugJavascript : Modifier

@@ -5,7 +5,7 @@
     using System.Xml.Serialization;
 
     [DataContract(Name = "disablecache", Namespace = "")]
-    [Modifier(Order = -1, IsEnabled = true)] 
+    [Modifier(Order = 0, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "disablecache")]
     public class DisableCache : Modifier

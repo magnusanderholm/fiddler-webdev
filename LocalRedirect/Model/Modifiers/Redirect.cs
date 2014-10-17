@@ -6,7 +6,7 @@
     using System.Xml.Serialization;
 
     [DataContract(Name="redirect", Namespace="")]
-    [Modifier(Order = 0, IsEnabled = true)] 
+    [Modifier(Order = 4, IsEnabled = true)] 
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "redirect")]
     public class Redirect : Modifier
