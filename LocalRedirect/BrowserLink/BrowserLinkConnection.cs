@@ -75,27 +75,32 @@
         private static void SendSignal(string signalName)
         {
             // TODO Make safer. May throw.
-            EventWaitHandle eventWaitHandle = EventWaitHandle.OpenExisting(signalName, EventWaitHandleRights.Modify);
             try
             {
-                eventWaitHandle.Set();
+                using (var eventWaitHandle = EventWaitHandle.OpenExisting(signalName, EventWaitHandleRights.Modify))
+                {
+                    eventWaitHandle.Set();
+                }                      
             }
-            finally
+            catch (Exception)
             {
-                eventWaitHandle.Dispose();
-            }            
+            }
+            
         }
         private static bool WaitForSignal(string signalName)
         {
-            EventWaitHandle eventWaitHandle = EventWaitHandle.OpenExisting(signalName, EventWaitHandleRights.Synchronize);
+            bool ret = true;
             try
             {
-                return eventWaitHandle.WaitOne(ArteryStartupTimeout);
+                using (var eventWaitHandle = EventWaitHandle.OpenExisting(signalName, EventWaitHandleRights.Synchronize))
+                {
+                    ret = eventWaitHandle.WaitOne(ArteryStartupTimeout);
+                }
             }
-            finally
+            catch (Exception)
             {
-                eventWaitHandle.Dispose();
             }            
+            return ret;          
         }
 
     }
