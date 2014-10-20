@@ -136,7 +136,7 @@
         private void OnInitializing(StreamingContext ctx)
         {
             urlString = string.Empty;
-            children = new ObservableCollection<Modifier>();
+            children = new SortedObservableCollection<Modifier>();
             color = null;         
         }
 

@@ -22,8 +22,7 @@
                  where t.IsClass && modifierType.IsAssignableFrom(t) && iSessionModifierType.IsAssignableFrom(t)
                  let modAttr = (ModifierAttribute)t.GetCustomAttributes(modifierAttributeType, true).FirstOrDefault()
                  let constr = t.GetConstructor(constructorParemeterTypes)
-                 where modAttr != null && constr != null && modAttr.IsEnabled
-                 orderby modAttr.Order ascending, t.Name ascending
+                 where modAttr != null && constr != null && modAttr.IsEnabled                 
                  select constr).ToArray();
         }
 

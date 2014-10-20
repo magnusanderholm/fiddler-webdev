@@ -83,6 +83,7 @@
     <Compile Include="Model\Modifiers\OverrideDNS.cs" />
     <Compile Include="Model\ObserveChange.cs" />
     <Compile Include="Model\JsonSerializer.cs" />
+    <Compile Include="Model\SortedObservableCollection.cs" />
     <Compile Include="Model\UriExtensions.cs" />
     <Compile Include="Model\Modifiers\UrlFileReplace.cs" />
     <Compile Include="Model\Modifiers\JavascriptCombiner.cs" />
