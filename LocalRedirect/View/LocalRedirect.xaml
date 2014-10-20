@@ -199,10 +199,10 @@
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                         <Setter Property="Source" Value="{StaticResource imgHttps}"/>
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Url.Scheme, UpdateSourceTrigger=PropertyChanged}" Value="HTTP">
+                                            <DataTrigger Binding="{Binding Url.Scheme, UpdateSourceTrigger=PropertyChanged}" Value="http">
                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding Url.Scheme, UpdateSourceTrigger=PropertyChanged}" Value="HTTPS">
+                                            <DataTrigger Binding="{Binding Url.Scheme, UpdateSourceTrigger=PropertyChanged}" Value="https">
                                                 <Setter Property="Visibility" Value="Visible"/>
                                             </DataTrigger>
                                         </Style.Triggers>
