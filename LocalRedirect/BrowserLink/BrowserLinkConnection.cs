@@ -23,18 +23,13 @@
             
         }
 
-        public string GetHtmlScript(bool isHttps, string browser="Chrome")
+        public string GetHtmlScript(Uri url, BrowserIdentifier browserIdentifier)
         {
             return GetInitializationDataScript(
-                Guid.NewGuid().ToString("N"), 
-                browser, 
-                isHttps ? SslConnectionString : ConnectionString);
-        }
-
-        public void Attach(HtmlAgilityPack.HtmlDocument doc)
-        {            
-            //SignalArteryForStartup();
-        }
+                Guid.NewGuid(), 
+                browserIdentifier.Id, 
+                url.Scheme == "https" ? SslConnectionString : ConnectionString);
+        }        
 
         public string RequestSignalName { get; private set; }
 		
@@ -46,12 +41,7 @@
 		
         public IEnumerable<string> ProjectPaths { get; private set; }
 
-//        public string HtmlScript { get; private set; }
-
-
-
-
-        private static string GetInitializationDataScript(string requestId, string appName, string connectionString)
+        private static string GetInitializationDataScript(Guid requestId, string appName, string connectionString)
         {            
             var htmlFormat =
 @"
@@ -60,7 +50,7 @@
 </script>
 <script type=""text/javascript"" src=""{2}"" async=""async""></script>
 ";
-            return string.Format(htmlFormat, appName, requestId, connectionString);            
+            return string.Format(htmlFormat, appName, requestId.ToString("N"), connectionString);            
         }
 
 
