@@ -17,8 +17,10 @@ namespace Fiddler.LocalRedirect.Model
         public SettingsRepository(FileInfo defaultSettingsFile)
         {
             if (defaultSettingsFile == null)
-                throw new ArgumentNullException("defaultSettingsFile");            
-            currentSettingsFile = defaultSettingsFile;
+                throw new ArgumentNullException("defaultSettingsFile");
+
+            Mru = new MostRecentlyUsedFiles(10, defaultSettingsFile);
+            currentSettingsFile = Mru.Last();
             settings = new Settings();
             
             if (!defaultSettingsFile.Exists || defaultSettingsFile.Length == 0)
@@ -38,7 +40,11 @@ namespace Fiddler.LocalRedirect.Model
             }
                             
             settings.Observer.Changed  += OnSettingsChanged;
+
         }
+
+
+        public MostRecentlyUsedFiles Mru { get; private set; }
         
         public Settings Settings { get { return settings; } }
 
@@ -56,7 +62,7 @@ namespace Fiddler.LocalRedirect.Model
 
         public void Save(FileInfo fI)
         {            
-            SaveSettingsToFile(CurrentFile, Settings);
+            SaveSettingsToFile(fI, Settings);
             CurrentFile = fI;
         }
 
@@ -89,6 +95,7 @@ namespace Fiddler.LocalRedirect.Model
 
         private void SaveSettingsToFile(FileInfo settingsFile, Settings settings)
         {
+            Mru.AddOrUpdate(settingsFile);
             using (var fS = settingsFile.OpenWrite())
             {
                 fS.SetLength(0);

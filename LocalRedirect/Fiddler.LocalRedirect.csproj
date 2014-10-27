@@ -71,6 +71,8 @@
     <Compile Include="Model\Modifiers\FileResponse.cs" />
     <Compile Include="Model\Modifiers\DisableCache.cs" />
     <Compile Include="Model\Modifiers\SimpleExternalProxySettings.cs" />
+    <Compile Include="Model\MostRecentlyUsed.cs" />
+    <Compile Include="Model\MostRecentlyUsedFiles.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\Modifiers\ModifierFactory.cs" />
     <Compile Include="Model\Modifiers\BrowserLink.cs" />

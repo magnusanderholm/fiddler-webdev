@@ -152,15 +152,40 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ToolBarTray>
+        <StackPanel Orientation="Horizontal">
+            <Menu Grid.Row="0" >
+                <!-- TODO Add nice looking images. -->
+                <MenuItem Header="File">
+                    <MenuItem Header="Open" Click="OnBtnOpenClick" />
+                    <MenuItem Header="Save As" Click="OnBtnSaveClick" />
+                    <Separator />
+                    <MenuItem Header="Recent Files" ItemsSource="{Binding SettingsRepository.Mru}" Click="OnBtnRecentFileClick" />
+                </MenuItem>
+            </Menu>
+            <TextBlock Text="{Binding SettingsRepository.CurrentFile, Mode=OneWay, TargetNullValue=...}" Style="{StaticResource ItemPadding}" />
+        </StackPanel>
+        
+        <!--<ToolBarTray>
             <ToolBar>
-                <Button Content="Open" Click="OnBtnOpenClick"/>
-                <Button Content="Save As" Click="OnBtnSaveClick"/>
+                <ToggleButton Name="mnuFile">
+                    <StackPanel>
+                        --><!--<Image></Image>--><!--
+                        <TextBlock Margin="2" VerticalAlignment="Center">File</TextBlock>
+                    </StackPanel>
+                </ToggleButton>
+                <Popup x:Name="popupFile" PlacementTarget="{Binding ElementName=mnuFile}" StaysOpen="False">
+                    <Border>
+                        <StackPanel>
+                            <Button Content="Open" Click="OnBtnOpenClick"/>
+                            <Button Content="Save As" Click="OnBtnSaveClick"/>
+                        </StackPanel>                        
+                    </Border>
+                </Popup>                
             </ToolBar>
             <ToolBar>
                 <Button Content="Add" Click="OnBtnAddClick"/>
             </ToolBar>
-        </ToolBarTray>
+        </ToolBarTray>-->
         <DataGrid Grid.Row="1" ItemsSource="{Binding UrlRules}" CanUserAddRows="False" CanUserDeleteRows="True" AutoGenerateColumns="False"  Grid.RowSpan="2" AllowDrop="True" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" HorizontalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" GridLinesVisibility="Horizontal"  RowDetailsVisibilityMode="Collapsed">
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">

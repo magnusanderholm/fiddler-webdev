@@ -101,6 +101,21 @@ namespace Fiddler.LocalRedirect.View
                     urlRule.Color = dlg.Color;                  
                 }
             }      
+        }
+
+        private void OnBtnRecentFileClick(object sender, RoutedEventArgs e)
+        {                        
+            var menuItem = sender as MenuItem; 
+            // get submenu clicked item constructed from MyMenuItems collection
+            var myItemsMenuSubItem = e.OriginalSource as MenuItem; 
+
+            // get underlying MyMenuItems collection item
+            var o = menuItem
+                .ItemContainerGenerator
+                .ItemFromContainer(myItemsMenuSubItem);
+            // convert to MyMenuItems type ... in our case string
+            var file = o as FileInfo;
+            ViewModel.SettingsRepository.Open(file);
         }        
     }
 }
