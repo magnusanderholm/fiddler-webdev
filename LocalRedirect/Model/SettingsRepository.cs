@@ -1,26 +1,32 @@
-﻿using Fiddler.LocalRedirect.Model;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
-
-namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Model
 {
-    public class SettingsRepository
+    using Fiddler.LocalRedirect.Model;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Xml;
+
+    public class SettingsRepository : INotifyPropertyChanged, Fiddler.LocalRedirect.Model.ISettingsRepository
     {
         private readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();
         private readonly Settings settings;                
         private FileInfo currentSettingsFile;
+        private NotifyPropertyChanged pC;
+
         private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
         public SettingsRepository(FileInfo defaultSettingsFile)
         {
             if (defaultSettingsFile == null)
                 throw new ArgumentNullException("defaultSettingsFile");
+            pC = new NotifyPropertyChanged(OnPropertyChanged);
+            Mru = new MostRecentlyUsedFiles(10);
+            if (!Mru.Any(f => string.Compare(f.FullName, defaultSettingsFile.FullName) == 0))
+                Mru.Touch(defaultSettingsFile);
 
-            Mru = new MostRecentlyUsedFiles(10, defaultSettingsFile);
-            currentSettingsFile = Mru.Last();
+            currentSettingsFile = Mru.First();
             settings = new Settings();
             
             if (!defaultSettingsFile.Exists || defaultSettingsFile.Length == 0)
@@ -44,7 +50,7 @@ namespace Fiddler.LocalRedirect.Model
         }
 
 
-        public MostRecentlyUsedFiles Mru { get; private set; }
+        public IMostRecentlyUsed<FileInfo> Mru { get; private set; }
         
         public Settings Settings { get { return settings; } }
 
@@ -56,7 +62,7 @@ namespace Fiddler.LocalRedirect.Model
                 if (value == null)
                     throw new ArgumentNullException("value");
                 if (string.Compare(value.FullName, currentSettingsFile.FullName) != 0)
-                    currentSettingsFile = value; 
+                    pC.Update(ref currentSettingsFile, value);
             }
         }
 
@@ -72,6 +78,7 @@ namespace Fiddler.LocalRedirect.Model
             {
                 var newSettings = LoadSettingsFromFile(fI);
                 settings.ReplaceUrlRulesWith(newSettings.UrlRules);
+                Mru.Touch(fI);
                 CurrentFile = fI;                
             }
             catch (Exception e)
@@ -80,6 +87,15 @@ namespace Fiddler.LocalRedirect.Model
             }
             
             return settings;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs pCe)
+        {
+            var h = PropertyChanged;
+            if (h != null)
+                h(this, pCe);
         }
 
         private void OnSettingsChanged(object sender, EventArgs e)
@@ -94,13 +110,16 @@ namespace Fiddler.LocalRedirect.Model
         }
 
         private void SaveSettingsToFile(FileInfo settingsFile, Settings settings)
-        {
-            Mru.AddOrUpdate(settingsFile);
+        {            
             using (var fS = settingsFile.OpenWrite())
             {
                 fS.SetLength(0);
                 settingsSerializer.Serialize(settings, fS);
-            }                       
-        }        
+            }
+
+            Mru.Touch(settingsFile);
+        }
+
+        
     }
 }

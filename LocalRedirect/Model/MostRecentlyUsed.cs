@@ -1,92 +1,89 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿namespace Fiddler.LocalRedirect.Model
+{
+    using Microsoft.Win32;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.Linq;
 
-namespace Fiddler.LocalRedirect.Model
-{    
-    public class MostRecentlyUsed<T> : IEnumerable<T>, INotifyCollectionChanged
-    {        
-        private readonly RegistryKey key;
+    public class MostRecentlyUsed<TItem> : IMostRecentlyUsed<TItem> where TItem:class
+    {
+
         private readonly string registryValueName;
-        private static string separator = Environment.NewLine;
-        private readonly List<T> files = new List<T>();
+        private readonly RegistryKey registryKey;
+        private readonly List<TItem> items = new List<TItem>();
         private readonly int maxItems;
-        private readonly Func<IEnumerable<T>, string> serializer;
-        private readonly Func<string, IEnumerable<T>> deserializer;
-        private readonly Func<T, T,int> comparer;
-        private readonly T[] constantItems;
+        private readonly Func<IEnumerable<TItem>, string> serializer;
+        private readonly Func<string, IEnumerable<TItem>> deserializer;
+        private readonly Func<TItem, TItem, int> comparer;
+
 
         public MostRecentlyUsed(
-            string registryKey, 
-            string registryValueName, 
+            string registryKey,
+            string registryValueName,
             int maxItems,
-            Func<IEnumerable<T>, string> serializer,
-            Func<string, IEnumerable<T>> deserializer, 
-            Func<T,T, int> comparer, 
-            params T[] constantItems)
+            Func<IEnumerable<TItem>, string> serializer,
+            Func<string, IEnumerable<TItem>> deserializer,
+            Func<TItem, TItem, int> comparer)
         {
-            this.constantItems = constantItems;
             this.serializer = serializer;
             this.deserializer = deserializer;
             this.comparer = comparer;
             this.maxItems = maxItems;
             this.registryValueName = registryValueName;
-            
 
-            // TODO Perhaps we shall always list the default location???? 
-            this.key = Registry.CurrentUser.CreateSubKey(registryKey); // Make sure key exists.                  
-            this.files.AddRange(deserializer((string)key.GetValue(registryValueName, String.Empty)));
+            this.registryKey = Registry.CurrentUser.CreateSubKey(registryKey); // Make sure key exists.            
+            items.AddRange(deserializer((string)this.registryKey.GetValue(registryValueName, String.Empty)));
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        public void AddOrUpdate(T path)
-        {            
-            var idx = files.FindIndex(f => comparer(f,path) == 0);
-            if (idx >= 0)
-            {
-                var tmp = files[idx];
-                files.RemoveAt(idx);
-                OnDeleted(tmp, idx);
-            }
+        public void Touch(TItem item)
+        {
+            var eventArgs = new List<NotifyCollectionChangedEventArgs>();
             
-            files.Add(path);
-            OnAdded(path, files.Count - 1);
-            key.SetValue(registryValueName, serializer(files));
+            var existingItemIndex = items.FindIndex(f => comparer(f, item) == 0);            
+            if (existingItemIndex >= 0) 
+            {
+                item = items[existingItemIndex];
+                items.RemoveAt(existingItemIndex);                  
+            }
+
+            items.Insert(0, item);
+            if (existingItemIndex >= 0)
+                eventArgs.Add(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, 0, existingItemIndex));
+            else eventArgs.Add(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, 0));
+
+
+            if (items.Count > maxItems) 
+            {
+                var removedItem = items.Last();
+                items.RemoveAt(items.Count - 1);
+                eventArgs.Add(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem, items.Count - 1));
+            }
+
+            foreach (var e in eventArgs)
+                OnCollectionChanged(e);
+
+            registryKey.SetValue(registryValueName, serializer(items));
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<TItem> GetEnumerator()
         {
-            return constantItems.Union(files).GetEnumerator();
+            return items.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
-
-        protected virtual void OnDeleted(T t, int index)
-        {
-            index += constantItems.Length;
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, t, index));
-        }
-
-        protected virtual void OnAdded(T t, int index)
-        {
-            index += constantItems.Length;
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, t, index));
-        }
-
+        
 
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             var h = CollectionChanged;
             if (h != null)
                 h(this, e);
-        }
+        }        
     }
 }

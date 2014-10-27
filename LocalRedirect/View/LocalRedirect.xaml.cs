@@ -26,7 +26,7 @@ namespace Fiddler.LocalRedirect.View
             InitializeComponent();
         }
 
-        public RedirectViewModel ViewModel { get { return DataContext as RedirectViewModel; } }
+        public IRedirectViewModel ViewModel { get { return DataContext as IRedirectViewModel; } }
 
         private void OnSetInjectFragmentClick(object sender, RoutedEventArgs e)
         {

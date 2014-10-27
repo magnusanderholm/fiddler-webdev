@@ -14,8 +14,8 @@ namespace Fiddler.LocalRedirect.Model
         private static string separator = Environment.NewLine;
 
 
-        public MostRecentlyUsedFiles(int maxItems, params FileInfo[] constantFiles)
-            : base(registryPath, mruKey, maxItems, Serialize, Deserialize, (f0, f1) => string.Compare(f0.FullName, f1.FullName, true), constantFiles)
+        public MostRecentlyUsedFiles(int maxItems)
+            : base(registryPath, mruKey, maxItems, Serialize, Deserialize, (f0, f1) => string.Compare(f0.FullName, f1.FullName, true))
         {
             // How can we ensure that we ALWAYS have the default file as the last item. It cannot be removed.
         }        

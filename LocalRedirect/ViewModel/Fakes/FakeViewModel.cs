@@ -1,14 +1,14 @@
-﻿namespace Fiddler.LocalRedirect.ViewModel
+﻿namespace Fiddler.LocalRedirect.ViewModel.Fakes
 {
     using Fiddler.LocalRedirect.Model;
     using System.Collections.Generic;
 
-    public class RedirectViewModel : Fiddler.LocalRedirect.ViewModel.IRedirectViewModel
+    public class FakeViewModel
     {
 
-        public RedirectViewModel(ISettingsRepository settingsRepository)
-        {                                    
-            SettingsRepository = settingsRepository;
+        public FakeViewModel()
+        {
+            SettingsRepository = new FakeSettingsRepository();
             UrlRules = SettingsRepository.Settings.UrlRules;
         }
 
