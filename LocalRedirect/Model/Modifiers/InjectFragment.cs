@@ -44,14 +44,15 @@
             }
             set 
             {
-                var val = value;
-                if (value != null)
+                var val = (value ?? string.Empty).Trim();
+                if (val != string.Empty && !System.IO.Path.IsPathRooted(val))
+                    throw new ArgumentException("Not an absolute path", "value");
+
+                if (val != string.Empty)
                 {
-                    // Make sure that the path looks valid (not that it exists). Also convert
-                    // to a absolute path
-                    var tmp = new FileInfo(value);
-                    val = tmp.FullName;
+                    var file = new FileInfo(value);
                 }
+                
                 pC.Update(ref path, val).Extra("HasScript", "HtmlFragment"); 
             }
         }
@@ -61,7 +62,7 @@
         public string HtmlSelector
         {
             get { return this.htmlSelector; }
-            set { pC.Update(ref path, value); }
+            set  { pC.Update(ref htmlSelector, value); }
         }
 
         [XmlIgnore()]

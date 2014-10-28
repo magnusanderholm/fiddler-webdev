@@ -9,54 +9,48 @@
              xmlns:fakeviewmodels="clr-namespace:Fiddler.LocalRedirect.ViewModel.Fakes"
              
              mc:Ignorable="d" AllowDrop="True" Height="372.903" Width="477.398">
+    
     <UserControl.Resources>
-
+    
         <fakeviewmodels:FakeViewModel x:Key="DesignViewModel" />
         <BitmapImage x:Key="imgHttps" UriSource="/Fiddler.LocalRedirect;component/images/lock_open.png" />
+        
+        <Style TargetType="{x:Type CheckBox}">            
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,2,0"/>
+        </Style>
 
-        <!--<Style x:Key="ItemPadding" TargetType="FrameworkElement">
-            --><!--<Setter Property="Margin" Value="2,2,2,2" />
-            <Setter Property="VerticalAlignment" Value="Bottom"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>--><!--
-        </Style>-->
-
-        <Style TargetType="{x:Type CheckBox}">
-            <Setter Property="VerticalAlignment" Value="Bottom"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Background" Value="Yellow"/>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="21"/>
+            <Setter Property="Margin" Value="0,0,2,0"/>
         </Style>
 
 
         <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Background" Value="Red"/>
-            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>            
+            <Setter Property="Margin" Value="0,0,2,0"/>
+        </Style>
+
+        <Style TargetType="{x:Type Label}">            
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,0,2,0"/>
+            <!--<Setter Property="FontSize" Value="10" />-->
+            <!--<Setter Property="Height" Value="10" />-->
         </Style>
-
-        <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="VerticalAlignment" Value="Center" />            
-        </Style>
-
-        <!--<Style x:Key="ItemPadding" TargetType="FrameworkElement">
-            --><!--<Setter Property="Margin" Value="2,2,2,2" />
-            <Setter Property="VerticalAlignment" Value="Bottom"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>--><!--
-        </Style>-->
-
-        <!--<Style x:Key="SettingStyle" TargetType="FrameworkElement">
-            --><!--<Setter Property="Margin" Value="2,0,0,0" />
-            <Setter Property="VerticalAlignment" Value="Bottom"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>--><!--
-        </Style>-->        
-
-
+       
         <DataTemplate DataType="{x:Type config:BrowserLink}">
             <Grid >                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock>Enable browser link.</TextBlock>
+                <Label>Enable browser link.</Label>
             </Grid>
         </DataTemplate>
 
@@ -66,7 +60,7 @@
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock>Disable cache.</TextBlock>
+                <Label>Disable cache.</Label>
             </Grid>
         </DataTemplate>
 
@@ -74,17 +68,19 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
-                    <TextBlock>Append
-                        <Hyperlink Click="OnSetInjectFragmentClick">
-                            <Run Text="{Binding Path=Path, TargetNullValue='...'}" />
-                        </Hyperlink>
-                    </TextBlock>
-                    <TextBlock Text=" to "/>
-                    <TextBox Text="{Binding HtmlSelector, ValidatesOnExceptions=True}" MinWidth="100" VerticalAlignment="Stretch"/>
-                </StackPanel>                                
+
+                <Label Grid.Column="0">Append script</Label>
+                <TextBox Grid.Column="1" Text="{Binding Path=Path, Mode=TwoWay, ValidatesOnExceptions=True}" />
+                <Button Grid.Column="2" Content="..." Click="OnSetInjectFragmentClick"/>
+                <Label Grid.Column="3">To</Label>
+
+                <TextBox Grid.Column="4" Text="{Binding HtmlSelector, Mode=TwoWay, ValidatesOnExceptions=True}"  />
+
             </Grid>
         </DataTemplate>
 
@@ -93,24 +89,26 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>                
-                <TextBlock Grid.Column="0" Grid.ColumnSpan="2">
-                    Read responses from 
-                    <Hyperlink Click="OnSetFileResponseDirectory" >
-                        <Run Text="{Binding Path=DirectoryPath, TargetNullValue='...'}" />
-                    </Hyperlink>
-                </TextBlock>                
+                <Label Grid.Column="0" Grid.ColumnSpan="2">Read responses from</Label>
+                <TextBox Grid.Column="1" Text="{Binding Path=DirectoryPath, Mode=TwoWay, ValidatesOnExceptions=True}" />                                    
+                <Button Grid.Column="2" Click="OnSetFileResponseDirectory">...</Button>
             </Grid>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type config:Redirect}">
-            <Grid HorizontalAlignment="Stretch">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Redirect to:" ></TextBlock>
-                <TextBox   Grid.Column="1" Text="{Binding ToUrl, ValidatesOnExceptions=True}" MinWidth="150" ></TextBox>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Content="Redirect to:" VerticalContentAlignment="Top" ></Label>
+                <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"  Text="{Binding ToUrl, ValidatesOnExceptions=True}"  ></TextBox>
             </Grid>
         </DataTemplate>
 
@@ -122,9 +120,9 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock  Grid.Column="0" Text="Override DNS:"></TextBlock>
-                <TextBox   Grid.Column="1" Text="{Binding ToHost, ValidatesOnExceptions=True}" MinWidth="150" ></TextBox>
-                <TextBlock  Grid.Column="2" Text=":"></TextBlock>
+                <Label  Grid.Column="0" Content="Override DNS:"></Label>
+                <TextBox   Grid.Column="1" Text="{Binding ToHost, ValidatesOnExceptions=True}" ></TextBox>
+                <Label  Grid.Column="2" Content=":"></Label>
                 <TextBox   Grid.Column="3" Text="{Binding ToPort, ValidatesOnExceptions=True}"></TextBox>
             </Grid>
         </DataTemplate>
@@ -135,7 +133,7 @@
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock  Text="Force unmin .js/.css"></TextBlock>
+                <Label  Content="Force unmin .js/.css"></Label>
             </Grid>
         </DataTemplate>
 
@@ -145,7 +143,7 @@
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock  Text="Force &lt;url&gt;.debug.js"></TextBlock>
+                <Label  Content="Force &lt;url&gt;.debug.js"></Label>
             </Grid>
         </DataTemplate>
 
@@ -155,7 +153,7 @@
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock  Text="Combine Js to head."></TextBlock>
+                <Label  Content="Combine Js to head."></Label>
                 <!-- TODO Checkbox indicating wether the element shall be async or not-->
             </Grid>
         </DataTemplate>
@@ -166,12 +164,16 @@
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelGroup"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock  Text="Combine css to head."></TextBlock>
+                <Label  Content="Combine css to head."></Label>
                 <!-- TODO Checkbox indicating wether the element shall be async or not-->
             </Grid>
         </DataTemplate>
 
-
+        <ResourceDictionary x:Key="theme">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/PresentationFramework.Aero;component/themes/Aero.NormalColor.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid d:DataContext="{Binding Source={StaticResource DesignViewModel}}">
         <Grid.RowDefinitions>            
@@ -185,15 +187,15 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Menu>
-                <!-- TODO Add nice looking images. -->
-                <MenuItem Header="File" Grid.Column="0">
+                <!-- TODO Add nice looking images. Perhaps a cogwheel instead of File?? -->
+                <MenuItem Header="File" Grid.Column="0" >
                     <MenuItem Header="Open" Click="OnBtnOpenClick" />
                     <MenuItem Header="Save As" Click="OnBtnSaveClick" />
                     <Separator />
                     <MenuItem Header="Recent Files" ItemsSource="{Binding SettingsRepository.Mru}" Click="OnBtnRecentFileClick" />
                 </MenuItem>
             </Menu>
-            <TextBlock Grid.Column="1" Text="{Binding SettingsRepository.CurrentFile, Mode=OneWay, TargetNullValue=...}" HorizontalAlignment="Right"  />
+            <Label Grid.Column="1" Content="{Binding SettingsRepository.CurrentFile, Mode=OneWay, TargetNullValue=...}" HorizontalAlignment="Right"  />
 
         </Grid>
         <DataGrid 
@@ -201,6 +203,8 @@
             ItemsSource="{Binding UrlRules}"
             CanUserAddRows="False"
             CanUserDeleteRows="True"             
+            CanUserReorderColumns="False"
+            CanUserResizeColumns="False"
             AutoGenerateColumns="False"             
             Grid.RowSpan="2" 
             AllowDrop="True" 
@@ -209,20 +213,27 @@
             HorizontalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" 
             VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
             GridLinesVisibility="Horizontal"              
-            RowDetailsVisibilityMode="Visible" >
+            RowDetailsVisibilityMode="Collapsed" RowHeaderWidth="0" HeadersVisibility="Column" >
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                    <!--<Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>-->
                     <!--<Setter Property="FontStyle" Value="Oblique" />-->
-                    <Setter Property="Background" Value="{StaticResource {x:Static SystemColors.MenuBrushKey}}" />
+                    <!--<Setter Property="Background" Value="{StaticResource {x:Static SystemColors.MenuBrushKey}}" />-->
                     <!--<Setter Property="FontWeight" Value="Bold" />-->
                 </Style>
             </DataGrid.RowStyle>
-            <DataGrid.Columns>                
-                <DataGridTemplateColumn IsReadOnly="True" >                    
+            <DataGrid.Columns>
+                <DataGridTemplateColumn IsReadOnly="True" Width="16" >
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}">                            
+                            <Setter Property="BorderThickness" Value="0"/>                            
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>                    
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Viewbox StretchDirection="Both" Stretch="Uniform" Height="16" Width="16">
-                                <Expander 
+                            <Viewbox Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                <Expander                                     
                                     Name="ShowDetails" 
                                     IsExpanded="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},
                                     Path=DetailsVisibility, 
@@ -230,14 +241,22 @@
                                     Mode=TwoWay,
                                     NotifyOnSourceUpdated=True,
                                     NotifyOnTargetUpdated=True,
-                                    UpdateSourceTrigger=PropertyChanged}" 
-                                    Margin="0,0,0,0">                                    
+                                    UpdateSourceTrigger=PropertyChanged}" >                                    
                                 </Expander>
                             </Viewbox>                                                        
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserSort="False" Width="Auto" IsReadOnly="True">
+                <DataGridTemplateColumn CanUserSort="True" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <CheckBox IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"  />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn CanUserSort="False" Width="Auto" IsReadOnly="True" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Image Stretch="Uniform" Width="12" Height="12">
@@ -259,23 +278,23 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="E" CanUserSort="True">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"  />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                
 
-                <DataGridTextColumn Header="Url" Binding="{Binding UrlString, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                <DataGridTextColumn Header="Url" Binding="{Binding UrlString, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" Width="*" >
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>    
+                </DataGridTextColumn>
                 
                 <DataGridTemplateColumn Header="" CanUserSort="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Height="8" Width="8" Click="OnSelectUrlRuleColor">
+                            <Button Height="12" Width="12" Click="OnSelectUrlRuleColor">
                                 <Button.Template>
                                     <ControlTemplate>
-                                        <Border BorderBrush="Black" BorderThickness="1"  >
+                                        <Border BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" BorderThickness="1"  >
                                             <Rectangle Fill="{Binding HtmlColor, TargetNullValue='Transparent'}"  />
                                         </Border>
                                     </ControlTemplate>
@@ -288,17 +307,17 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <Grid Margin="35,0,0,0" Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}"  >
-                        <ListView ItemsSource="{Binding Modifiers}" BorderThickness="0" SelectionMode="Single" FontWeight="Normal" Grid.IsSharedSizeScope="True">
+                    <Grid Background="{StaticResource {x:Static SystemColors.WindowBrushKey}}" Margin="0" >
+                        <ListView Margin="40,0,0,0"  ItemsSource="{Binding Modifiers}" BorderThickness="0" SelectionMode="Single" FontWeight="Normal" Grid.IsSharedSizeScope="True" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid>
+                                    <Grid >
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <CheckBox Grid.Column="0"  IsChecked="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}" />
-                                        <ContentPresenter  Grid.Column="1" Content="{Binding}"/>
+                                        <ContentPresenter Grid.Column="1"  Content="{Binding}" />
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

@@ -35,7 +35,7 @@ namespace Fiddler.LocalRedirect.View
             bool? result = dlg.ShowDialog();
             if (result != null && result.Value)
             {
-                var injectFragment = (Model.InjectFragment)((System.Windows.FrameworkContentElement)(e.Source)).DataContext;
+                var injectFragment = (Model.InjectFragment)((System.Windows.Controls.Control)(e.Source)).DataContext;
                 injectFragment.Path = dlg.FileName;
                 injectFragment.IsEnabled = true;
             }
@@ -83,7 +83,7 @@ namespace Fiddler.LocalRedirect.View
                     !string.IsNullOrEmpty(dlg.SelectedPath) && 
                     System.IO.Directory.Exists(dlg.SelectedPath))
                 {
-                    var fileResponse = (Model.FileResponse)((System.Windows.FrameworkContentElement)(e.Source)).DataContext;
+                    var fileResponse = (Model.FileResponse)((System.Windows.Controls.Control)(e.Source)).DataContext;
                     fileResponse.DirectoryPath = dlg.SelectedPath;                    
                 }
             }                                    

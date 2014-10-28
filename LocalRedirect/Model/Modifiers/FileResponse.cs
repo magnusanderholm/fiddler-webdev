@@ -33,16 +33,17 @@
             }
             set 
             {
-                if (value != null && !Path.IsPathRooted(value))
+                var val = (value ?? string.Empty).Trim();
+                if (val != string.Empty && !Path.IsPathRooted(val))
                     throw new ArgumentException("Not an absolute path", "value");
 
-                if (!string.IsNullOrEmpty(value))
+                if (val != string.Empty)
                 {  
                     // Make sure that the path looks valid.
                     var dir = new DirectoryInfo(value);                                        
                 }
                 
-                pC.Update(ref baseDirectory, value); 
+                pC.Update(ref baseDirectory, val); 
             }
         }
 
