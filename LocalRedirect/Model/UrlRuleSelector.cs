@@ -1,11 +1,13 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
     using Fiddler.LocalRedirect.Model;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;    
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Threading;    
     
     public class UrlRuleSelector
     {
@@ -13,20 +15,17 @@ using System.Threading;
         private readonly ConcurrentDictionary<Fiddler.Session, SessionModifier> map =
             new ConcurrentDictionary<Session, SessionModifier>();
 
-        private static readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();
+        private static readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();        
         private Settings settings = null;
-
-        public UrlRuleSelector()
-        {
-        }                
+        
 
         public void AssignSettings(Settings settings)
-        {            
+        {
             lock (settingsSerializer)
             {
                 var settingsCopy = settingsSerializer.DeepCopy(settings);
-                this.settings = settingsCopy;                
-            }            
+                this.settings = settingsCopy;
+            }
         }
                         
         public SessionModifier Get(Session oSession)

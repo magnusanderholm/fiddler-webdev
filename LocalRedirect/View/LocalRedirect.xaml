@@ -14,6 +14,7 @@
     
         <fakeviewmodels:FakeViewModel x:Key="DesignViewModel" />
         <BitmapImage x:Key="imgHttps" UriSource="/Fiddler.LocalRedirect;component/images/lock_open.png" />
+        <BitmapImage x:Key="imgSettings" UriSource="/Fiddler.LocalRedirect;component/Images/settings_32.png" />
         
         <Style TargetType="{x:Type CheckBox}">            
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -181,14 +182,23 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid>
+        <Grid Grid.Row="0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Menu>
+            <Menu Grid.Column="0" >
                 <!-- TODO Add nice looking images. Perhaps a cogwheel instead of File?? -->
-                <MenuItem Header="File" Grid.Column="0" >
+                <MenuItem Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" >
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{StaticResource imgSettings}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2" Width="16" Height="16" />
+                            <TextBlock Text="File" Margin="0,2" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </MenuItem.Header>                    
                     <MenuItem Header="Open" Click="OnBtnOpenClick" />
                     <MenuItem Header="Save As" Click="OnBtnSaveClick" />
                     <Separator />

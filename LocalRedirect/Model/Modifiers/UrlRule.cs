@@ -146,6 +146,8 @@
             foreach (var c in children)            
                 c.Parent = this;
             children.CollectionChanged += OnChildrenCollectionChanged;
+            children.PublishCollectionChangedOnEventBus(eventBus);
+            children.PublishPropertyChangedOnEventBus(eventBus);
         }
 
         private void OnChildrenCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

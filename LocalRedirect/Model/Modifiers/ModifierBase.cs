@@ -24,10 +24,13 @@
     {
         private bool isEnabled;
         protected NotifyPropertyChanged pC;
+        protected static readonly IEventBus eventBus = EventBusManager.Get();
+        private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
         
         public ModifierBase()
         {
-            Initialize();
+            OnDeserializing(emptyStreamingContext);
+            OnDeserialized(emptyStreamingContext);
         }
 
         
@@ -73,18 +76,12 @@
             var h = PropertyChanged;
             if (h != null)
                 h(this, pCe);
-        }        
-
-        private void Initialize()
-        {
-            pC = new NotifyPropertyChanged(OnPropertyChanged);
-            isEnabled = false;
-        }
+        }                
 
         [OnDeserializing]
         private void OnDeserializing(StreamingContext ctx)
         {
-            this.Initialize();
+            pC = new NotifyPropertyChanged(OnPropertyChanged);
             this.pC.Enabled = false;            
         }
 
@@ -92,6 +89,7 @@
         private void OnDeserialized(StreamingContext ctx)
         {
             this.pC.Enabled = true;
+            this.PublishPropertyChangedOnEventBus(eventBus);
         }
     }
 }

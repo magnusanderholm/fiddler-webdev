@@ -14,9 +14,9 @@
     public partial class Settings : INotifyPropertyChanged
     {
         private ObservableCollection<UrlRule> urlRules;
-        private NotifyPropertyChanged pC;
-        private ObserveChange changeObserver;
+        private NotifyPropertyChanged pC;        
         private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
+        private static readonly IEventBus eventBus = EventBusManager.Get();
         
 
         public Settings()
@@ -24,12 +24,7 @@
             OnInitializing(emptyStreamingContext);
             OnInitialized(emptyStreamingContext);
         }
-
-        [XmlIgnore()]
-        public IChange Observer
-        {
-            get { return changeObserver; }
-        }
+        
 
         // TODO Put in extension method of ObservableCollection<UrlRule>
         public void ReplaceUrlRulesWith(IEnumerable<UrlRule> rules)
@@ -66,8 +61,7 @@
             UrlRuleFactory = new ModifierFactory(this);
             pC = new NotifyPropertyChanged(OnPropertyChanged);
             urlRules = new ObservableCollection<UrlRule>();
-            changeObserver = new ObserveChange();           
-            this.pC.Enabled = false;
+            this.pC.Enabled = false;            
         }
 
         [OnDeserialized]
@@ -79,11 +73,13 @@
                 urlRule.Parent = this;
                 SetParentAndObserveHiearchyChanges(urlRule);
             }
-
-            changeObserver.Observe(urlRules);
-            changeObserver.Observe(this);
+            
             this.pC.Enabled = true;
             urlRules.CollectionChanged += OnUrlRulesCollectionChanged;
+            
+            this.PublishPropertyChangedOnEventBus(eventBus);
+            urlRules.PublishCollectionChangedOnEventBus(eventBus);
+            urlRules.PublishPropertyChangedOnEventBus(eventBus);
         }
 
         private void OnUrlRulesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -97,15 +93,7 @@
 
         private void SetParentAndObserveHiearchyChanges(UrlRule rule)
         {
-            rule.Parent = this;
-
-            // TODO ChangeObserver is still not working satisfactory. It cannot handle the case
-            //      where rule.Children gets new items. New items will not be observed correctly.
-            //      not an issue right now but might become later on.
-            changeObserver.Observe(rule);
-            changeObserver.Observe(rule.Modifiers);
-            foreach (var c in rule.Modifiers)
-                changeObserver.Observe(c);
+            rule.Parent = this;            
         }
     }
 }

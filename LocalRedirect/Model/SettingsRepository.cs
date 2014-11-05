@@ -3,6 +3,7 @@
     using Fiddler.LocalRedirect.Model;
     using System;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.IO;
     using System.Linq;
@@ -17,10 +18,13 @@
         private NotifyPropertyChanged pC;
 
         private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
+        private static readonly IEventBus eventBus = EventBusManager.Get();
+
         public SettingsRepository(FileInfo defaultSettingsFile)
         {
             if (defaultSettingsFile == null)
                 throw new ArgumentNullException("defaultSettingsFile");
+            
             pC = new NotifyPropertyChanged(OnPropertyChanged);
             Mru = new MostRecentlyUsedFiles(10);
             if (!Mru.Any(f => string.Compare(f.FullName, defaultSettingsFile.FullName) == 0))
@@ -44,9 +48,22 @@
                     logger.Error(() => string.Format("{0} has invalid format.", currentSettingsFile.FullName), e);
                 }
             }
-                            
-            settings.Observer.Changed  += OnSettingsChanged;
+         
+            
+            eventBus.Subscribe<Settings, PropertyChangedEventArgs>(OnSettingsPropertyChanged);
+            eventBus.Subscribe<Settings, NotifyCollectionChangedEventArgs>(OnSettingsPropertyChanged);
+            eventBus.Subscribe<ModifierBase, PropertyChangedEventArgs>(OnSettingsPropertyChanged);
+            eventBus.Subscribe<ModifierBase, NotifyCollectionChangedEventArgs>(OnSettingsPropertyChanged);
+        }
 
+        private void OnSettingsPropertyChanged(object sender, NotifyCollectionChangedEventArgs arg2)
+        {
+            SaveSettingsToFile(CurrentFile, Settings);
+        }
+
+        private void OnSettingsPropertyChanged(object sender, PropertyChangedEventArgs arg2)
+        {
+            SaveSettingsToFile(CurrentFile, Settings);
         }
 
 
@@ -77,9 +94,9 @@
             try
             {
                 var newSettings = LoadSettingsFromFile(fI);
-                settings.ReplaceUrlRulesWith(newSettings.UrlRules);
-                Mru.Touch(fI);
-                CurrentFile = fI;                
+                CurrentFile = fI;
+                Mru.Touch(CurrentFile);                
+                settings.ReplaceUrlRulesWith(newSettings.UrlRules); // Will trigger change events resulting in file being changed.                
             }
             catch (Exception e)
             {
@@ -98,10 +115,6 @@
                 h(this, pCe);
         }
 
-        private void OnSettingsChanged(object sender, EventArgs e)
-        {
-            SaveSettingsToFile(currentSettingsFile, settings);
-        }
 
         private Settings LoadSettingsFromFile(FileInfo settingsFile)
         {            
