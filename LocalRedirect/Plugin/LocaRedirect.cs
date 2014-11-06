@@ -2,6 +2,8 @@
 using Fiddler.LocalRedirect.Embedded;
 using Fiddler.LocalRedirect.Model;
 using Fiddler.LocalRedirect.ViewModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 
@@ -29,8 +31,19 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         //settingsRepository.Settings.Observer.Changed += (s, e) => urlMatcher.AssignSettings(settingsRepository.Settings);
         //urlMatcher.AssignSettings(settingsRepository.Settings);
         viewModel = new RedirectViewModel(settingsRepository);
-        eventBus.Subscribe<Settings, object>((s, e) => urlMatcher.AssignSettings(s));
         
+        eventBus.SubscribeTo<Settings, object>(OnSettingsChanged);
+        eventBus.SubscribeTo<ModifierBase, object>(OnSettingsChanged);
+    }
+
+    private void OnSettingsChanged(object sender, object msg)
+    {
+        Settings settings = sender as Settings;
+        if (settings == null)        
+            settings = sender is UrlRule ? (sender as UrlRule).Parent : (sender as Modifier).Parent.Parent;
+
+        urlMatcher.AssignSettings(settings);
+        settingsRepository.Save(settings);
     }
 
     private void OnWebSocketsMessage(object sender, WebSocketMessageEventArgs e)

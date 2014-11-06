@@ -26,6 +26,12 @@
         {
             this.Initialize();
         }
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext ctx)
+        {
+            pC.Enabled = true;
+        }
         
 
         private void Initialize()

@@ -1,57 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+﻿namespace Fiddler.LocalRedirect.Model
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
 
-namespace Fiddler.LocalRedirect.Model
-{    
     public class EventBus : IEventBus 
     {        
-        private Dictionary<Type, LinkedList<Subscription>> subscriberLookup =
-            new Dictionary<Type, LinkedList<Subscription>>();
+        private LinkedList<Subscription> subscribers = new LinkedList<Subscription>();
 
-        public IDisposable Subscribe<TSender, TMessage>(Action<TSender, TMessage> onRecieved)
+        public IDisposable SubscribeTo<TSender, TMessage>(Action<TSender, TMessage> onRecieved)
         {            
-            var senderType = typeof(TSender);
-            var messageType = typeof(TMessage);
-
-            LinkedList<Subscription> subscribers = null;
-            if (!subscriberLookup.TryGetValue(messageType, out subscribers))
-            {
-                subscribers = new LinkedList<Subscription>();
-                subscriberLookup[messageType] = subscribers;
-            }
-
+            // TOOD throw if onReceived.Target is null. We do not support static methods right now.
+                                                
             // TODO Create a open delegate from onRecieved it will NOT have a Target property set hence
             //      it will not keep the parent object alive
             //var d = Delegate.CreateDelegate(onRecieved.GetType(), onRecieved.Method);
-            var subscription = subscribers.AddLast(new Subscription(senderType, messageType, onRecieved));
-            
-            return Disposable.Create(subscription, (s) => 
+            var subscriptionNode = subscribers.AddLast(new Subscription(typeof(TSender), typeof(TMessage), onRecieved));
+
+            return Disposable.Create(subscriptionNode, (_subscriptionNode) => 
             {
-                if (s.List != null)
-                    s.List.Remove(subscription);
+                if (_subscriptionNode.List != null)
+                    _subscriptionNode.List.Remove(_subscriptionNode);
             });
         }
 
         public void Publish<TMessage>(object sender, TMessage message)
-        {         
-            LinkedList<Subscription> subscribers = null;
-            var messageType = typeof(TMessage);
-            if (subscriberLookup.TryGetValue(messageType, out subscribers))
-            {
-                if (subscribers.Count == 0)
-                    subscriberLookup.Remove(messageType);
-                else
+        {
+            foreach (var node in AsNodes(subscribers))
+            {                
+                if (node.Value.IsMatch(sender, message))
                 {
-                    foreach (var node in AsNodes(subscribers))
-                    {
-                        if (!node.Value.Invoke(sender, message))
-                            subscribers.Remove(node);
-                    }
-                }
-            }
+                    if (!node.Value.Invoke(sender, message))
+                        subscribers.Remove(node);
+                }                    
+            }            
         }
 
         private static IEnumerable<LinkedListNode<T>> AsNodes<T>(LinkedList<T> list)
@@ -107,11 +91,16 @@ namespace Fiddler.LocalRedirect.Model
                 this.receiverType = onRecievedHandler.Target.GetType();
                 this.onRecievedHandlerMethodInfo = onRecievedHandler.Method;
             }
+
+            public bool IsMatch(object sender, object message)
+            {
+                return senderType.IsAssignableFrom(sender.GetType()) && messageType.IsAssignableFrom(message.GetType());
+            }
             
             public bool Invoke(object sender, object message)
             {
                 bool invoked = true;                
-                if (senderType.IsAssignableFrom(sender.GetType()) && messageType.IsAssignableFrom(message.GetType()))
+                if (IsMatch(sender, message))
                 {
                     var h = (object)receiverRef.Target;
                     if (h != null) 

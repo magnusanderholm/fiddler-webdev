@@ -47,13 +47,7 @@
                 {
                     logger.Error(() => string.Format("{0} has invalid format.", currentSettingsFile.FullName), e);
                 }
-            }
-         
-            
-            eventBus.Subscribe<Settings, PropertyChangedEventArgs>(OnSettingsPropertyChanged);
-            eventBus.Subscribe<Settings, NotifyCollectionChangedEventArgs>(OnSettingsPropertyChanged);
-            eventBus.Subscribe<ModifierBase, PropertyChangedEventArgs>(OnSettingsPropertyChanged);
-            eventBus.Subscribe<ModifierBase, NotifyCollectionChangedEventArgs>(OnSettingsPropertyChanged);
+            }                                 
         }
 
         private void OnSettingsPropertyChanged(object sender, NotifyCollectionChangedEventArgs arg2)
@@ -133,6 +127,11 @@
             Mru.Touch(settingsFile);
         }
 
-        
+
+
+        public void Save(Settings settings)
+        {
+            SaveSettingsToFile(CurrentFile, Settings);
+        }
     }
 }

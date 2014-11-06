@@ -61,23 +61,26 @@
             UrlRuleFactory = new ModifierFactory(this);
             pC = new NotifyPropertyChanged(OnPropertyChanged);
             urlRules = new ObservableCollection<UrlRule>();
-            this.pC.Enabled = false;            
+            this.pC.Enabled = false;
         }
 
         [OnDeserialized]
         private void OnInitialized(StreamingContext ctx)
         {
-            // Sort rules according to their modifierattributes
+            // When we get here the children has not yet been initialized. They will
+            // be deserialized later on. And added to this object using the normal methods
+            // ie property setters and collection add.
 
-            foreach (var urlRule in urlRules) {                                 
-                urlRule.Parent = this;
-                SetParentAndObserveHiearchyChanges(urlRule);
-            }
+            // However we do NOT want to allow them to send events on the eventBus
+            // until the entire hiearchy has been deserialized.
+
+            // A. Before serialization we need to ensure that eventbus and propertynotifier is turned off
+            // B. After serialization is complete we need to ensure that 
             
             this.pC.Enabled = true;
             urlRules.CollectionChanged += OnUrlRulesCollectionChanged;
             
-            this.PublishPropertyChangedOnEventBus(eventBus);
+            this.PublishPropertyChangedOnEventBus(eventBus);            
             urlRules.PublishCollectionChangedOnEventBus(eventBus);
             urlRules.PublishPropertyChangedOnEventBus(eventBus);
         }
@@ -87,13 +90,11 @@
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 foreach (UrlRule r in e.NewItems)
-                    SetParentAndObserveHiearchyChanges(r);
+                {
+                    r.Parent = this;
+                    r.PublishPropertyChangedOnEventBus(eventBus);                    
+                }
             }
-        }
-
-        private void SetParentAndObserveHiearchyChanges(UrlRule rule)
-        {
-            rule.Parent = this;            
-        }
+        }        
     }
 }

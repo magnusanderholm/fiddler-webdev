@@ -43,5 +43,11 @@
         {
             
         }
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext ctx)
+        {
+            
+        }
     }
 }

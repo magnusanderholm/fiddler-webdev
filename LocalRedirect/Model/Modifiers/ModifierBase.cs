@@ -22,17 +22,15 @@
     [KnownType(typeof(Modifier)), XmlInclude(typeof(Modifier))]
     public abstract class ModifierBase : INotifyPropertyChanged, ISessionModifier
     {
-        private bool isEnabled;
+        private bool isEnabled;        
         protected NotifyPropertyChanged pC;
-        protected static readonly IEventBus eventBus = EventBusManager.Get();
         private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
         
         public ModifierBase()
         {
             OnDeserializing(emptyStreamingContext);
-            OnDeserialized(emptyStreamingContext);
+            pC.Enabled = true;
         }
-
         
         /// <remarks/>
         [DataMember(Name = "isenabled", IsRequired = false), DefaultValue(false)]
@@ -42,7 +40,7 @@
             get { return this.isEnabled; }
             set { pC.Update(ref isEnabled, value); }            
         }
-        
+                
         
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -81,15 +79,7 @@
         [OnDeserializing]
         private void OnDeserializing(StreamingContext ctx)
         {
-            pC = new NotifyPropertyChanged(OnPropertyChanged);
-            this.pC.Enabled = false;            
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            this.pC.Enabled = true;
-            this.PublishPropertyChangedOnEventBus(eventBus);
-        }
+            pC = new NotifyPropertyChanged(OnPropertyChanged) { Enabled = false };            
+        }        
     }
 }

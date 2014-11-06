@@ -40,6 +40,12 @@
                 session.oRequest["Pragma"] = "no-cache";
             }            
         }
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext ctx)
+        {
+            pC.Enabled = true;
+        }
                                                
     }
 }

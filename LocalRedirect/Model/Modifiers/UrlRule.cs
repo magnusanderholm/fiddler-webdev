@@ -18,8 +18,9 @@
     {
         private ObservableCollection<Modifier> children;
         private string urlString;
-        private Settings parent;
+        private Settings parent;        
         private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
+        private static readonly IEventBus eventBus = EventBusManager.Get();
         private string color;
 
         private UrlRule()
@@ -142,12 +143,11 @@
 
         [OnDeserialized]
         private void OnInitialized(StreamingContext ctx)
-        {
-            foreach (var c in children)            
-                c.Parent = this;
+        {            
             children.CollectionChanged += OnChildrenCollectionChanged;
             children.PublishCollectionChangedOnEventBus(eventBus);
             children.PublishPropertyChangedOnEventBus(eventBus);
+            pC.Enabled = true;
         }
 
         private void OnChildrenCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -155,7 +155,10 @@
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 foreach (Modifier c in e.NewItems)
+                {
                     c.Parent = this;
+                    c.PublishPropertyChangedOnEventBus(eventBus);
+                }
             }
         }        
     }

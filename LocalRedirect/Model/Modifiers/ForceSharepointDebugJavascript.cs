@@ -35,6 +35,12 @@ using System.Xml.Serialization;
             {                
                 session.url = regex.Replace( session.url, ".debug.js");                
             }
-        }                        
+        }
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext ctx)
+        {
+            pC.Enabled = true;
+        }   
     }
 }
