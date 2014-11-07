@@ -13,7 +13,7 @@
     {
         private CSSCombiner()
         {
-            Initialize();
+            
         }
 
         private void Initialize()
@@ -25,17 +25,6 @@
             : base(parent)
         {                                    
         }        
-                                       
-        [OnDeserializing]
-        private void DeserializationInitializer(StreamingContext ctx)
-        {
-            this.Initialize();
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            pC.Enabled = true;
-        }
+        
     }
 }

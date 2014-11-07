@@ -42,12 +42,6 @@
         public void BeforeReturningError(Session session)
         {
             
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            
-        }
+        }     
     }
 }

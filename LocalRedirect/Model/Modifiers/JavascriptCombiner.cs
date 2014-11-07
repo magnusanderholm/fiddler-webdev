@@ -12,8 +12,8 @@
     public class JavascriptCombiner : Modifier
     {
         private JavascriptCombiner()
-        {
-            Initialize();
+            : this(null)
+        {            
         }
 
         public JavascriptCombiner(UrlRule parent)
@@ -42,24 +42,6 @@
             // NO what happens if the server gives client different javascripts depending on who the user is. Same names but different 
             // content. No the only thing that could work is if the proxy always downloads content per response and never
             // tries to cache anything. That would however introduce a latency in the response that probably would be too large
-        }        
-                                       
-        [OnDeserializing]
-        private void DeserializationInitializer(StreamingContext ctx)
-        {
-            this.Initialize();
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            pC.Enabled = true;
-        }
-        
-
-        private void Initialize()
-        {
-
-        }
+        }                                              
     }
 }

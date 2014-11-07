@@ -30,9 +30,11 @@
         public UrlRule(Settings settings)
             : base()
         {
-            OnInitializing(emptyStreamingContext);
-            Parent = settings;            
-            OnInitialized(emptyStreamingContext);            
+            urlString = string.Empty;
+            children.CollectionChanged += OnChildrenCollectionChanged;
+            children = new SortedObservableCollection<Modifier>();
+            color = null;         
+            Parent = settings;
         }
         
         [XmlIgnore()]
@@ -140,21 +142,6 @@
                 session.oFlags["ui-backcolor"] = HtmlColor;            
         }
         
-        [OnDeserializing]
-        private void OnInitializing(StreamingContext ctx)
-        {
-            urlString = string.Empty;
-            children = new SortedObservableCollection<Modifier>();
-            color = null;         
-        }
-
-        [OnDeserialized]
-        private void OnInitialized(StreamingContext ctx)
-        {            
-            children.CollectionChanged += OnChildrenCollectionChanged;            
-            pC.Enabled = true;
-        }
-
         private void OnChildrenCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)

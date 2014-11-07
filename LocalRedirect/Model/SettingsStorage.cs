@@ -10,11 +10,11 @@
     using System.Text;
     using System.Xml;
 
-    public class SettingsStorage : INotifyPropertyChanged, Fiddler.LocalRedirect.Model.ISettingsRepository
+    public class SettingsStorage : INotifyPropertyChanged, Fiddler.LocalRedirect.Model.ISettingsStorage
     {
         private readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();
         private Settings settings;                
-        private FileInfo currentStorage;
+        private FileInfo currentStorage = new FileInfo(Guid.NewGuid().ToString("N"));
         private NotifyPropertyChanged pC;
 
         private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
@@ -49,7 +49,7 @@
                     // Look on disk if file exists. If so load it.
                     // TODO Create NEW messagebus and feed it to newSettings. Resubscribe on the new messagebus. This should solve
                     //      the serialization/deserialization issue.
-                    Settings newSettings = currentStorage.Exists ? LoadSettingsFromFile(currentStorage) : new Settings();      
+                    Settings newSettings = value.Exists ? LoadSettingsFromFile(value) : new Settings();      
                     var notifyChanged = pC.Update(ref currentStorage, value);
                     if (notifyChanged.IsChanged)
                     {

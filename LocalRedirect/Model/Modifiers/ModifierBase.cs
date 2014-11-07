@@ -28,8 +28,7 @@
         
         public ModifierBase()
         {
-            OnDeserializing(emptyStreamingContext);
-            pC.Enabled = true;
+            pC = new NotifyPropertyChanged(OnPropertyChanged);             
         }
         
         /// <remarks/>
@@ -74,12 +73,6 @@
             var h = PropertyChanged;
             if (h != null)
                 h(this, pCe);
-        }                
-
-        [OnDeserializing]
-        private void OnDeserializing(StreamingContext ctx)
-        {
-            pC = new NotifyPropertyChanged(OnPropertyChanged) { Enabled = false };            
-        }        
+        }                        
     }
 }

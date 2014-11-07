@@ -11,32 +11,15 @@
     public class MirroredBrowsing : Modifier
     {
         private MirroredBrowsing()
+            : this(null)
         {
-            Initialize();
+           
         }
 
         public MirroredBrowsing(UrlRule parent)
             : base(parent)
         {        
          
-        }        
-                                       
-        [OnDeserializing]
-        private void DeserializationInitializer(StreamingContext ctx)
-        {
-            this.Initialize();
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            pC.Enabled = true;
-        }
-        
-
-        private void Initialize()
-        {
-
-        }
+        }                                              
     }
 }

@@ -5,7 +5,6 @@
 
     public interface IRedirectViewModel
     {
-        ISettingsRepository SettingsRepository { get; }
-        IEnumerable<UrlRule> UrlRules { get; }
+        ISettingsStorage SettingsStorage { get; }        
     }
 }

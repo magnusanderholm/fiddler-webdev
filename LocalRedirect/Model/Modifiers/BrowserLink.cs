@@ -16,14 +16,14 @@
         private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
         
         private BrowserLink()
-        {
-            Initialize();
+            : this(null)
+        {            
         }
 
         public BrowserLink(UrlRule parent)
             : base(parent)
         {
-            Initialize();
+            visualStudioProjectPath = "";
         }
 
         [DataMember(Name = "visualstudioprojectpath", IsRequired = false), DefaultValue("")]
@@ -81,23 +81,6 @@
                     }                                                                                                   
                 }                
             } 
-        }        
-
-        private void Initialize()
-        {
-            visualStudioProjectPath = "";
-        }
-
-        [OnDeserializing]
-        private void DeserializationInitializer(StreamingContext ctx)
-        {
-            this.Initialize();
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            pC.Enabled = true; 
-        }
+        }                
     }
 }

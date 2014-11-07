@@ -8,7 +8,7 @@
     using System.Text;
 
 
-    class FakeSettingsRepository : ISettingsRepository
+    class FakeSettingsRepository : ISettingsStorage
     {
         
         public FakeSettingsRepository()

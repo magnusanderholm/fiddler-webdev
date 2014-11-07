@@ -8,12 +8,9 @@
 
         public FakeViewModel()
         {
-            SettingsRepository = new FakeSettingsRepository();
-            UrlRules = SettingsRepository.Settings.UrlRules;
+            SettingsRepository = new FakeSettingsRepository();            
         }
 
-        public ISettingsRepository SettingsRepository { get; private set; }        
-                
-        public IEnumerable<Model.UrlRule> UrlRules { get; private set; }                       
+        public ISettingsStorage SettingsRepository { get; private set; }                                
     }
 }

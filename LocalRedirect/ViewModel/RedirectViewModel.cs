@@ -1,19 +1,14 @@
 ﻿namespace Fiddler.LocalRedirect.ViewModel
 {
     using Fiddler.LocalRedirect.Model;
-    using System.Collections.Generic;
-using System.IO;
 
     public class RedirectViewModel : Fiddler.LocalRedirect.ViewModel.IRedirectViewModel
     {
-        public RedirectViewModel(ISettingsRepository settingsRepository)
+        public RedirectViewModel(ISettingsStorage settingsStorage)
         {                                    
-            SettingsRepository = settingsRepository;
-            UrlRules = SettingsRepository.Settings.UrlRules;
+            SettingsStorage = settingsStorage;            
         }
 
-        public ISettingsRepository SettingsRepository { get; private set; }        
-                
-        public IEnumerable<Model.UrlRule> UrlRules { get; private set; }                
+        public ISettingsStorage SettingsStorage { get; private set; }                                
     }
 }

@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-    public interface ISettingsRepository
+    public interface ISettingsStorage
     {
         FileInfo CurrentStorage { get; set; }
         IMostRecentlyUsed<FileInfo> Mru { get; }

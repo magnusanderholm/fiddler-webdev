@@ -52,7 +52,7 @@ namespace Fiddler.LocalRedirect.View
             if (result != null && result.Value)
             {
                 fI = new FileInfo(dlg.FileName);
-                ViewModel.SettingsRepository.CurrentStorage = fI;
+                ViewModel.SettingsStorage.CurrentStorage = fI;
             }                        
         }
 
@@ -65,14 +65,14 @@ namespace Fiddler.LocalRedirect.View
             bool? result = dlg.ShowDialog();
             if (result != null && result.Value)
             {
-                ViewModel.SettingsRepository.CurrentStorage =  new FileInfo(dlg.FileName);
+                ViewModel.SettingsStorage.CurrentStorage =  new FileInfo(dlg.FileName);
             }                        
         }
 
         private void OnBtnAddClick(object sender, RoutedEventArgs e)
         {
-            var urlRule = ViewModel.SettingsRepository.Settings.UrlRuleFactory.Create();
-            ViewModel.SettingsRepository.Settings.UrlRules.Add(urlRule);
+            var urlRule = ViewModel.SettingsStorage.Settings.UrlRuleFactory.Create();
+            ViewModel.SettingsStorage.Settings.UrlRules.Add(urlRule);
         }
 
         private void OnSetFileResponseDirectory(object sender, RoutedEventArgs e)
@@ -115,7 +115,7 @@ namespace Fiddler.LocalRedirect.View
                 .ItemFromContainer(myItemsMenuSubItem);
             // convert to MyMenuItems type ... in our case string
             var file = o as FileInfo;
-            ViewModel.SettingsRepository.CurrentStorage = file;
+            ViewModel.SettingsStorage.CurrentStorage = file;
         }        
     }
 }

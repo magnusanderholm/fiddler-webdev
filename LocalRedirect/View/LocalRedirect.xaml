@@ -205,12 +205,12 @@
                     <MenuItem Header="Recent Files" ItemsSource="{Binding SettingsRepository.Mru}" Click="OnBtnRecentFileClick" />
                 </MenuItem>
             </Menu>
-            <Label Grid.Column="1" Content="{Binding SettingsRepository.CurrentFile, Mode=OneWay, TargetNullValue=...}" HorizontalAlignment="Right"  />
+            <Label Grid.Column="1" Content="{Binding SettingsRepository.CurrentStorage, Mode=OneWay, TargetNullValue=...}" HorizontalAlignment="Right"  />
 
         </Grid>
         <DataGrid 
             Grid.Row="1" 
-            ItemsSource="{Binding UrlRules}"
+            ItemsSource="{Binding SettingsRepository.Settings.UrlRules}"
             CanUserAddRows="False"
             CanUserDeleteRows="True"             
             CanUserReorderColumns="False"

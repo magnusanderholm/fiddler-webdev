@@ -25,7 +25,8 @@
         public InjectFragment(UrlRule parent)
             :base(parent)
         {
-            Initialize();
+            path = null;
+            htmlSelector = defaultHtmlSelector;
         }
 
         public InjectFragment(UrlRule parent, FileInfo fI)
@@ -113,24 +114,6 @@
                 }
                 session.utilSetResponseBody(htmlDoc.DocumentNode.OuterHtml);
             }
-        }
-
-        private void Initialize()
-        {
-            path = null;
-            htmlSelector = defaultHtmlSelector;
-        }
-
-        [OnDeserializing]
-        private void DeserializationInitializer(StreamingContext ctx)
-        {
-            this.Initialize();
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            pC.Enabled = true;
-        }
+        }   
     }
 }

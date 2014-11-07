@@ -14,19 +14,14 @@
         private string toUrl;        
 
         private Redirect()
-        {
-            Initialize();
+            : this(null)
+        {           
         }
-
-        private void Initialize()
-        {
-            this.toUrl = "http://localhost";
-        }
-
+        
         public Redirect(UrlRule parent)
             : base(parent)
         {
-            Initialize();
+            this.toUrl = "http://localhost";
         }        
                
         [DataMember(Name="tourl", IsRequired=false), DefaultValue("")]
@@ -51,16 +46,5 @@
                 session.fullUrl = new Uri(new Uri(ToUrl), session.PathAndQuery).ToString();
         }
                 
-        [OnDeserializing]
-        private void DeserializationInitializer(StreamingContext ctx)
-        {
-            this.Initialize();
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            pC.Enabled = true;
-        }
     }
 }

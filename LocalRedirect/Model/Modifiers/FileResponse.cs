@@ -15,6 +15,7 @@
         private string baseDirectory;
 
         private FileResponse()
+            : this(null)
         {            
         }
 
@@ -56,12 +57,6 @@
                 if (localFile.Exists)
                     session.oFlags["x-replywithfile"] = localFile.FullName;
             }
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            pC.Enabled = true;
-        } 
+        }    
     }
 }

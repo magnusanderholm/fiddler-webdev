@@ -24,7 +24,12 @@
             : base()
         {
             Parent = parent;
-            OnDeserialized(emptyStreamingContext);
+            var t = GetType();
+
+            var modAtr = (ModifierAttribute)t.GetCustomAttributes(typeof(ModifierAttribute), true).FirstOrDefault();
+            compareValue = modAtr != null
+                ? modAtr.Order.ToString("{000000000}") + "#" + t.FullName
+                : t.FullName;         
         }
                 
         [XmlIgnore()]
@@ -46,17 +51,6 @@
                 return 0;
 
             return string.Compare(compareValue, other.compareValue);
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            var t = GetType();
-            
-            var modAtr = (ModifierAttribute)t.GetCustomAttributes(typeof(ModifierAttribute), true).FirstOrDefault();
-            compareValue = modAtr != null
-                ? modAtr.Order.ToString("{000000000}") + "#" + t.FullName
-                : t.FullName;            
-        }        
+        }         
     }
 }

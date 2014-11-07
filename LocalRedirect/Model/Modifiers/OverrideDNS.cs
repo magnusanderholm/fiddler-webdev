@@ -23,7 +23,8 @@
         public OverrideDNS(UrlRule parent)
             : base(parent)
         {
-            Initialize();
+            this.toHost = "127.0.0.1";
+            toPort = 80;
         }        
                
         [DataMember(Name="tohost", IsRequired=false), DefaultValue("127.0.0.1")]
@@ -65,27 +66,6 @@
                 // its also easier to handle in the iis.
                 session.oRequest.headers.UriScheme = "http";
             }
-        }
-
-
-        private void Initialize()
-        {
-            this.toHost = "127.0.0.1";
-            toPort = 80;
-        }
-
-        [OnDeserializing]
-        private void DeserializationInitializer(StreamingContext ctx)
-        {
-            this.Initialize();
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            pC.Enabled = true;
-        }
-
-   
+        }   
     }
 }

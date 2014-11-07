@@ -16,6 +16,7 @@
     public class ForceUnminified : Modifier
     {
         private ForceUnminified()
+            : this(null)
         {
         }
         
@@ -36,12 +37,6 @@
                 session.url = session.url.Replace(".min.css", ".css");
                 session.url = session.url.Replace(".min.js", ".js");                
             }
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext ctx)
-        {
-            pC.Enabled = true;
-        }      
+        }    
     }
 }
