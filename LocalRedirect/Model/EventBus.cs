@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -17,6 +19,9 @@
             // TODO Create a open delegate from onRecieved it will NOT have a Target property set hence
             //      it will not keep the parent object alive
             //var d = Delegate.CreateDelegate(onRecieved.GetType(), onRecieved.Method);
+
+            // TODO Make SURE that we cannot subscribe the same subscriber combo twice. Need to look at onReceived.Target to 
+            //      and compare that against subscriptions for that 
             var subscriptionNode = subscribers.AddLast(new Subscription(typeof(TSender), typeof(TMessage), onRecieved));
 
             return Disposable.Create(subscriptionNode, (_subscriptionNode) => 
@@ -24,6 +29,23 @@
                 if (_subscriptionNode.List != null)
                     _subscriptionNode.List.Remove(_subscriptionNode);
             });
+        }
+
+        public void PublishChanges(INotifyPropertyChanged nPc)
+        {
+            nPc.PropertyChanged -= OnChanged;
+            nPc.PropertyChanged += OnChanged;
+        }
+
+        public void PublishChanges(INotifyCollectionChanged nCc)
+        {
+            nCc.CollectionChanged -= OnChanged;
+            nCc.CollectionChanged += OnChanged;
+        }
+
+        protected virtual void OnChanged(object sender, EventArgs e)
+        {
+            Publish(sender, e);
         }
 
         public void Publish<TMessage>(object sender, TMessage message)

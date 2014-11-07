@@ -18,12 +18,13 @@
         private NotifyPropertyChanged pC;
 
         private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
-        private static readonly IEventBus eventBus = EventBusManager.Get();
+        private IEventBus eventBus;
 
-        public SettingsStorage(FileInfo defaultSettingsFile)
+        public SettingsStorage(FileInfo defaultSettingsFile, IEventBus eventBus)
         {
             if (defaultSettingsFile == null)
                 throw new ArgumentNullException("defaultSettingsFile");
+            this.eventBus = eventBus;
             
             pC = new NotifyPropertyChanged(OnPropertyChanged);
             Mru = new MostRecentlyUsedFiles(10);
@@ -46,9 +47,7 @@
                     throw new ArgumentNullException("value");
                 if (string.Compare(value.FullName, currentStorage.FullName) != 0)
                 {
-                    // Look on disk if file exists. If so load it.
-                    // TODO Create NEW messagebus and feed it to newSettings. Resubscribe on the new messagebus. This should solve
-                    //      the serialization/deserialization issue.
+                    // Look on disk if file exists. If so load it.                    
                     Settings newSettings = value.Exists ? LoadSettingsFromFile(value) : new Settings();      
                     var notifyChanged = pC.Update(ref currentStorage, value);
                     if (notifyChanged.IsChanged)
@@ -58,11 +57,57 @@
                         notifyChanged.Extra("Settings");
                         
                         // Now we shall subscribe to any changes made in settings
-                        settings.Events.SubscribeTo<object, NotifyCollectionChangedEventArgs>((s, e) => SaveSettingsToFile(CurrentStorage, Settings));
-                        settings.Events.SubscribeTo<object, NotifyCollectionChangedEventArgs>((s, e) => SaveSettingsToFile(CurrentStorage, Settings));
+
+                        // TODO We do probab
+                        // TODO Traverse the settings tree and hookup the subscriptions on our new eventbus. Since we will be subscribing
+                        // to INotifyPropertyChanged events and on NotifyCollecitonChangedEventArgs we only need to listen for such messages
+                        // when they arrive we just make sure that we also subscribe on all those new items as well. That way the tree can grow
+                        // dynamically and we do not really care about what new objects that removed/entered into the tree.
+                        //settings.Events.SubscribeTo<object, NotifyCollectionChangedEventArgs>((s, e) => SaveSettingsToFile(CurrentStorage, Settings));
+                        //settings.Events.SubscribeTo<object, NotifyCollectionChangedEventArgs>((s, e) => SaveSettingsToFile(CurrentStorage, Settings));
+                        var flattenedTree = new List<object>();
+                        flattenedTree.Add(settings);
+                        flattenedTree.Add(settings.UrlRules);
+                        flattenedTree.AddRange(settings.UrlRules);
+                        foreach (var u in settings.UrlRules)
+                        {
+                            flattenedTree.Add(u.Modifiers);
+                            flattenedTree.AddRange(u.Modifiers);
+                        }
+                                                                            
+                        foreach (var n in flattenedTree)                        
+                            AttemptToPublishChangesForObjectOnEventBus(n);                        
+
+                        // We are now listening to the tree as it is right this moment. Set up subscriptions. If we get a change in 
+                        // one of the observable collections then we may need to react on that and make sure that the new item also publishes on the eventbus
+
+                        eventBus.SubscribeTo<object, PropertyChangedEventArgs>((s, e) => OnSettingsChange(s, e));
+                        eventBus.SubscribeTo<object, NotifyCollectionChangedEventArgs>((s, e) => OnSettingsChange(s, e));
+                        
+                        // we have new settings. Publish it so all interested parties
+                        // can read it.
+                        eventBus.Publish(this, Settings); 
                     }
                 }
             }
+        }
+
+        private void AttemptToPublishChangesForObjectOnEventBus(object n)
+        {
+            var np = n as INotifyPropertyChanged;
+            var nc = n as INotifyCollectionChanged;
+            if (np != null)
+                eventBus.PublishChanges(np);                
+            if (nc != null)
+                eventBus.PublishChanges(nc);                
+        }
+
+        private void OnSettingsChange(object sender, EventArgs e)
+        {
+            AttemptToPublishChangesForObjectOnEventBus(sender);
+            SaveSettingsToFile(CurrentStorage, Settings);
+            // Ok settings have changed so we publish a message about that for any listeners
+            eventBus.Publish(this, Settings); 
         }
         
         public event PropertyChangedEventHandler PropertyChanged;
@@ -87,9 +132,7 @@
             {
                 fS.SetLength(0);
                 settingsSerializer.Serialize(settings, fS);
-            }
-
-            Mru.Touch(settingsFile);
+            }            
         }
     }
 }

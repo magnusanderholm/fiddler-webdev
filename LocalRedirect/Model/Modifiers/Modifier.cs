@@ -36,11 +36,7 @@
         public UrlRule Parent 
         {
             get { return parent; }
-            set 
-            {
-                if (pC.Update(ref parent, value).IsChanged)                
-                    this.PublishPropertyChangedOnEventBus(parent.Parent.Events);                
-            }
+            set { pC.Update(ref parent, value); }
         }
 
         public int CompareTo(Modifier other)

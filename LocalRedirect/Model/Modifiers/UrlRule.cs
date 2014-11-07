@@ -30,9 +30,9 @@
         public UrlRule(Settings settings)
             : base()
         {
-            urlString = string.Empty;
-            children.CollectionChanged += OnChildrenCollectionChanged;
+            urlString = string.Empty;            
             children = new SortedObservableCollection<Modifier>();
+            children.CollectionChanged += OnChildrenCollectionChanged;
             color = null;         
             Parent = settings;
         }
@@ -41,15 +41,7 @@
         public Settings Parent
         {
             get { return parent; }
-            set 
-            {
-                if (pC.Update(ref parent, value).IsChanged)
-                {
-                    this.PublishPropertyChangedOnEventBus(parent.Events);
-                    this.Modifiers.PublishCollectionChangedOnEventBus(parent.Events, this);
-                    this.Modifiers.PublishPropertyChangedOnEventBus(parent.Events, this);
-                }
-            }
+            set  { pC.Update(ref parent, value);}
         }
 
         [DataMember(Name = "modifiers", IsRequired = true)]

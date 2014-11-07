@@ -17,20 +17,12 @@
         private NotifyPropertyChanged pC;        
                         
         public Settings()
-        {
-            Events = new EventBus();
+        {            
             UrlRuleFactory = new ModifierFactory(this);
             pC = new NotifyPropertyChanged(OnPropertyChanged);
             urlRules = new ObservableCollection<UrlRule>();
-            urlRules.CollectionChanged += OnUrlRulesCollectionChanged;
-
-            this.PublishPropertyChangedOnEventBus(this.Events);
-            urlRules.PublishCollectionChangedOnEventBus(this.Events, this);
-            urlRules.PublishPropertyChangedOnEventBus(this.Events, this);
-        }                
-
-        [XmlIgnore()]
-        public IEventBus Events { get; private set; }
+            urlRules.CollectionChanged += OnUrlRulesCollectionChanged;            
+        }                        
 
         [XmlIgnore()]
         public ModifierFactory UrlRuleFactory { get; private set;}       
