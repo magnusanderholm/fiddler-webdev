@@ -82,6 +82,7 @@
     <Compile Include="Model\Modifiers\SimpleExternalProxySettings.cs" />
     <Compile Include="Model\MostRecentlyUsed.cs" />
     <Compile Include="Model\MostRecentlyUsedFiles.cs" />
+    <Compile Include="Model\ChangeObserver.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\Modifiers\ModifierFactory.cs" />
     <Compile Include="Model\Modifiers\BrowserLink.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="Model\Settings.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\SettingsRepository.cs" />
+    <Compile Include="Model\SettingsStorage.cs" />
     <Compile Include="Model\UrlRuleSelector.cs">
       <SubType>Code</SubType>
     </Compile>

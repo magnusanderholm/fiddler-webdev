@@ -11,28 +11,20 @@
     [DataContract(Name = "settings", Namespace = "")]
     [Serializable()]
     [XmlRoot(Namespace = "", ElementName = "settings")]
-    public partial class Settings : INotifyPropertyChanged
+    public class Settings : INotifyPropertyChanged
     {
         private ObservableCollection<UrlRule> urlRules;
         private NotifyPropertyChanged pC;        
         private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
-        private static readonly IEventBus eventBus = EventBusManager.Get();
-        
-
+                
         public Settings()
         {            
             OnInitializing(emptyStreamingContext);
             OnInitialized(emptyStreamingContext);
-        }
-        
+        }                
 
-        // TODO Put in extension method of ObservableCollection<UrlRule>
-        public void ReplaceUrlRulesWith(IEnumerable<UrlRule> rules)
-        {
-            urlRules.Clear();
-            foreach (var r in rules)            
-                urlRules.Add(r);            
-        }
+        [XmlIgnore()]
+        public IEventBus Events { get; private set; }
 
         [XmlIgnore()]
         public ModifierFactory UrlRuleFactory { get; private set;}       
@@ -58,6 +50,7 @@
         [OnDeserializing]
         private void OnInitializing(StreamingContext ctx)
         {
+            Events = new EventBus();
             UrlRuleFactory = new ModifierFactory(this);
             pC = new NotifyPropertyChanged(OnPropertyChanged);
             urlRules = new ObservableCollection<UrlRule>();
@@ -80,9 +73,9 @@
             this.pC.Enabled = true;
             urlRules.CollectionChanged += OnUrlRulesCollectionChanged;
             
-            this.PublishPropertyChangedOnEventBus(eventBus);            
-            urlRules.PublishCollectionChangedOnEventBus(eventBus);
-            urlRules.PublishPropertyChangedOnEventBus(eventBus);
+            this.PublishPropertyChangedOnEventBus(this.Events);
+            urlRules.PublishCollectionChangedOnEventBus(this.Events, this);
+            urlRules.PublishPropertyChangedOnEventBus(this.Events, this);
         }
 
         private void OnUrlRulesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -90,10 +83,7 @@
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 foreach (UrlRule r in e.NewItems)
-                {
                     r.Parent = this;
-                    r.PublishPropertyChangedOnEventBus(eventBus);                    
-                }
             }
         }        
     }

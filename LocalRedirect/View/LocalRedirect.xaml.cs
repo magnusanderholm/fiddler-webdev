@@ -52,7 +52,7 @@ namespace Fiddler.LocalRedirect.View
             if (result != null && result.Value)
             {
                 fI = new FileInfo(dlg.FileName);
-                ViewModel.SettingsRepository.Open(fI);
+                ViewModel.SettingsRepository.CurrentStorage = fI;
             }                        
         }
 
@@ -65,7 +65,7 @@ namespace Fiddler.LocalRedirect.View
             bool? result = dlg.ShowDialog();
             if (result != null && result.Value)
             {
-                ViewModel.SettingsRepository.Save(new FileInfo(dlg.FileName));
+                ViewModel.SettingsRepository.CurrentStorage =  new FileInfo(dlg.FileName);
             }                        
         }
 
@@ -115,7 +115,7 @@ namespace Fiddler.LocalRedirect.View
                 .ItemFromContainer(myItemsMenuSubItem);
             // convert to MyMenuItems type ... in our case string
             var file = o as FileInfo;
-            ViewModel.SettingsRepository.Open(file);
+            ViewModel.SettingsRepository.CurrentStorage = file;
         }        
     }
 }

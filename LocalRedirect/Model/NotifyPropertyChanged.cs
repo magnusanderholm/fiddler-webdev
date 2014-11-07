@@ -35,13 +35,14 @@ namespace System.ComponentModel
             return this;
         }
 
-        public void Extra(string name, params string[] extraNames)
+        public NotifyPropertyChanged Extra(string name, params string[] extraNames)
         {
             if (Enabled && IsChanged && extraNames.Length > 0)
             {
                 foreach (var n in extraNames)                
                     onPropertyChanged(new PropertyChangedEventArgs(n));                                 
             }
+            return this;
         }
         
     }

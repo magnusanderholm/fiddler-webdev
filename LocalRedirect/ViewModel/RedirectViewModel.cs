@@ -2,6 +2,7 @@
 {
     using Fiddler.LocalRedirect.Model;
     using System.Collections.Generic;
+using System.IO;
 
     public class RedirectViewModel : Fiddler.LocalRedirect.ViewModel.IRedirectViewModel
     {
@@ -13,9 +14,6 @@
 
         public ISettingsRepository SettingsRepository { get; private set; }        
                 
-        public IEnumerable<Model.UrlRule> UrlRules { get; private set; }
-
-        // TODO Viewmodel simply sends a message to SettingsRepository telling it where future files shall be saved.
-        //      Viewmodel keeps track of file reference
+        public IEnumerable<Model.UrlRule> UrlRules { get; private set; }                
     }
 }

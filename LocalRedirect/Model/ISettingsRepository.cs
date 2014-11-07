@@ -1,13 +1,12 @@
-﻿using System;
-using System.IO;
-namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System;
+    using System.IO;
+
     public interface ISettingsRepository
     {
-        System.IO.FileInfo CurrentFile { get; set; }
+        FileInfo CurrentStorage { get; set; }
         IMostRecentlyUsed<FileInfo> Mru { get; }
-        Settings Settings { get; }
-        void Save(FileInfo fI);
-        Settings Open(FileInfo fI);
+        Settings Settings { get; }        
     }
 }

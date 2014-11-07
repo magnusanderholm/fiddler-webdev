@@ -13,8 +13,8 @@ using System.Windows.Forms;
 
 public class LocalRedirect : Fiddler.IAutoTamper2
 {
-    private readonly SettingsRepository settingsRepository =
-        new SettingsRepository(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")));        
+    private readonly SettingsStorage settingsStorage =
+        new SettingsStorage(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")));        
     private readonly UrlRuleSelector urlMatcher = new UrlRuleSelector();
     private readonly RedirectViewModel viewModel;
     private static readonly EmbeddedAssemblyLoader assemblyLoader;
@@ -30,8 +30,10 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     {
         //settingsRepository.Settings.Observer.Changed += (s, e) => urlMatcher.AssignSettings(settingsRepository.Settings);
         //urlMatcher.AssignSettings(settingsRepository.Settings);
-        viewModel = new RedirectViewModel(settingsRepository);
+        viewModel = new RedirectViewModel(settingsStorage);
         
+        // TODO Hmm In reality I need to listen for Settings.UrlRules.CollectionChanged and I'm not. I'm only listening for
+        // events that originate from the Settings class. Not its properties 
         eventBus.SubscribeTo<Settings, object>(OnSettingsChanged);
         eventBus.SubscribeTo<ModifierBase, object>(OnSettingsChanged);
     }
@@ -42,8 +44,8 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         if (settings == null)        
             settings = sender is UrlRule ? (sender as UrlRule).Parent : (sender as Modifier).Parent.Parent;
 
-        urlMatcher.AssignSettings(settings);
-        settingsRepository.Save(settings);
+        //urlMatcher.AssignSettings(settings);
+        //settingsRepository.Save(settings);
     }
 
     private void OnWebSocketsMessage(object sender, WebSocketMessageEventArgs e)

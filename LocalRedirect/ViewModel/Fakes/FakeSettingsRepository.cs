@@ -13,7 +13,7 @@
         
         public FakeSettingsRepository()
         {
-            CurrentFile = new FileInfo(@"c:\temp\dummy.txt");
+            CurrentStorage = new FileInfo(@"c:\temp\dummy.txt");
             Mru = new FakeMostRecentlyUsed();
             Settings = new Settings();
             var scheme = new string[2] {"http", "https"};
@@ -26,7 +26,7 @@
             }                            
         }
 
-        public System.IO.FileInfo CurrentFile { get; set; }
+        public System.IO.FileInfo CurrentStorage { get; set; }
 
         public IMostRecentlyUsed<FileInfo> Mru { get; private set; }
 

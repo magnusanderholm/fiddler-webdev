@@ -19,8 +19,7 @@
         private ObservableCollection<Modifier> children;
         private string urlString;
         private Settings parent;        
-        private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
-        private static readonly IEventBus eventBus = EventBusManager.Get();
+        private static readonly StreamingContext emptyStreamingContext = new StreamingContext();        
         private string color;
 
         private UrlRule()
@@ -40,7 +39,15 @@
         public Settings Parent
         {
             get { return parent; }
-            set { pC.Update(ref parent, value); }
+            set 
+            {
+                if (pC.Update(ref parent, value).IsChanged)
+                {
+                    this.PublishPropertyChangedOnEventBus(parent.Events);
+                    this.Modifiers.PublishCollectionChangedOnEventBus(parent.Events, this);
+                    this.Modifiers.PublishPropertyChangedOnEventBus(parent.Events, this);
+                }
+            }
         }
 
         [DataMember(Name = "modifiers", IsRequired = true)]
@@ -144,9 +151,7 @@
         [OnDeserialized]
         private void OnInitialized(StreamingContext ctx)
         {            
-            children.CollectionChanged += OnChildrenCollectionChanged;
-            children.PublishCollectionChangedOnEventBus(eventBus);
-            children.PublishPropertyChangedOnEventBus(eventBus);
+            children.CollectionChanged += OnChildrenCollectionChanged;            
             pC.Enabled = true;
         }
 
@@ -155,10 +160,7 @@
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 foreach (Modifier c in e.NewItems)
-                {
                     c.Parent = this;
-                    c.PublishPropertyChangedOnEventBus(eventBus);
-                }
             }
         }        
     }
