@@ -21,6 +21,9 @@ namespace Fiddler.LocalRedirect.View
     /// </summary>
     public partial class LocalRedirect : UserControl
     {
+        private const string defaultSettingsExtension = ".config";
+        private const string settingsFileFilter = "Redirect config (*.config)|*.conf, *.config|All Files (*.*)|*.*";
+
         public LocalRedirect()
         {
             InitializeComponent();
@@ -44,29 +47,23 @@ namespace Fiddler.LocalRedirect.View
         private void OnBtnOpenClick(object sender, RoutedEventArgs e)
         {
             // Open a file dialog and let us load a configuration 
-            FileInfo fI = null;
             var dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".config";
-            dlg.Filter = "Redirect config (*.config)|*.conf, *.config|All Files (*.*)|*.*";
+            dlg.DefaultExt = defaultSettingsExtension;
+            dlg.Filter = settingsFileFilter;
             bool? result = dlg.ShowDialog();
             if (result != null && result.Value)
-            {
-                fI = new FileInfo(dlg.FileName);
-                ViewModel.SettingsStorage.CurrentStorage = fI;
-            }                        
+                ViewModel.SettingsStorage.CurrentStorage = new FileInfo(dlg.FileName);            
         }
 
         private void OnBtnSaveClick(object sender, RoutedEventArgs e)
         {            
             // Show save dialog and set ViewModel.CurrentSettingsFile. Otherwise just save.
             var dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.DefaultExt = ".config";
-            dlg.Filter = "Redirect config (*.config)|*.conf, *.config|All Files (*.*)|*.*";            
+            dlg.DefaultExt = defaultSettingsExtension;
+            dlg.Filter = settingsFileFilter;            
             bool? result = dlg.ShowDialog();
-            if (result != null && result.Value)
-            {
-                ViewModel.SettingsStorage.CurrentStorage =  new FileInfo(dlg.FileName);
-            }                        
+            if (result != null && result.Value)            
+                ViewModel.SettingsStorage.CurrentStorage =  new FileInfo(dlg.FileName);            
         }
 
         private void OnBtnAddClick(object sender, RoutedEventArgs e)

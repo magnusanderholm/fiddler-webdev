@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-
-namespace System.ComponentModel
+﻿namespace System.ComponentModel
 {
+    using System;
+    using System.Runtime.CompilerServices;
+
     public class NotifyPropertyChanged
     {
         private readonly Action<PropertyChangedEventArgs> onPropertyChanged;
@@ -24,9 +19,10 @@ namespace System.ComponentModel
         public bool IsChanged { get; private set; }
         
 
-        public NotifyPropertyChanged Update<T>(ref T field, T value, NotifyPropertyChanged parent = null, [CallerMemberName]string name="")
+        public NotifyPropertyChanged Update<T>(ref T field, T value, Func<T,T, bool> equals = null, [CallerMemberName]string name="")
         {
-            if ((IsChanged = !object.Equals(field, value)))
+            equals = equals ?? ((T t0, T t1) => object.Equals(t0, t1));
+            if ((IsChanged = !equals(field, value)))
             {
                 field = value;
                 if (Enabled)                
@@ -35,7 +31,7 @@ namespace System.ComponentModel
             return this;
         }
 
-        public NotifyPropertyChanged Extra(string name, params string[] extraNames)
+        public NotifyPropertyChanged Extra(params string[] extraNames)
         {
             if (Enabled && IsChanged && extraNames.Length > 0)
             {
