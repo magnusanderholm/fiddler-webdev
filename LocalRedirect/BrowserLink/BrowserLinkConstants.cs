@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Fiddler.LocalRedirect.BrowserLink
+﻿namespace Fiddler.LocalRedirect.BrowserLink
 {
+
     public static class BrowserLinkConstants
     {
         public const string ElevatedIndexFileName = "Global\\PageInspector.Artery";

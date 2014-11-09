@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.Linq;
-using System.Security.Permissions;
-using System.Text;
-
-namespace Fiddler.LocalRedirect.BrowserLink
+﻿namespace Fiddler.LocalRedirect.BrowserLink
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.IO.MemoryMappedFiles;
+    using System.Linq;
+    using System.Security.Permissions;
+    using System.Text;
+
     public class BrowserLinkConfiguration
     {
         private enum ConneectionStringIndex { HTTP = 0, HTTPS = 1, Path = 3};

@@ -67,7 +67,6 @@
     <Compile Include="Embedded\EmbeddedResourceExtensions.cs" />
     <Compile Include="Model\Disposable.cs" />
     <Compile Include="Model\EventBus.cs" />
-    <Compile Include="Model\EventBusFactory.cs" />
     <Compile Include="Model\IEventBus.cs" />
     <Compile Include="Model\ILogger.cs" />
     <Compile Include="Model\IMostRecentlyUsed.cs" />

@@ -16,7 +16,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     private readonly RedirectViewModel viewModel;
     private static readonly EmbeddedAssemblyLoader assemblyLoader;
     private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
-    private static readonly IEventBus eventBus = EventBusManager.Get();
+    private static readonly IEventBus eventBus = new EventBus();
 
     static LocalRedirect()
     {
