@@ -13,17 +13,25 @@
         private LinkedList<Subscription> subscribers = new LinkedList<Subscription>();
 
         public IDisposable SubscribeTo<TSender, TMessage>(Action<TSender, TMessage> onRecieved)
-        {            
-            // TOOD throw if onReceived.Target is null. We do not support static methods right now.
+        {
+            if (onRecieved == null)
+                throw new ArgumentNullException("onReceived");
+            
+            if (onRecieved.Target == null)
+                throw new ArgumentException("Static methods are not supported", "onReceived");
+
+            
                                                 
             // TODO Create a open delegate from onRecieved it will NOT have a Target property set hence
             //      it will not keep the parent object alive
             //var d = Delegate.CreateDelegate(onRecieved.GetType(), onRecieved.Method);
 
-            // TODO Make SURE that we cannot subscribe the same subscriber combo twice. Need to look at onReceived.Target to 
-            //      and compare that against subscriptions for that 
-            var subscriptionNode = subscribers.AddLast(new Subscription(typeof(TSender), typeof(TMessage), onRecieved));
-
+            // Add new subscription unless it already exists. If so just return the existing one.
+            var newSubscription = new Subscription(typeof(TSender), typeof(TMessage), onRecieved);
+            var subscriptionNode = AsNodes(subscribers).FirstOrDefault(s => s.Value.AreActiveAndEqual(newSubscription));
+            if (subscriptionNode == null)            
+                subscriptionNode = subscribers.AddLast(newSubscription);            
+                
             return Disposable.Create(subscriptionNode, (_subscriptionNode) => 
             {
                 if (_subscriptionNode.List != null)
@@ -114,6 +122,18 @@
                 this.onRecievedHandlerMethodInfo = onRecievedHandler.Method;
             }
 
+            public bool AreActiveAndEqual(Subscription s)
+            {
+                if (s == null)
+                    return false;
+                var _t0 = receiverRef.Target;
+                var _t1 = s.receiverRef.Target;
+                if (_t0 == null || _t1 == null)
+                    return false;
+                return object.ReferenceEquals(_t0, _t1) && object.Equals(onRecievedHandlerMethodInfo, s.onRecievedHandlerMethodInfo);
+            }
+            
+            
             public bool IsMatch(object sender, object message)
             {
                 return senderType.IsAssignableFrom(sender.GetType()) && messageType.IsAssignableFrom(message.GetType());

@@ -133,10 +133,10 @@
         {
             var np = n as INotifyPropertyChanged;
             var nc = n as INotifyCollectionChanged;
-            if (np != null)
-                eventBus.PublishChanges(np);
             if (nc != null)
                 eventBus.PublishChanges(nc);
+            if (np != null)
+                eventBus.PublishChanges(np);            
         }
 
         private void OnSettingsChange(object sender, EventArgs e)
