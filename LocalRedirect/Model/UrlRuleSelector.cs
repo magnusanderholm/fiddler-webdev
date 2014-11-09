@@ -1,14 +1,10 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
-    using Fiddler.LocalRedirect.Model;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
     using System.Linq;
-    using System.Threading;    
-    
+
     public class UrlRuleSelector
     {
         // TODO Can probably replace with a thread storage dictionary instead to avoid locking.

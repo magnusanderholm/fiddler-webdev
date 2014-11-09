@@ -2,8 +2,6 @@
 using Fiddler.LocalRedirect.Embedded;
 using Fiddler.LocalRedirect.Model;
 using Fiddler.LocalRedirect.ViewModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 

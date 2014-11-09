@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using Fiddler.LocalRedirect.ViewModel;
-using System.Reflection;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
-using System.Drawing.Imaging;
-
-namespace Fiddler.LocalRedirect.View
+﻿namespace Fiddler.LocalRedirect.View
 {
+    using Fiddler.LocalRedirect.ViewModel;
+    using System;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.Linq;
+    using System.Windows.Forms;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+
     public partial class LocalRedirectHost : UserControl
     {                
         public LocalRedirectHost()

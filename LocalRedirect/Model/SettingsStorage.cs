@@ -1,14 +1,11 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
-    using Fiddler.LocalRedirect.Model;
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.IO;
     using System.Linq;
-    using System.Text;
-    using System.Xml;
 
     public class SettingsStorage : INotifyPropertyChanged, ISettingsStorage
     {

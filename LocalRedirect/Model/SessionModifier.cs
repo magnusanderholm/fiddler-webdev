@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-using System.Runtime.CompilerServices;
+    using System.Runtime.CompilerServices;
 
     public class SessionModifier
     {
@@ -23,7 +23,7 @@ using System.Runtime.CompilerServices;
                 throw new ArgumentNullException("modifiers");
 
             Modifiers = modifiers;
-            Session = session;            
+            Session = session;
         }
 
         public IEnumerable<ISessionModifier> Modifiers { get; private set; }
@@ -31,23 +31,23 @@ using System.Runtime.CompilerServices;
         public Fiddler.Session Session { get; private set; }
 
         public void PeekAtResponseHeaders()
-        {            
-            ApplySessionModification(Modifiers, Session, m => m.PeekAtResponseHeaders);            
+        {
+            ApplySessionModification(Modifiers, Session, m => m.PeekAtResponseHeaders);
         }
 
         public void RequestAfter()
         {
-            ApplySessionModification(Modifiers, Session, m => m.RequestAfter);            
+            ApplySessionModification(Modifiers, Session, m => m.RequestAfter);
         }
 
         public void RequestBefore()
         {
-            ApplySessionModification(Modifiers, Session, m => m.RequestBefore);            
+            ApplySessionModification(Modifiers, Session, m => m.RequestBefore);
         }
 
         public void ResponseAfter()
         {
-            ApplySessionModification(Modifiers, Session, m => m.ResponseAfter);            
+            ApplySessionModification(Modifiers, Session, m => m.ResponseAfter);
         }
 
         public void ResponseBefore()
@@ -57,27 +57,27 @@ using System.Runtime.CompilerServices;
 
         public void BeforeReturningError()
         {
-            ApplySessionModification(Modifiers, Session, m => m.BeforeReturningError);            
+            ApplySessionModification(Modifiers, Session, m => m.BeforeReturningError);
         }
 
         private static void ApplySessionModification(IEnumerable<ISessionModifier> modifiers, Session session, Func<ISessionModifier, Action<Session>> method, [CallerMemberName]string callingMember = "")
-        {            
-                if (session != null && modifiers != null && modifiers.Any())
+        {
+            if (session != null && modifiers != null && modifiers.Any())
+            {
+                foreach (var m in modifiers)
                 {
-                    foreach (var m in modifiers)
+                    try
                     {
-                        try
-                        {
-                            method(m)(session);
-                        }
-                        catch (Exception e)
-                        {
-                            logger.Error(() => string.Format("Unexpected exception in {0}.{1}", m.GetType().FullName, callingMember), e);
-                        }                        
+                        method(m)(session);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(() => string.Format("Unexpected exception in {0}.{1}", m.GetType().FullName, callingMember), e);
                     }
                 }
-                        
+            }
+
         }
     }
-    
+
 }

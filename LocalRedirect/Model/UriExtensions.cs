@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace System
+﻿namespace System
 {
+
     public static class UriExtensions
     {
         public static bool IsPartialMatch(this Uri url, Uri u)

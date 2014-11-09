@@ -1,12 +1,10 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿namespace Fiddler.LocalRedirect.Model
+{
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
 
-namespace Fiddler.LocalRedirect.Model
-{    
     public class MostRecentlyUsedFiles : MostRecentlyUsed<FileInfo>
     {
         const string registryPath = "Software\\FiddlerExtensions";
