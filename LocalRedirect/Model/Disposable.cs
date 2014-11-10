@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System;
+
     public static class Disposable
     {                     
         public static IDisposable Create<T>(T obj, Action<T> action)

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+
     public interface ILogger
     {
         bool IsTraceEnabled { get; }

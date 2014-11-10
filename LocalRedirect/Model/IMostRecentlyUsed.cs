@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System.Collections.Generic;
+
     public interface IMostRecentlyUsed<TItem> : IEnumerable<TItem>
     {
         void Touch(TItem item);

@@ -1,12 +1,11 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
     using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.ComponentModel;
+    using System.IO;
+    using System.Linq;
 
     public class SettingsStorage : INotifyPropertyChanged, ISettingsStorage
     {
@@ -16,7 +15,7 @@ using System.Linq;
 
         private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
         private IEventBus eventBus;
-        
+
 
         public SettingsStorage(IEventBus eventBus, IMostRecentlyUsed<FileInfo> mru)
         {
@@ -26,11 +25,11 @@ using System.Linq;
                 throw new ArgumentNullException("mru");
             if (!mru.Any())
                 throw new ArgumentException("Must contain at least one element!", "mru");
-            
+
             this.eventBus = eventBus;
             this.pC = new NotifyPropertyChanged(OnPropertyChanged);
             this.Mru = mru;
-            
+
             CurrentStorage = Mru.First();
         }
 
@@ -47,8 +46,8 @@ using System.Linq;
                     throw new ArgumentNullException("value");
 
                 var notifyChanged = pC.Update(
-                    ref currentStorage, 
-                    value, 
+                    ref currentStorage,
+                    value,
                     (s0, s1) => string.Compare(value.FullName, currentStorage.FullName) == 0);
 
                 if (notifyChanged.IsChanged)
@@ -137,7 +136,7 @@ using System.Linq;
             if (nc != null)
                 eventBus.PublishChanges(nc);
             if (np != null)
-                eventBus.PublishChanges(np);            
+                eventBus.PublishChanges(np);
         }
 
         private void OnSettingsChange(object sender, EventArgs e)

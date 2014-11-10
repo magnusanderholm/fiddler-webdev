@@ -1,6 +1,5 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
-    using System;
     using System.Diagnostics;
 
     public class LogManager

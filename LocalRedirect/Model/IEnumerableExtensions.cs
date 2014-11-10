@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-
-namespace Fiddler.LocalRedirect.Model
+﻿namespace Fiddler.LocalRedirect.Model
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+
     public static class IEnumerableExtensions
     {
         public static ObservableCollection<TItem> ToObservableCollection<TItem>(this IEnumerable<TItem> enumerable)
