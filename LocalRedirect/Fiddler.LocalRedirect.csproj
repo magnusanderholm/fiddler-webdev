@@ -71,7 +71,7 @@
     <Compile Include="Model\IEventBus.cs" />
     <Compile Include="Model\ILogger.cs" />
     <Compile Include="Model\IMostRecentlyUsed.cs" />
-    <Compile Include="Model\ISettingsRepository.cs" />
+    <Compile Include="Model\ISettingsStorage.cs" />
     <Compile Include="Model\Logger.cs" />
     <Compile Include="Model\LogManager.cs" />
     <Compile Include="Model\Modifiers\FakeHTTPSTunnel.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="Model\Modifiers\UrlRule.cs" />
     <Compile Include="Plugin\LocaRedirect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModel\Fakes\FakeSettingsRepository.cs" />
+    <Compile Include="ViewModel\Fakes\FakeSettingsStorage.cs" />
     <Compile Include="ViewModel\Fakes\FakeViewModel.cs" />
     <Compile Include="ViewModel\IRedirectViewModel.cs" />
     <Compile Include="ViewModel\RedirectViewModel.cs" />

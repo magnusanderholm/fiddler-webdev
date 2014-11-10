@@ -18,8 +18,7 @@
     {
         private ObservableCollection<Modifier> children;
         private string urlString;
-        private Settings parent;        
-        private static readonly StreamingContext emptyStreamingContext = new StreamingContext();        
+        private Settings parent;                
         private string color;
 
         private UrlRule()

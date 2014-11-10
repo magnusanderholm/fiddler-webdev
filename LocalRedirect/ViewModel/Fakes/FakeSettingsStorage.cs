@@ -8,10 +8,10 @@
     using System.Text;
 
 
-    class FakeSettingsRepository : ISettingsStorage
+    class FakeSettingsStorage : ISettingsStorage
     {
         
-        public FakeSettingsRepository()
+        public FakeSettingsStorage()
         {
             CurrentStorage = new FileInfo(@"c:\temp\dummy.txt");
             Mru = new FakeMostRecentlyUsed();
@@ -57,9 +57,7 @@
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
             {
                 return files.GetEnumerator();
-            }
-
-            public event System.Collections.Specialized.NotifyCollectionChangedEventHandler CollectionChanged;
+            }            
         }
     }
 }

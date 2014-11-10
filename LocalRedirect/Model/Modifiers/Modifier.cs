@@ -10,8 +10,7 @@
     [Serializable()]    
     public abstract class Modifier: ModifierBase, IComparable<Modifier>
     {
-        private UrlRule parent;
-        private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
+        private UrlRule parent;        
         private string compareValue = string.Empty;
         
         public Modifier()

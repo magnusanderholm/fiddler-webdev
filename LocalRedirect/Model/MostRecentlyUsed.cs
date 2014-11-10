@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
 
     public class MostRecentlyUsed<TItem> : IMostRecentlyUsed<TItem>
     {

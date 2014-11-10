@@ -9,7 +9,7 @@
 
         public FakeViewModel()
         {
-            SettingsStorage = new FakeSettingsRepository(); 
+            SettingsStorage = new FakeSettingsStorage();             
             var mruCollection = new List<FileInfo>();
             mruCollection.Add(new FileInfo("c:\f1.config"));
             mruCollection.Add(new FileInfo("c:\f2.config"));

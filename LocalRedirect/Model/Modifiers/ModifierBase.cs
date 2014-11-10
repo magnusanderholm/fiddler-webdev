@@ -23,8 +23,7 @@
     public abstract class ModifierBase : INotifyPropertyChanged, ISessionModifier
     {
         private bool isEnabled;        
-        protected NotifyPropertyChanged pC;
-        private static readonly StreamingContext emptyStreamingContext = new StreamingContext();
+        protected NotifyPropertyChanged pC;        
         
         public ModifierBase()
         {
