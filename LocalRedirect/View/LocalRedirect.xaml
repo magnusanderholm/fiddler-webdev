@@ -202,7 +202,7 @@
                     <MenuItem Header="Open" Click="OnBtnOpenClick" />
                     <MenuItem Header="Save As" Click="OnBtnSaveClick" />
                     <Separator />
-                    <MenuItem Header="Recent Files" ItemsSource="{Binding SettingsStorage.Mru}" Click="OnBtnRecentFileClick" />
+                    <MenuItem Header="Recent Files" ItemsSource="{Binding Mru}" Click="OnBtnRecentFileClick" />
                 </MenuItem>
             </Menu>
             <Label Grid.Column="1" Content="{Binding SettingsStorage.CurrentStorage, Mode=OneWay, TargetNullValue=...}" HorizontalAlignment="Right"  />

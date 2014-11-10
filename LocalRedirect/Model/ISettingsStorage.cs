@@ -5,8 +5,7 @@
 
     public interface ISettingsStorage
     {
-        FileInfo CurrentStorage { get; set; }
-        IMostRecentlyUsed<FileInfo> Mru { get; }
+        FileInfo CurrentStorage { get; set; }       
         Settings Settings { get; }        
     }
 }

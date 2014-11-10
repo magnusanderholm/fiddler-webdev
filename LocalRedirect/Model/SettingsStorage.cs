@@ -1,11 +1,12 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
-    using System.IO;
-    using System.Linq;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
 
     public class SettingsStorage : INotifyPropertyChanged, ISettingsStorage
     {
@@ -15,18 +16,21 @@
 
         private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
         private IEventBus eventBus;
+        
 
-        public SettingsStorage(FileInfo defaultSettingsFile, IEventBus eventBus)
+        public SettingsStorage(IEventBus eventBus, IMostRecentlyUsed<FileInfo> mru)
         {
-            if (defaultSettingsFile == null)
-                throw new ArgumentNullException("defaultSettingsFile");
+            if (eventBus == null)
+                throw new ArgumentNullException("eventBus");
+            if (mru == null)
+                throw new ArgumentNullException("mru");
+            if (!mru.Any())
+                throw new ArgumentException("Must contain at least one element!", "mru");
+            
             this.eventBus = eventBus;
-
-            pC = new NotifyPropertyChanged(OnPropertyChanged);
-            Mru = new MostRecentlyUsedFiles(10);
-            if (!Mru.Any(f => string.Compare(f.FullName, defaultSettingsFile.FullName) == 0))
-                Mru.Touch(defaultSettingsFile);
-
+            this.pC = new NotifyPropertyChanged(OnPropertyChanged);
+            this.Mru = mru;
+            
             CurrentStorage = Mru.First();
         }
 

@@ -1,74 +1,45 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
-    using Microsoft.Win32;
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.Linq;
+    using System.Collections.ObjectModel;
 
-    public class MostRecentlyUsed<TItem> : IMostRecentlyUsed<TItem> where TItem:class
+    public class MostRecentlyUsed<TItem> : IMostRecentlyUsed<TItem>
     {
-
-        private readonly string registryValueName;
-        private readonly RegistryKey registryKey;
-        private readonly List<TItem> items = new List<TItem>();
-        private readonly int maxItems;
-        private readonly Func<IEnumerable<TItem>, string> serializer;
-        private readonly Func<string, IEnumerable<TItem>> deserializer;
-        private readonly Func<TItem, TItem, int> comparer;
-
-
-        public MostRecentlyUsed(
-            string registryKey,
-            string registryValueName,
-            int maxItems,
-            Func<IEnumerable<TItem>, string> serializer,
-            Func<string, IEnumerable<TItem>> deserializer,
-            Func<TItem, TItem, int> comparer)
+        private readonly IList<TItem> items;
+        private  Func<TItem, TItem, bool> equals = ((TItem i0, TItem i1) => object.Equals(i0, i1));
+        public MostRecentlyUsed(IList<TItem> items, int maxItems, Func<TItem, TItem, bool> equals = null)
         {
-            this.serializer = serializer;
-            this.deserializer = deserializer;
-            this.comparer = comparer;
-            this.maxItems = maxItems;
-            this.registryValueName = registryValueName;
-
-            this.registryKey = Registry.CurrentUser.CreateSubKey(registryKey); // Make sure key exists.            
-            items.AddRange(deserializer((string)this.registryKey.GetValue(registryValueName, String.Empty)));
+            this.equals = equals ?? this.equals;
+            this.MaxItems = maxItems;
+            this.items = items;
         }
 
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public int MaxItems { get; private set; }
 
+        // Check if an item exist in the collection. If it does exist move it to the beginning of the collection
+        // otherwise add it to the collection of the list.
         public void Touch(TItem item)
-        {
-            var eventArgs = new List<NotifyCollectionChangedEventArgs>();
-            
-            var existingItemIndex = items.FindIndex(f => comparer(f, item) == 0);            
-            if (existingItemIndex >= 0) 
+        {                        
+            for (int idx = 0; idx < items.Count; ++idx)
             {
-                item = items[existingItemIndex];
-                items.RemoveAt(existingItemIndex);                  
+                if (equals(items[idx], item))
+                {
+                    item = items[idx];
+                    items.RemoveAt(idx);
+                    break;
+                }
             }
 
-            items.Insert(0, item);
-            if (existingItemIndex >= 0)
-                eventArgs.Add(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, 0, existingItemIndex));
-            else eventArgs.Add(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, 0));
-
-
-            if (items.Count > maxItems) 
-            {
-                var removedItem = items.Last();
+            // Make room for new item if needed.
+            if (items.Count + 1 >= MaxItems)
                 items.RemoveAt(items.Count - 1);
-                eventArgs.Add(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem, items.Count - 1));
-            }
-
-            foreach (var e in eventArgs)
-                OnCollectionChanged(e);
-
-            registryKey.SetValue(registryValueName, serializer(items));
+            
+            // add item to beginning of list.
+            items.Insert(0, item);            
         }
 
-        public IEnumerator<TItem> GetEnumerator()
+        public System.Collections.Generic.IEnumerator<TItem> GetEnumerator()
         {
             return items.GetEnumerator();
         }
@@ -77,13 +48,5 @@
         {
             return GetEnumerator();
         }
-        
-
-        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            var h = CollectionChanged;
-            if (h != null)
-                h(this, e);
-        }        
     }
 }

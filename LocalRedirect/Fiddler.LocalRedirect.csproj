@@ -67,6 +67,7 @@
     <Compile Include="Embedded\EmbeddedResourceExtensions.cs" />
     <Compile Include="Model\Disposable.cs" />
     <Compile Include="Model\EventBus.cs" />
+    <Compile Include="Model\IEnumerableExtensions.cs" />
     <Compile Include="Model\IEventBus.cs" />
     <Compile Include="Model\ILogger.cs" />
     <Compile Include="Model\IMostRecentlyUsed.cs" />
@@ -79,7 +80,7 @@
     <Compile Include="Model\Modifiers\MirroredBrowsing.cs" />
     <Compile Include="Model\Modifiers\SimpleExternalProxySettings.cs" />
     <Compile Include="Model\MostRecentlyUsed.cs" />
-    <Compile Include="Model\MostRecentlyUsedFiles.cs" />
+    <Compile Include="Model\RegistrySetting.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\Modifiers\ModifierFactory.cs" />
     <Compile Include="Model\Modifiers\BrowserLink.cs" />

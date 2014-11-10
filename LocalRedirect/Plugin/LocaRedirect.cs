@@ -2,9 +2,10 @@
 using Fiddler.LocalRedirect.Embedded;
 using Fiddler.LocalRedirect.Model;
 using Fiddler.LocalRedirect.ViewModel;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
-
 
 [assembly: Fiddler.RequiredVersion("4.4.9.3")]
 
@@ -16,7 +17,9 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     private readonly RedirectViewModel viewModel;
     private static readonly EmbeddedAssemblyLoader assemblyLoader;
     private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
-    private static readonly IEventBus eventBus = new EventBus();
+    private readonly IEventBus eventBus = new EventBus();
+    private readonly IMostRecentlyUsed<FileInfo> mru;
+    private readonly RegistrySetting<FileInfo[]> mruStorage;
 
     static LocalRedirect()
     {
@@ -25,9 +28,22 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     
     public LocalRedirect()
     {
+        mruStorage = new RegistrySetting<FileInfo[]>(
+            "Software\\FiddlerExtensions",
+            "mru",
+            new FileInfo[] { new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")) },
+            str => str.Split(';').Select(s => new FileInfo(s)).ToArray(),
+            files => string.Join(";", files.Select(f => f.FullName).ToArray()));
+        
+        var mruCollection = mruStorage.Get().ToObservableCollection();
+        this.mru = new MostRecentlyUsed<FileInfo>(mruCollection, 10, null);
+        mruCollection.CollectionChanged += (s, e) => mruStorage.Set(((IEnumerable<FileInfo>)s).ToArray());
+               
+
         eventBus.SubscribeTo<SettingsStorage, Settings>(OnSettingsChanged);
-        settingsStorage = new SettingsStorage(new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")), eventBus);
-        viewModel = new RedirectViewModel(settingsStorage);                        
+        settingsStorage = new SettingsStorage(eventBus, mru);
+        viewModel = new RedirectViewModel(settingsStorage, mruCollection);  
+                      
     }
 
     private void OnSettingsChanged(SettingsStorage sender, Settings settings)
