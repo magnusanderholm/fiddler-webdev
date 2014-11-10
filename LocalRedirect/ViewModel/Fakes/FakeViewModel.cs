@@ -2,14 +2,14 @@
 {
     using Fiddler.LocalRedirect.Model;
 
-    public class FakeViewModel
+    public class FakeViewModel : IRedirectViewModel
     {
 
         public FakeViewModel()
         {
-            SettingsRepository = new FakeSettingsRepository();            
+            SettingsStorage = new FakeSettingsRepository();            
         }
 
-        public ISettingsStorage SettingsRepository { get; private set; }                                
+        public ISettingsStorage SettingsStorage { get; private set; }                                
     }
 }
