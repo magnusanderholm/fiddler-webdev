@@ -72,18 +72,7 @@
                     // dynamically and we do not really care about what new objects that removed/entered into the tree.
                     //settings.Events.SubscribeTo<object, NotifyCollectionChangedEventArgs>((s, e) => SaveSettingsToFile(CurrentStorage, Settings));
                     //settings.Events.SubscribeTo<object, NotifyCollectionChangedEventArgs>((s, e) => SaveSettingsToFile(CurrentStorage, Settings));
-                    var flattenedTree = new List<object>();
-                    flattenedTree.Add(Settings);
-                    flattenedTree.Add(Settings.UrlRules);
-                    flattenedTree.AddRange(Settings.UrlRules);
-                    foreach (var u in Settings.UrlRules)
-                    {
-                        flattenedTree.Add(u.Modifiers);
-                        flattenedTree.AddRange(u.Modifiers);
-                    }
-
-                    foreach (var n in flattenedTree)
-                        AttemptToPublishChangesForObjectOnEventBus(n);
+                    ListenForChangesInSettings();
 
                     // We are now listening to the tree as it is right this moment. Set up subscriptions. If we get a change in 
                     // one of the observable collections then we may need to react on that and make sure that the new item also publishes on the eventbus
@@ -96,6 +85,46 @@
                     eventBus.Publish(this, Settings);
                 }
             }
+        }
+
+        private void ListenForChangesInSettings()
+        {
+            var flattenedTree = new List<object>();
+            flattenedTree.Add(Settings);
+            flattenedTree.Add(Settings.UrlRules);
+            flattenedTree.AddRange(Settings.UrlRules);
+            
+            foreach (var u in Settings.UrlRules)
+            {
+                flattenedTree.Add(u.Modifiers);
+                flattenedTree.AddRange(u.Modifiers);
+            }
+
+            foreach (var n in flattenedTree)
+            {
+                var np = n as INotifyPropertyChanged;
+                var nc = n as INotifyCollectionChanged;
+                if (nc != null)
+                {
+                    nc.CollectionChanged -= OnCollectionChanged;
+                    nc.CollectionChanged -= OnCollectionChanged;
+                }
+                if (np != null)
+                {
+                    np.PropertyChanged -= OnPropertyChanged;
+                    np.PropertyChanged += OnPropertyChanged;
+                }
+            }
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnSettingsChange(sender, e);
+        }
+
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnSettingsChange(sender, e);            
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -129,19 +158,9 @@
             }
         }
 
-        private void AttemptToPublishChangesForObjectOnEventBus(object n)
-        {
-            var np = n as INotifyPropertyChanged;
-            var nc = n as INotifyCollectionChanged;
-            if (nc != null)
-                eventBus.PublishChanges(nc);
-            if (np != null)
-                eventBus.PublishChanges(np);
-        }
-
         private void OnSettingsChange(object sender, EventArgs e)
         {
-            AttemptToPublishChangesForObjectOnEventBus(sender);
+            ListenForChangesInSettings();
             SaveSettingsToFile(CurrentStorage, Settings);
             // Ok settings have changed so we publish a message about that for any listeners
             eventBus.Publish(this, Settings);
