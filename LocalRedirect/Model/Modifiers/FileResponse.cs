@@ -13,6 +13,7 @@
     public class FileResponse : Modifier
     {
         private string baseDirectory;
+        private static readonly ILogger log = LogManager.CreateCurrentClassLogger();
 
         private FileResponse()
             : this(null)
@@ -56,6 +57,8 @@
                 var localFile = new FileInfo(Path.Combine(baseDirectory, new Uri(session.fullUrl).LocalPath.TrimStart('/')));
                 if (localFile.Exists)
                     session.oFlags["x-replywithfile"] = localFile.FullName;
+                else
+                    log.Error(() => string.Format("'{0}' does not exist", localFile.FullName));
             }
         }    
     }
