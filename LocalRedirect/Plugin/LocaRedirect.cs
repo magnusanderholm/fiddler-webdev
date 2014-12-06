@@ -23,7 +23,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
 
     static LocalRedirect()
     {
-        assemblyLoader = new EmbeddedAssemblyLoader();               
+        assemblyLoader = new EmbeddedAssemblyLoader(typeof(EmbeddedAssemblyLoader).Namespace);
     }
     
     public LocalRedirect()

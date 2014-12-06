@@ -1,7 +1,6 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.IO;
@@ -13,7 +12,7 @@
         private FileInfo currentStorage = new FileInfo(Guid.NewGuid().ToString("N"));
         private NotifyPropertyChanged pC;
 
-        private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();        
+        private static readonly ILogger log = LogManager.CreateCurrentClassLogger();        
 
         public SettingsStorage(IMostRecentlyUsed<FileInfo> mru)
         {            
@@ -44,28 +43,26 @@
                     ref currentStorage,
                     value,
                     (s0, s1) => string.Compare(value.FullName, currentStorage.FullName) == 0);
-
+                
                 if (notifyChanged.IsChanged)
                 {
+                    CurrentStorage.Refresh(); // Make sure we are looking at a fresh file descriptor.
+
                     // Load settings from file if possible. Otherwise try to fallback to current settings and finally
                     // empty settings.
                     Settings = TryLoadSettingsFromFile(CurrentStorage, Settings ?? new Settings());
                     notifyChanged.Extra("Settings");
 
-                    // Always save the settings once to the new location to ensure we actually have stored the data on disk
-                    // at least once.
-                    SaveSettingsToFile(CurrentStorage, Settings);
+                    // If file does not exist then we loaded default settings. Resave it to disk so we
+                    // always have a file on disk. (Otherwise we'll get issues with MRU)
+                    if (!CurrentStorage.Exists)                    
+                        SaveSettingsToFile(CurrentStorage, Settings);
 
                     // Most recently used update.
                     Mru.Touch(CurrentStorage);
 
-
-                    // Now we shall subscribe to any changes made to any object in this.Settings.                         
-                    // Traverse the settings tree and hookup the subscriptions on our new eventbus. Since we will be subscribing
-                    // to INotifyPropertyChanged events and on NotifyCollecitonChangedEventArgs we only need to listen for such messages
-                    // when they arrive we just make sure that we also subscribe on all those new items as well. That way the tree can grow
-                    // dynamically and we do not really care about what new objects that removed/entered into the tree.                    
-                    ListenForChangesInSettings();                    
+                    // Now we shall subscribe to any changes made to any object in this.Settings                                                        
+                    RegisterOnSettingsPropertyAndCollectionChangedEvents(this.Settings);                    
                 }
             }
         }
@@ -81,9 +78,11 @@
                 h(this, pCe);
         }
 
-        protected virtual void OnSettingsChanged(EventArgs e)
+        protected virtual void OnSettingsChanged(object sender, EventArgs e)
         {
-            ListenForChangesInSettings();
+            // Since a item in Settings changed (may be a INotifyPropertyChanged or INotifyCollectionChanged item)
+            // we need to traverse the tree and listen to any potional new objects PropertyChanged or Collectionchanged events.
+            RegisterOnSettingsPropertyAndCollectionChangedEvents(Settings); 
             SaveSettingsToFile(CurrentStorage, Settings);
             var h = SettingsChanged;
             if (h != null)
@@ -100,6 +99,7 @@
                 using (var s = settingsFile.OpenRead())
                     _settings = settingsSerializer.Deserialize(s);
             }
+            log.Debug(() => "Restored settings from " + settingsFile.FullName);
             return _settings;
         }
 
@@ -110,46 +110,29 @@
                 fS.SetLength(0);
                 settingsSerializer.Serialize(settings, fS);
             }
+            CurrentStorage.Refresh();                        
+            log.Debug(() => "Saved settings to " + settingsFile.FullName);
         }
 
-        private void ListenForChangesInSettings()
+        private void RegisterOnSettingsPropertyAndCollectionChangedEvents(Settings settings)
         {
-            var flattenedTree = new List<object>();
-            flattenedTree.Add(Settings);
-            flattenedTree.Add(Settings.UrlRules);
-            flattenedTree.AddRange(Settings.UrlRules);
-
-            foreach (var u in Settings.UrlRules)
+            foreach (var item in settings.AsFlattenedEnumerable())
             {
-                flattenedTree.Add(u.Modifiers);
-                flattenedTree.AddRange(u.Modifiers);
-            }
-
-            foreach (var n in flattenedTree)
-            {
-                var np = n as INotifyPropertyChanged;
-                var nc = n as INotifyCollectionChanged;
-                if (nc != null)
+                var nP = item as INotifyPropertyChanged;
+                var nC = item as INotifyCollectionChanged;
+                
+                if (nC != null)
                 {
-                    nc.CollectionChanged -= OnCollectionChanged;
-                    nc.CollectionChanged += OnCollectionChanged;
+                    nC.CollectionChanged -= OnSettingsChanged;
+                    nC.CollectionChanged += OnSettingsChanged;
                 }
-                if (np != null)
+
+                if (nP != null)
                 {
-                    np.PropertyChanged -= OnPropertyChanged;
-                    np.PropertyChanged += OnPropertyChanged;
+                    nP.PropertyChanged -= OnSettingsChanged;
+                    nP.PropertyChanged += OnSettingsChanged;
                 }
             }
-        }
-
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            OnSettingsChanged(e);
-        }
-
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            OnSettingsChanged(e);
-        }
+        }  
     }
 }

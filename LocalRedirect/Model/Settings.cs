@@ -1,6 +1,7 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
@@ -50,6 +51,19 @@
                 foreach (UrlRule r in e.NewItems)
                     r.Parent = this;
             }
+        }
+
+        public IEnumerable<object> AsFlattenedEnumerable()
+        {                
+            yield return this;
+            yield return UrlRules;
+            foreach (var u in UrlRules)
+            {
+                yield return u;
+                yield return u.Modifiers;
+                foreach (var m in u.Modifiers)                
+                    yield return m;                
+            }                                     
         }        
     }
 }
