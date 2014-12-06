@@ -66,9 +66,7 @@
     <Compile Include="Embedded\EmbeddedAssemblyLoader.cs" />
     <Compile Include="Embedded\EmbeddedResourceExtensions.cs" />
     <Compile Include="Model\Disposable.cs" />
-    <Compile Include="Model\EventBus.cs" />
     <Compile Include="Model\IEnumerableExtensions.cs" />
-    <Compile Include="Model\IEventBus.cs" />
     <Compile Include="Model\ILogger.cs" />
     <Compile Include="Model\IMostRecentlyUsed.cs" />
     <Compile Include="Model\ISettingsStorage.cs" />

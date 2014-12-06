@@ -2,6 +2,7 @@
 using Fiddler.LocalRedirect.Embedded;
 using Fiddler.LocalRedirect.Model;
 using Fiddler.LocalRedirect.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,8 +17,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     private readonly UrlRuleSelector urlMatcher = new UrlRuleSelector();
     private readonly RedirectViewModel viewModel;
     private static readonly EmbeddedAssemblyLoader assemblyLoader;
-    private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
-    private readonly IEventBus eventBus = new EventBus();
+    private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();    
     private readonly IMostRecentlyUsed<FileInfo> mru;
     private readonly RegistrySetting<FileInfo[]> mruStorage;
 
@@ -38,17 +38,16 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         var mruCollection = mruStorage.Get().ToObservableCollection();
         this.mru = new MostRecentlyUsed<FileInfo>(mruCollection, 10, null);
         mruCollection.CollectionChanged += (s, e) => mruStorage.Set(((IEnumerable<FileInfo>)s).ToArray());
-               
-
-        eventBus.SubscribeTo<SettingsStorage, Settings>(OnSettingsChanged);
-        settingsStorage = new SettingsStorage(eventBus, mru);
-        viewModel = new RedirectViewModel(settingsStorage, mruCollection);  
-                      
+        settingsStorage = new SettingsStorage(mru);
+        settingsStorage.SettingsChanged += OnSettingsChanged;
+                
+        viewModel = new RedirectViewModel(settingsStorage, mruCollection);                        
     }
 
-    private void OnSettingsChanged(SettingsStorage sender, Settings settings)
-    {        
-        urlMatcher.AssignSettings(settings);
+    private void OnSettingsChanged(object sender, EventArgs e)
+    {
+        var settingsStorage = (SettingsStorage)sender;
+        urlMatcher.AssignSettings(settingsStorage.Settings);
     }
 
     private void OnWebSocketsMessage(object sender, WebSocketMessageEventArgs e)

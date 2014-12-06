@@ -13,20 +13,15 @@
         private FileInfo currentStorage = new FileInfo(Guid.NewGuid().ToString("N"));
         private NotifyPropertyChanged pC;
 
-        private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();
-        private IEventBus eventBus;
+        private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();        
 
-
-        public SettingsStorage(IEventBus eventBus, IMostRecentlyUsed<FileInfo> mru)
-        {
-            if (eventBus == null)
-                throw new ArgumentNullException("eventBus");
+        public SettingsStorage(IMostRecentlyUsed<FileInfo> mru)
+        {            
             if (mru == null)
                 throw new ArgumentNullException("mru");
             if (!mru.Any())
                 throw new ArgumentException("Must contain at least one element!", "mru");
-
-            this.eventBus = eventBus;
+            
             this.pC = new NotifyPropertyChanged(OnPropertyChanged);
             this.Mru = mru;
 
@@ -65,75 +60,34 @@
                     Mru.Touch(CurrentStorage);
 
 
-                    // Now we shall subscribe to any changes made in settings                        
+                    // Now we shall subscribe to any changes made to any object in this.Settings.                         
                     // Traverse the settings tree and hookup the subscriptions on our new eventbus. Since we will be subscribing
                     // to INotifyPropertyChanged events and on NotifyCollecitonChangedEventArgs we only need to listen for such messages
                     // when they arrive we just make sure that we also subscribe on all those new items as well. That way the tree can grow
-                    // dynamically and we do not really care about what new objects that removed/entered into the tree.
-                    //settings.Events.SubscribeTo<object, NotifyCollectionChangedEventArgs>((s, e) => SaveSettingsToFile(CurrentStorage, Settings));
-                    //settings.Events.SubscribeTo<object, NotifyCollectionChangedEventArgs>((s, e) => SaveSettingsToFile(CurrentStorage, Settings));
-                    ListenForChangesInSettings();
-
-                    // We are now listening to the tree as it is right this moment. Set up subscriptions. If we get a change in 
-                    // one of the observable collections then we may need to react on that and make sure that the new item also publishes on the eventbus
-
-                    eventBus.SubscribeTo<object, PropertyChangedEventArgs>((s, e) => OnSettingsChange(s, e));
-                    eventBus.SubscribeTo<object, NotifyCollectionChangedEventArgs>((s, e) => OnSettingsChange(s, e));
-
-                    // we have new settings. Publish it so all interested parties
-                    // can read it.
-                    eventBus.Publish(this, Settings);
+                    // dynamically and we do not really care about what new objects that removed/entered into the tree.                    
+                    ListenForChangesInSettings();                    
                 }
             }
         }
-
-        private void ListenForChangesInSettings()
-        {
-            var flattenedTree = new List<object>();
-            flattenedTree.Add(Settings);
-            flattenedTree.Add(Settings.UrlRules);
-            flattenedTree.AddRange(Settings.UrlRules);
-            
-            foreach (var u in Settings.UrlRules)
-            {
-                flattenedTree.Add(u.Modifiers);
-                flattenedTree.AddRange(u.Modifiers);
-            }
-
-            foreach (var n in flattenedTree)
-            {
-                var np = n as INotifyPropertyChanged;
-                var nc = n as INotifyCollectionChanged;
-                if (nc != null)
-                {
-                    nc.CollectionChanged -= OnCollectionChanged;
-                    nc.CollectionChanged -= OnCollectionChanged;
-                }
-                if (np != null)
-                {
-                    np.PropertyChanged -= OnPropertyChanged;
-                    np.PropertyChanged += OnPropertyChanged;
-                }
-            }
-        }
-
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            OnSettingsChange(sender, e);
-        }
-
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            OnSettingsChange(sender, e);            
-        }
-
+       
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public event EventHandler SettingsChanged;
+        
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs pCe)
         {
             var h = PropertyChanged;
             if (h != null)
                 h(this, pCe);
+        }
+
+        protected virtual void OnSettingsChanged(EventArgs e)
+        {
+            ListenForChangesInSettings();
+            SaveSettingsToFile(CurrentStorage, Settings);
+            var h = SettingsChanged;
+            if (h != null)
+                h(this, e);
         }
 
         private Settings TryLoadSettingsFromFile(FileInfo settingsFile, Settings defaultValue)
@@ -158,12 +112,44 @@
             }
         }
 
-        private void OnSettingsChange(object sender, EventArgs e)
+        private void ListenForChangesInSettings()
         {
-            ListenForChangesInSettings();
-            SaveSettingsToFile(CurrentStorage, Settings);
-            // Ok settings have changed so we publish a message about that for any listeners
-            eventBus.Publish(this, Settings);
+            var flattenedTree = new List<object>();
+            flattenedTree.Add(Settings);
+            flattenedTree.Add(Settings.UrlRules);
+            flattenedTree.AddRange(Settings.UrlRules);
+
+            foreach (var u in Settings.UrlRules)
+            {
+                flattenedTree.Add(u.Modifiers);
+                flattenedTree.AddRange(u.Modifiers);
+            }
+
+            foreach (var n in flattenedTree)
+            {
+                var np = n as INotifyPropertyChanged;
+                var nc = n as INotifyCollectionChanged;
+                if (nc != null)
+                {
+                    nc.CollectionChanged -= OnCollectionChanged;
+                    nc.CollectionChanged += OnCollectionChanged;
+                }
+                if (np != null)
+                {
+                    np.PropertyChanged -= OnPropertyChanged;
+                    np.PropertyChanged += OnPropertyChanged;
+                }
+            }
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnSettingsChanged(e);
+        }
+
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnSettingsChanged(e);
         }
     }
 }
