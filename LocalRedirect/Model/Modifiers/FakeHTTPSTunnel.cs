@@ -1,11 +1,5 @@
 ﻿namespace Fiddler.LocalRedirect.Model
 {
-    using System;
-    using System.ComponentModel;
-    using System.Runtime.Serialization;
-    using System.Xml.Serialization;
-
-        
     public class FakeHTTPSTunnel : ISessionModifier
     {
         public FakeHTTPSTunnel()
