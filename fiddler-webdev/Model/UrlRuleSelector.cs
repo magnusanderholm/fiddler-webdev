@@ -17,10 +17,13 @@
 
         public void AssignSettings(Settings settings)
         {
-            lock (settingsSerializer)
+            if (settings != null)
             {
-                var settingsCopy = settingsSerializer.DeepCopy(settings);
-                this.settings = settingsCopy;
+                lock (settingsSerializer)
+                {
+                    var settingsCopy = settingsSerializer.DeepCopy(settings);
+                    this.settings = settingsCopy;
+                }
             }
         }
                         

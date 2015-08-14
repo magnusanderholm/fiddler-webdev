@@ -27,7 +27,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     }
     
     public LocalRedirect()
-    {
+    {        
         mruStorage = new RegistrySetting<FileInfo[]>(
             "Software\\FiddlerExtensions",
             "mru",
@@ -40,6 +40,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         mruCollection.CollectionChanged += (s, e) => mruStorage.Set(((IEnumerable<FileInfo>)s).ToArray());
         settingsStorage = new SettingsStorage(mru);
         settingsStorage.SettingsChanged += OnSettingsChanged;
+        urlMatcher.AssignSettings(settingsStorage.Settings);
                 
         viewModel = new RedirectViewModel(settingsStorage, mruCollection);                        
     }
