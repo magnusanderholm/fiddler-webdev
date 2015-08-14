@@ -54,7 +54,12 @@
             base.RequestBefore(session);
             if (IsEnabled /*&& this.HasScript*/)
             {
-                var localFile = new FileInfo(Path.Combine(baseDirectory, new Uri(session.fullUrl).LocalPath.TrimStart('/')));
+                // Cut of parent path so we get a path relative the parent
+                // this is then used with baseDir to find the local file.
+                var path = new Uri(session.fullUrl)
+                    .LocalPath.Remove(0, this.Parent.Url.LocalPath.Length)
+                    .TrimStart('/');                
+                var localFile = new FileInfo(Path.Combine(baseDirectory, path));
                 if (localFile.Exists)
                     session.oFlags["x-replywithfile"] = localFile.FullName;
                 else
