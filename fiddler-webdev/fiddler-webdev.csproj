@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Fiddler">
-      <HintPath>..\..\..\Program Files (x86)\Fiddler2\Fiddler.exe</HintPath>
+      <HintPath>C:\Program Files (x86)\Fiddler2\Fiddler.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="HtmlAgilityPack">
@@ -154,7 +154,11 @@
        Other similar extension points exist, see Microsoft.Common.targets. -->
   <Target Name="BeforeBuild">
   </Target>
+  
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(USERPROFILE)\Documents\Fiddler2\Scripts\" SkipUnchangedFiles="false" />
+    <PropertyGroup>
+      <FiddlerScriptDir>$([System.Environment]::GetFolderPath(SpecialFolder.MyDocuments))\Fiddler2\Scripts\</FiddlerScriptDir>
+    </PropertyGroup>
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(FiddlerScriptDir)" SkipUnchangedFiles="false" />
   </Target>
 </Project>
