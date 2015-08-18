@@ -11,27 +11,27 @@ using System.Windows.Forms;
 [assembly: Fiddler.RequiredVersion("4.4.9.3")]
 
 
-public class LocalRedirect : Fiddler.IAutoTamper2
+public class WebdevPlugin : Fiddler.IAutoTamper2
 {
     private readonly SettingsStorage settingsStorage;        
     private readonly UrlRuleSelector urlMatcher = new UrlRuleSelector();
-    private readonly RedirectViewModel viewModel;
+    private readonly WebdevViewModel viewModel;
     private static readonly EmbeddedAssemblyLoader assemblyLoader;
     private static readonly ILogger logger = LogManager.CreateCurrentClassLogger();    
     private readonly IMostRecentlyUsed<FileInfo> mru;
     private readonly RegistrySetting<FileInfo[]> mruStorage;
 
-    static LocalRedirect()
+    static WebdevPlugin()
     {
         assemblyLoader = new EmbeddedAssemblyLoader(typeof(EmbeddedAssemblyLoader).Namespace);
     }
     
-    public LocalRedirect()
-    {        
+    public WebdevPlugin()
+    {
         mruStorage = new RegistrySetting<FileInfo[]>(
             "Software\\FiddlerExtensions",
             "mru",
-            new FileInfo[] { new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "localredirect.xml")) },
+            new FileInfo[] { new FileInfo(Path.Combine(Fiddler.CONFIG.GetPath("Root"), "webdev.xml")) },
             str => str.Split(';').Select(s => new FileInfo(s)).ToArray(),
             files => string.Join(";", files.Select(f => f.FullName).ToArray()));
         
@@ -42,7 +42,7 @@ public class LocalRedirect : Fiddler.IAutoTamper2
         settingsStorage.SettingsChanged += OnSettingsChanged;
         urlMatcher.AssignSettings(settingsStorage.Settings);
                 
-        viewModel = new RedirectViewModel(settingsStorage, mruCollection);                        
+        viewModel = new WebdevViewModel(settingsStorage, mruCollection);                        
     }
 
     private void OnSettingsChanged(object sender, EventArgs e)
@@ -63,9 +63,9 @@ public class LocalRedirect : Fiddler.IAutoTamper2
     public void OnLoad()
     {
         FiddlerApplication.OnWebSocketMessage += OnWebSocketsMessage;
-        var view = new Fiddler.Webdev.View.LocalRedirectHost() { ViewModel = viewModel };
+        var view = new Fiddler.Webdev.View.WebdevHost() { ViewModel = viewModel };
            
-        var oPage = new TabPage("Redirector");
+        var oPage = new TabPage("Webdev");
         oPage.ImageIndex = (int)Fiddler.SessionIcons.Redirect;        
         oPage.Controls.Add(view);
         oPage.Padding = new Padding(0);

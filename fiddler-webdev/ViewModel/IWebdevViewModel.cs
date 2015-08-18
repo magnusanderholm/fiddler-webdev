@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
 
-    public interface IRedirectViewModel
+    public interface IWebdevViewModel
     {
         ISettingsStorage SettingsStorage { get; }
 

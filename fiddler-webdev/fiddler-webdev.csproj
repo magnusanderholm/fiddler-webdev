@@ -107,33 +107,33 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\Modifiers\UrlRule.cs" />
-    <Compile Include="Plugin\LocaRedirect.cs" />
+    <Compile Include="Plugin\WebdevPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\Fakes\FakeSettingsStorage.cs" />
     <Compile Include="ViewModel\Fakes\FakeViewModel.cs" />
-    <Compile Include="ViewModel\IRedirectViewModel.cs" />
-    <Compile Include="ViewModel\RedirectViewModel.cs" />
-    <Compile Include="View\LocalRedirect.xaml.cs">
-      <DependentUpon>LocalRedirect.xaml</DependentUpon>
+    <Compile Include="ViewModel\IWebdevViewModel.cs" />
+    <Compile Include="ViewModel\WebdevViewModel.cs" />
+    <Compile Include="View\Webdev.xaml.cs">
+      <DependentUpon>Webdev.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\LocalRedirectHost.cs">
+    <Compile Include="View\WebdevHost.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="View\LocalRedirectHost.Designer.cs">
-      <DependentUpon>LocalRedirectHost.cs</DependentUpon>
+    <Compile Include="View\WebdevHost.Designer.cs">
+      <DependentUpon>WebdevHost.cs</DependentUpon>
     </Compile>
     <Compile Include="View\VisibilityToBooleanConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="View\LocalRedirectHost.resx">
-      <DependentUpon>LocalRedirectHost.cs</DependentUpon>
+    <EmbeddedResource Include="View\WebdevHost.resx">
+      <DependentUpon>WebdevHost.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\lock_open.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="View\LocalRedirect.xaml">
+    <Page Include="View\Webdev.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

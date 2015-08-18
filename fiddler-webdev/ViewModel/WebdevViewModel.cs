@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.IO;
 
-    public class RedirectViewModel : Fiddler.Webdev.ViewModel.IRedirectViewModel
+    public class WebdevViewModel : Fiddler.Webdev.ViewModel.IWebdevViewModel
     {
-        public RedirectViewModel(ISettingsStorage settingsStorage, IEnumerable<FileInfo> mru)
+        public WebdevViewModel(ISettingsStorage settingsStorage, IEnumerable<FileInfo> mru)
         {                                    
             SettingsStorage = settingsStorage;
             Mru = mru;

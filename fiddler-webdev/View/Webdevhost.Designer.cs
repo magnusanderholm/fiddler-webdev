@@ -1,6 +1,6 @@
 ﻿namespace Fiddler.Webdev.View
 {
-    partial class LocalRedirectHost
+    partial class WebdevHost
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.wpfHost = new System.Windows.Forms.Integration.ElementHost();
-            this.localRedirect1 = new Fiddler.Webdev.View.LocalRedirect();
+            this.webDev = new Fiddler.Webdev.View.Webdev();
             this.lblDropZone = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.lblDropZone)).BeginInit();
             this.SuspendLayout();
@@ -42,7 +42,7 @@
             this.wpfHost.Size = new System.Drawing.Size(372, 276);
             this.wpfHost.TabIndex = 0;
             this.wpfHost.Text = "elementHost1";
-            this.wpfHost.Child = this.localRedirect1;
+            this.wpfHost.Child = this.webDev;
             // 
             // lblDropZone
             // 
@@ -59,7 +59,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.wpfHost);
             this.Controls.Add(this.lblDropZone);
-            this.Name = "LocalRedirectHost";
+            this.Name = "WebdevHost";
             this.Size = new System.Drawing.Size(372, 276);
             ((System.ComponentModel.ISupportInitialize)(this.lblDropZone)).EndInit();
             this.ResumeLayout(false);
@@ -69,7 +69,7 @@
         #endregion
 
         private System.Windows.Forms.Integration.ElementHost wpfHost;
-        private LocalRedirect localRedirect1;
+        private Webdev webDev;
         private System.Windows.Forms.PictureBox lblDropZone;
     }
 }

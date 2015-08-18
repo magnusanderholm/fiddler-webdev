@@ -6,19 +6,19 @@
     using System.Windows.Controls;
 
     /// <summary>
-    /// Interaction logic for LocalRedirect.xaml
+    /// Interaction logic for Webdev.xaml
     /// </summary>
-    public partial class LocalRedirect : UserControl
+    public partial class Webdev : UserControl
     {
         private const string defaultSettingsExtension = ".config";
         private const string settingsFileFilter = "Redirect config (*.config)|*.conf, *.config|All Files (*.*)|*.*";
 
-        public LocalRedirect()
+        public Webdev()
         {
             InitializeComponent();
         }
 
-        public IRedirectViewModel ViewModel { get { return DataContext as IRedirectViewModel; } }
+        public IWebdevViewModel ViewModel { get { return DataContext as IWebdevViewModel; } }
 
         private void OnSetInjectFragmentClick(object sender, RoutedEventArgs e)
         {

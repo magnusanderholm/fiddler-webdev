@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
 
-    public class FakeViewModel : IRedirectViewModel
+    public class FakeViewModel : IWebdevViewModel
     {
 
         public FakeViewModel()

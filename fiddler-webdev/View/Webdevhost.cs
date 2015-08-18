@@ -9,9 +9,9 @@
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
-    public partial class LocalRedirectHost : UserControl
+    public partial class WebdevHost : UserControl
     {                
-        public LocalRedirectHost()
+        public WebdevHost()
         {
             InitializeComponent();                        
             this.wpfHost.Child.AllowDrop = true;         
@@ -27,10 +27,10 @@
             this.DragLeave += OnWinFormsDragLeave;            
         }
 
-        public RedirectViewModel ViewModel
+        public WebdevViewModel ViewModel
         {
-            get { return localRedirect1.DataContext as RedirectViewModel; }
-            set { localRedirect1.DataContext = value; }
+            get { return webDev.DataContext as WebdevViewModel; }
+            set { webDev.DataContext = value; }
         }
 
         private void OnWpfDragEnter(object sender, System.Windows.DragEventArgs e)
