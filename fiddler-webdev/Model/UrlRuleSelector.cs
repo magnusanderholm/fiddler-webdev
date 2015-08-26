@@ -4,12 +4,12 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
 
     public class UrlRuleSelector
-    {
-        // TODO Can probably replace with a thread storage dictionary instead to avoid locking.
-        private readonly ConcurrentDictionary<Fiddler.Session, SessionModifier> map =
-            new ConcurrentDictionary<Session, SessionModifier>();
+    {        
+        private readonly ConditionalWeakTable<Fiddler.Session, SessionModifier> map =
+            new ConditionalWeakTable<Session, SessionModifier>();
 
         private static readonly SerializerEx<Settings> settingsSerializer = new SerializerEx<Settings>();        
         private Settings settings = null;
@@ -35,8 +35,9 @@
             lock (settingsSerializer)            
                 _settings = settings;                        
 
-            var redirect = map.GetOrAdd(oSession, s => 
+            var redirect = map.GetValue(oSession, s => 
             {
+                oSession.OnCompleteTransaction -= OnCompleteTransaction;
                 oSession.OnCompleteTransaction += OnCompleteTransaction;
                 var sessionModifier = SessionModifier.Empty;
                 
@@ -71,10 +72,9 @@
         
 
         private void OnCompleteTransaction(object sender, EventArgs e)
-        {
-            SessionModifier tmp = null;
+        {            
             Fiddler.Session session = (Fiddler.Session)sender;
-            map.TryRemove((Session)sender, out tmp);
+            map.Remove(session);
             session.OnCompleteTransaction -= OnCompleteTransaction;
         }
     }
